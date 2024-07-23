@@ -1,11 +1,29 @@
 {
-  "manifest_version": 3,
-  "description": "",
-  "name": "Reaxct Extension",
+  "name": "Site Blocker",
+  "description": "Chrome Extension to block sites",
   "version": "1.0.0",
+  "manifest_version": 3,
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "react extension"
+    "default_title": "React Extension",
+    "default_icon": "icon.png"
+  },
+  "web_accessible_resources": ["*.html"],
+  "content_security_policy": "script-src 'self' 'sha256-/13BBW2yQVtpCsBV7JiO23y7pwEFFUobOzefJ27Nltg='; object-src 'self'",
+  "permissions": ["declarativeNetRequest", "tabs"],
+  "declarative_net_request": {
+    "rule_resources": [
+      {
+        "id": "ruleset_1",
+        "enabled": false,
+        "path": "rules.json"
+      }
+    ]
   },
   "options_page": "options.html",
   "background": {
