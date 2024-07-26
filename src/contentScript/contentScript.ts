@@ -1,34 +1,32 @@
-const rules = {
-  "https://www.google.com/search": filterGoogleSearch,
-}
-
 const sitesToFilter = ["reddit", "wikipedia"]
 
-console.log("Extension active")
-
 function filterGoogleSearch() {
+  if (document.documentElement.dataset.addScript) {
+    return
+  }
+  const searchResultsDiv = document.querySelector("#search")
+  document.documentElement.dataset.addScript = "true"
   const observer = new MutationObserver((mutations) => {
-    mutations.forEach(() => {
-      // Filter main search results
-      const searchResults = document.querySelectorAll("#search .g")
-      searchResults.forEach((result) => {
-        const links = result.querySelectorAll("a")
-        const cites = result.querySelectorAll("cite")
+    console.log(mutations)
+    // mutations.forEach(() => {
+    //   const searchResults = document.querySelectorAll("#search .g")
+    //   searchResults.forEach((result) => {
+    //     const links = result.querySelectorAll("a")
+    //     const cites = result.querySelectorAll("cite")
 
-        if (shouldFilterResult(links, cites)) {
-          ;(result as HTMLElement).style.display = "none"
-        }
-      })
+    //     if (shouldFilterResult(links, cites)) {
+    //       ;(result as HTMLElement).style.display = "none"
+    //     }
+    //   })
 
-      // Filter "More to ask" section
-      filterMoreToAskSection()
-    })
+    //   filterMoreToAskSection()
+    // })
   })
 
-  observer.observe(document.body, { childList: true, subtree: true })
+  //TODO add if searchResultsDiv is nothing
+  observer.observe(document.documentElement, { childList: true, subtree: true })
 
-  // Initial filtering
-  filterMoreToAskSection()
+  // filterMoreToAskSection()
 }
 
 function filterMoreToAskSection() {
@@ -84,9 +82,8 @@ function shouldFilterLink(url: string): boolean {
 }
 
 // Check if the current URL starts with any of the keys in rules
-for (const url in rules) {
-  if (document.URL.startsWith(url)) {
-    rules[url]()
-    break
-  }
+function Start() {
+  filterGoogleSearch()
 }
+
+Start()

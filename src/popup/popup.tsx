@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react"
 import { createRoot } from "react-dom/client"
 import "./popup.css"
+import OnOffSlider from "../components/onOffSlider"
+import { UserSettings } from "../types"
 
 interface BlockedWebsitesProps {
   id: number
@@ -10,6 +12,11 @@ interface BlockedWebsitesProps {
 
 interface AppProps {
   blockedWebsites: BlockedWebsitesProps[]
+}
+
+const OnOffSetting: UserSettings = {
+  settingName: "Extension on",
+  googleStorageKey: "ExtensionOnOFf",
 }
 
 const Brands: BlockedWebsitesProps[] = [
@@ -24,74 +31,51 @@ const Brands: BlockedWebsitesProps[] = [
     url: "wikipedia.com",
   },
   {
-    id: 1,
+    id: 3,
     icon: "broom.png",
     url: "reddit.com",
   },
   {
-    id: 1,
+    id: 4,
     icon: "broom.png",
     url: "reddit.com",
   },
   {
-    id: 2,
+    id: 5,
     icon: "broom.png",
     url: "wikipedia.com",
   },
   {
-    id: 1,
+    id: 6,
     icon: "broom.png",
     url: "reddit.com",
   },
   {
-    id: 1,
+    id: 7,
     icon: "broom.png",
     url: "reddit.com",
   },
   {
-    id: 2,
+    id: 8,
     icon: "broom.png",
     url: "wikipedia.com",
   },
   {
-    id: 1,
+    id: 9,
     icon: "broom.png",
     url: "reddit.com",
   },
 ]
 
+// Function to handle slider change
+const handleSliderChange = (googleStorageKey: string, value: boolean) => {
+  console.log("here")
+  chrome.storage.sync.set({ [googleStorageKey]: value }, () => {
+    console.log(`Setting ${googleStorageKey} is set to ${value}`)
+  })
+}
+
 const App: React.FC<AppProps> = ({ blockedWebsites }) => {
-  const [showPopup, setAddSiteShowPopup] = useState(false)
-  const popupRef = useRef<HTMLDivElement>(null)
-
-  const handleAddNewClick = () => {
-    setAddSiteShowPopup(true)
-  }
-
-  const handleClosePopup = () => {
-    setAddSiteShowPopup(false)
-  }
-
-  // For if the user clicks outside of the add site popup, close the add site popup
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        popupRef.current &&
-        !popupRef.current.contains(event.target as Node)
-      ) {
-        handleClosePopup()
-      }
-    }
-
-    if (showPopup) {
-      document.addEventListener("mousedown", handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [showPopup])
-
   return (
     <div id="popup-container">
       <div id="entire-top-bar">
@@ -100,12 +84,13 @@ const App: React.FC<AppProps> = ({ blockedWebsites }) => {
           <p className="header-text">Search Sanitzer</p>
         </div>
         <div id="right-top-bar" className="top-bar-section">
-          <div className="slider-container">
-            <input type="checkbox" className="slider-checkbox" id="checkbox" />
-            <label className="slider-switch" htmlFor="checkbox">
-              <span className="slider-slider"></span>
-            </label>
-          </div>
+          <OnOffSlider
+            id="OnOff"
+            onChange={(value) =>
+              handleSliderChange(OnOffSetting.settingName, value)
+            }
+            keyName={OnOffSetting.settingName}
+          />
           <div id="settings-icon" className="button-hover-effect">
             <img src="setting.png" alt="Settings icon" />
           </div>
@@ -114,12 +99,33 @@ const App: React.FC<AppProps> = ({ blockedWebsites }) => {
 
       <div id="middle-section" className="scrollable-section">
         <div
-          onClick={handleAddNewClick}
+          data-open-modal
+          onClick={openAddSiteModal}
           id="blocked-add-new"
           className="blocked-card-outline blocked-card-add button-hover-effect"
         >
           <img className="blocked-add-icon" src="add.png" alt="plus icon" />
         </div>
+
+        <dialog data-modal>
+          <div className="popup-overlay">
+            <div className="popup-content">
+              <button id="add-current-site-btn" onClick={closeAddSiteModal}>
+                Add current site;
+              </button>
+              <button id="add-manual-site-btn" onClick={onManualAddSitesClick}>
+                Manual add sites
+              </button>
+              <div
+                id="close-modal-btn"
+                className="cross-button button-hover-effect"
+                onClick={closeAddSiteModal}
+              >
+                <img className="cross-image" src="close.png"></img>
+              </div>
+            </div>
+          </div>
+        </dialog>
         {blockedWebsites.map((website) => (
           <div
             className="button-hover-effect blocked-card-outline blocked-card-inside"
@@ -137,35 +143,24 @@ const App: React.FC<AppProps> = ({ blockedWebsites }) => {
           </div>
         ))}
       </div>
-      {showPopup && (
-        <div className="popup-overlay">
-          <div className="popup-content" ref={popupRef}>
-            <button
-              onClick={() => {
-                handleClosePopup()
-              }}
-            >
-              Add &lt;current site&gt;
-            </button>
-            <button
-              onClick={() => {
-                handleClosePopup()
-              }}
-            >
-              Manual add sites
-            </button>
-            <div
-              className="cross-button button-hover-effect"
-              onClick={handleClosePopup}
-            >
-              <img className="cross-image" src="close.png"></img>
-            </div>
-          </div>
-        </div>
-      )}
+
       <div id="bottom-bar"></div>
     </div>
   )
+}
+
+function onManualAddSitesClick() {
+  chrome.runtime.openOptionsPage()
+}
+
+function openAddSiteModal() {
+  const modal: HTMLDialogElement = document.querySelector("[data-modal]")
+  modal.showModal()
+}
+
+function closeAddSiteModal() {
+  const modal: HTMLDialogElement = document.querySelector("[data-modal]")
+  modal.close()
 }
 
 const container = document.createElement("div")

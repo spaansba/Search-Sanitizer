@@ -2,31 +2,30 @@
 /*!********************************************!*\
   !*** ./src/contentScript/contentScript.ts ***!
   \********************************************/
-const rules = {
-    "https://www.google.com/search": filterGoogleSearch,
-};
 const sitesToFilter = ["reddit", "wikipedia"];
-console.log("Extension active");
 function filterGoogleSearch() {
+    if (document.documentElement.dataset.addScript) {
+        return;
+    }
+    const searchResultsDiv = document.querySelector("#search");
+    document.documentElement.dataset.addScript = "true";
     const observer = new MutationObserver((mutations) => {
-        mutations.forEach(() => {
-            // Filter main search results
-            const searchResults = document.querySelectorAll("#search .g");
-            searchResults.forEach((result) => {
-                const links = result.querySelectorAll("a");
-                const cites = result.querySelectorAll("cite");
-                if (shouldFilterResult(links, cites)) {
-                    ;
-                    result.style.display = "none";
-                }
-            });
-            // Filter "More to ask" section
-            filterMoreToAskSection();
-        });
+        console.log(mutations);
+        // mutations.forEach(() => {
+        //   const searchResults = document.querySelectorAll("#search .g")
+        //   searchResults.forEach((result) => {
+        //     const links = result.querySelectorAll("a")
+        //     const cites = result.querySelectorAll("cite")
+        //     if (shouldFilterResult(links, cites)) {
+        //       ;(result as HTMLElement).style.display = "none"
+        //     }
+        //   })
+        //   filterMoreToAskSection()
+        // })
     });
-    observer.observe(document.body, { childList: true, subtree: true });
-    // Initial filtering
-    filterMoreToAskSection();
+    //TODO add if searchResultsDiv is nothing
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    // filterMoreToAskSection()
 }
 function filterMoreToAskSection() {
     const moreToAskSection = document.querySelector("[data-initq]");
@@ -74,12 +73,10 @@ function shouldFilterLink(url) {
     return false;
 }
 // Check if the current URL starts with any of the keys in rules
-for (const url in rules) {
-    if (document.URL.startsWith(url)) {
-        rules[url]();
-        break;
-    }
+function Start() {
+    filterGoogleSearch();
 }
+Start();
 
 /******/ })()
 ;
