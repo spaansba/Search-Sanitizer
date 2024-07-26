@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client"
 import "./popup.css"
 import OnOffSlider from "../components/onOffSlider"
 import { UserSettings } from "../types"
+import { getStorageItem, updateOption } from "../options/optionsHelper"
 
 interface BlockedWebsitesProps {
   id: number
@@ -16,7 +17,7 @@ interface AppProps {
 
 const OnOffSetting: UserSettings = {
   settingName: "Extension on",
-  googleStorageKey: "ExtensionOnOFf",
+  googleStorageKey: "ExtensionOnOff",
 }
 
 const Brands: BlockedWebsitesProps[] = [
@@ -67,15 +68,21 @@ const Brands: BlockedWebsitesProps[] = [
   },
 ]
 
-// Function to handle slider change
-const handleSliderChange = (googleStorageKey: string, value: boolean) => {
-  console.log("here")
-  chrome.storage.sync.set({ [googleStorageKey]: value }, () => {
-    console.log(`Setting ${googleStorageKey} is set to ${value}`)
-  })
-}
-
 const App: React.FC<AppProps> = ({ blockedWebsites }) => {
+  const [initialValue, setInitialValue] = useState<boolean | null>(null)
+
+  // Function to handle slider change
+  async function handleSliderChange(googleStorageKey: string, value: boolean) {
+    await updateOption(googleStorageKey, value)
+  }
+
+  useEffect(() => {
+    const fetchInitialValue = async () => {
+      const value = await getStorageItem<boolean>(OnOffSetting.googleStorageKey)
+      setInitialValue(value ?? false)
+    }
+    fetchInitialValue()
+  }, []) // Empty dependency array ensures this runs only once on mount
   return (
     <div id="popup-container">
       <div id="entire-top-bar">
@@ -84,13 +91,7 @@ const App: React.FC<AppProps> = ({ blockedWebsites }) => {
           <p className="header-text">Search Sanitzer</p>
         </div>
         <div id="right-top-bar" className="top-bar-section">
-          <OnOffSlider
-            id="OnOff"
-            onChange={(value) =>
-              handleSliderChange(OnOffSetting.settingName, value)
-            }
-            keyName={OnOffSetting.settingName}
-          />
+          <OnOffSlider id="OnOff" googleStorageKey={"ExtensionOnOff"} />
           <div id="settings-icon" className="button-hover-effect">
             <img src="setting.png" alt="Settings icon" />
           </div>

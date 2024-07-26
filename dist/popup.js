@@ -42,7 +42,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* On/Off Slider */
   background-color: #e0dfe2;
   border-radius: 13.75px; /* 11px * 1.25 = 13.75px */
   cursor: pointer;
-  transition: all 0.2s ease-out;
+  transition: all 0.4s ease-out;
 }
 
 .slider-slider {
@@ -55,7 +55,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* On/Off Slider */
   background: white;
   box-shadow: 0px 2.5px 6.25px rgba(0, 0, 0, 0.15),
     0px 2.5px 1.25px rgba(0, 0, 0, 0.06); /* Increased shadow */
-  transition: all 0.2s ease-out;
+  transition: all 0.4s ease-out;
   cursor: pointer;
 }
 
@@ -67,7 +67,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `/* On/Off Slider */
   left: calc(50% - 22.5px / 2 + 8.75px); /* Adjusted for new size */
   top: calc(50% - 22.5px / 2);
 }
-`, "",{"version":3,"sources":["webpack://./src/components/onOffSlider.css"],"names":[],"mappings":"AAAA,kBAAkB;AAClB;EACE,aAAa,EAAE,yBAAyB;EACxC,eAAe,EAAE,0BAA0B;EAC3C,kBAAkB;AACpB;;AAEA;EACE,UAAU;EACV,QAAQ;EACR,SAAS;EACT,kBAAkB;AACpB;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,cAAc;EACd,yBAAyB;EACzB,sBAAsB,EAAE,0BAA0B;EAClD,eAAe;EACf,6BAA6B;AAC/B;;AAEA;EACE,aAAa,EAAE,yBAAyB;EACxC,cAAc;EACd,kBAAkB;EAClB,qCAAqC,EAAE,0BAA0B;EACjE,2BAA2B;EAC3B,kBAAkB;EAClB,iBAAiB;EACjB;wCACsC,EAAE,qBAAqB;EAC7D,6BAA6B;EAC7B,eAAe;AACjB;;AAEA;EACE,yBAAyB;AAC3B;;AAEA;EACE,qCAAqC,EAAE,0BAA0B;EACjE,2BAA2B;AAC7B","sourcesContent":["/* On/Off Slider */\r\n.slider-container {\r\n  width: 42.5px; /* 34px * 1.25 = 42.5px */\r\n  height: 26.25px; /* 21px * 1.25 = 26.25px */\r\n  position: relative;\r\n}\r\n\r\n.slider-checkbox {\r\n  opacity: 0;\r\n  width: 0;\r\n  height: 0;\r\n  position: absolute;\r\n}\r\n\r\n.slider-switch {\r\n  width: 100%;\r\n  height: 100%;\r\n  display: block;\r\n  background-color: #e0dfe2;\r\n  border-radius: 13.75px; /* 11px * 1.25 = 13.75px */\r\n  cursor: pointer;\r\n  transition: all 0.2s ease-out;\r\n}\r\n\r\n.slider-slider {\r\n  width: 22.5px; /* 18px * 1.25 = 22.5px */\r\n  height: 22.5px;\r\n  position: absolute;\r\n  left: calc(50% - 22.5px / 2 - 8.75px); /* Adjusted for new size */\r\n  top: calc(50% - 22.5px / 2);\r\n  border-radius: 50%;\r\n  background: white;\r\n  box-shadow: 0px 2.5px 6.25px rgba(0, 0, 0, 0.15),\r\n    0px 2.5px 1.25px rgba(0, 0, 0, 0.06); /* Increased shadow */\r\n  transition: all 0.2s ease-out;\r\n  cursor: pointer;\r\n}\r\n\r\n.slider-checkbox:checked + .slider-switch {\r\n  background-color: #34c759;\r\n}\r\n\r\n.slider-checkbox:checked + .slider-switch .slider-slider {\r\n  left: calc(50% - 22.5px / 2 + 8.75px); /* Adjusted for new size */\r\n  top: calc(50% - 22.5px / 2);\r\n}\r\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/components/onOffSlider.css"],"names":[],"mappings":"AAAA,kBAAkB;AAClB;EACE,aAAa,EAAE,yBAAyB;EACxC,eAAe,EAAE,0BAA0B;EAC3C,kBAAkB;AACpB;;AAEA;EACE,UAAU;EACV,QAAQ;EACR,SAAS;EACT,kBAAkB;AACpB;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,cAAc;EACd,yBAAyB;EACzB,sBAAsB,EAAE,0BAA0B;EAClD,eAAe;EACf,6BAA6B;AAC/B;;AAEA;EACE,aAAa,EAAE,yBAAyB;EACxC,cAAc;EACd,kBAAkB;EAClB,qCAAqC,EAAE,0BAA0B;EACjE,2BAA2B;EAC3B,kBAAkB;EAClB,iBAAiB;EACjB;wCACsC,EAAE,qBAAqB;EAC7D,6BAA6B;EAC7B,eAAe;AACjB;;AAEA;EACE,yBAAyB;AAC3B;;AAEA;EACE,qCAAqC,EAAE,0BAA0B;EACjE,2BAA2B;AAC7B","sourcesContent":["/* On/Off Slider */\r\n.slider-container {\r\n  width: 42.5px; /* 34px * 1.25 = 42.5px */\r\n  height: 26.25px; /* 21px * 1.25 = 26.25px */\r\n  position: relative;\r\n}\r\n\r\n.slider-checkbox {\r\n  opacity: 0;\r\n  width: 0;\r\n  height: 0;\r\n  position: absolute;\r\n}\r\n\r\n.slider-switch {\r\n  width: 100%;\r\n  height: 100%;\r\n  display: block;\r\n  background-color: #e0dfe2;\r\n  border-radius: 13.75px; /* 11px * 1.25 = 13.75px */\r\n  cursor: pointer;\r\n  transition: all 0.4s ease-out;\r\n}\r\n\r\n.slider-slider {\r\n  width: 22.5px; /* 18px * 1.25 = 22.5px */\r\n  height: 22.5px;\r\n  position: absolute;\r\n  left: calc(50% - 22.5px / 2 - 8.75px); /* Adjusted for new size */\r\n  top: calc(50% - 22.5px / 2);\r\n  border-radius: 50%;\r\n  background: white;\r\n  box-shadow: 0px 2.5px 6.25px rgba(0, 0, 0, 0.15),\r\n    0px 2.5px 1.25px rgba(0, 0, 0, 0.06); /* Increased shadow */\r\n  transition: all 0.4s ease-out;\r\n  cursor: pointer;\r\n}\r\n\r\n.slider-checkbox:checked + .slider-switch {\r\n  background-color: #34c759;\r\n}\r\n\r\n.slider-checkbox:checked + .slider-switch .slider-slider {\r\n  left: calc(50% - 22.5px / 2 + 8.75px); /* Adjusted for new size */\r\n  top: calc(50% - 22.5px / 2);\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -414,19 +414,113 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _onOffSlider_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./onOffSlider.css */ "./src/components/onOffSlider.css");
 
 
-function OnOffSlider({ id, onChange, keyName }) {
+function OnOffSlider({ id, googleStorageKey }) {
     const [isChecked, setIsChecked] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+    const [isLoaded, setIsLoaded] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+        chrome.storage.sync.get([googleStorageKey], (result) => {
+            setIsChecked(result[googleStorageKey] || false);
+            setIsLoaded(true);
+        });
+    }, [googleStorageKey]);
     const handleChange = () => {
         const newValue = !isChecked;
+        chrome.storage.sync.set({ [googleStorageKey]: newValue });
         setIsChecked(newValue);
-        onChange(newValue);
     };
+    if (!isLoaded) {
+        return null; // or a loading indicator
+    }
     return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "slider-container" },
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", { type: "checkbox", id: id, className: "slider-checkbox", checked: isChecked, onChange: handleChange }),
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", { className: "slider-switch", htmlFor: id },
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "slider-slider" }))));
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OnOffSlider);
+
+
+/***/ }),
+
+/***/ "./src/options/optionsHelper.ts":
+/*!**************************************!*\
+  !*** ./src/options/optionsHelper.ts ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   allSettings: () => (/* binding */ allSettings),
+/* harmony export */   getEntireSyncStorage: () => (/* binding */ getEntireSyncStorage),
+/* harmony export */   getStorageItem: () => (/* binding */ getStorageItem),
+/* harmony export */   initializeOptionsState: () => (/* binding */ initializeOptionsState),
+/* harmony export */   updateOption: () => (/* binding */ updateOption)
+/* harmony export */ });
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+// Define our settings
+const allSettings = [
+    {
+        settingName: "Extension on",
+        googleStorageKey: "ExtensionOnOff",
+    },
+    {
+        settingName: "Show a clean block page instead of funny images",
+        googleStorageKey: "testKey2",
+    },
+];
+function updateOption(googleStorageKey, newValue) {
+    return new Promise((resolve, reject) => {
+        chrome.storage.sync.set({ [googleStorageKey]: newValue }, () => {
+            if (chrome.runtime.lastError) {
+                console.error(`Error setting ${googleStorageKey}:`, chrome.runtime.lastError);
+                reject(chrome.runtime.lastError);
+            }
+            else {
+                resolve();
+            }
+        });
+    });
+}
+function getStorageItem(key) {
+    return new Promise((resolve) => {
+        chrome.storage.sync.get([key], (result) => {
+            console.log(`Value for ${key}:`, result[key]);
+            resolve(result[key]);
+        });
+    });
+}
+function initializeOptionsState() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const state = {};
+        for (const setting of allSettings) {
+            const value = yield getStorageItem(setting.googleStorageKey);
+            state[setting.googleStorageKey] = value !== null && value !== void 0 ? value : false;
+        }
+        console.log("Initialized options state:", state);
+        return state;
+    });
+}
+function getEntireSyncStorage() {
+    return new Promise((resolve, reject) => {
+        chrome.storage.sync.get(null, (items) => {
+            if (chrome.runtime.lastError) {
+                console.error("Error fetching sync storage:", chrome.runtime.lastError);
+                reject(chrome.runtime.lastError);
+            }
+            else {
+                console.log("Entire sync storage:", items);
+                resolve(items);
+            }
+        });
+    });
+}
 
 
 /***/ }),
@@ -446,13 +540,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 /* harmony import */ var _popup_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./popup.css */ "./src/popup/popup.css");
 /* harmony import */ var _components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/onOffSlider */ "./src/components/onOffSlider.tsx");
+/* harmony import */ var _options_optionsHelper__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../options/optionsHelper */ "./src/options/optionsHelper.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
 
 
 
 
 const OnOffSetting = {
     settingName: "Extension on",
-    googleStorageKey: "ExtensionOnOFf",
+    googleStorageKey: "ExtensionOnOff",
 };
 const Brands = [
     {
@@ -501,21 +606,28 @@ const Brands = [
         url: "reddit.com",
     },
 ];
-// Function to handle slider change
-const handleSliderChange = (googleStorageKey, value) => {
-    console.log("here");
-    chrome.storage.sync.set({ [googleStorageKey]: value }, () => {
-        console.log(`Setting ${googleStorageKey} is set to ${value}`);
-    });
-};
 const App = ({ blockedWebsites }) => {
+    const [initialValue, setInitialValue] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+    // Function to handle slider change
+    function handleSliderChange(googleStorageKey, value) {
+        return __awaiter(this, void 0, void 0, function* () {
+            yield (0,_options_optionsHelper__WEBPACK_IMPORTED_MODULE_4__.updateOption)(googleStorageKey, value);
+        });
+    }
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+        const fetchInitialValue = () => __awaiter(void 0, void 0, void 0, function* () {
+            const value = yield (0,_options_optionsHelper__WEBPACK_IMPORTED_MODULE_4__.getStorageItem)(OnOffSetting.googleStorageKey);
+            setInitialValue(value !== null && value !== void 0 ? value : false);
+        });
+        fetchInitialValue();
+    }, []); // Empty dependency array ensures this runs only once on mount
     return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "popup-container" },
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "entire-top-bar" },
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "left-top-bar", className: "top-bar-section" },
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", { className: "top-bar-icon", src: "broom.png", alt: "Broom icon" }),
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", { className: "header-text" }, "Search Sanitzer")),
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "right-top-bar", className: "top-bar-section" },
-                react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__["default"], { id: "OnOff", onChange: (value) => handleSliderChange(OnOffSetting.settingName, value), keyName: OnOffSetting.settingName }),
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__["default"], { id: "OnOff", googleStorageKey: "ExtensionOnOff" }),
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "settings-icon", className: "button-hover-effect" },
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", { src: "setting.png", alt: "Settings icon" })))),
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "middle-section", className: "scrollable-section" },

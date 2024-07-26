@@ -3,6 +3,11 @@ import { createRoot } from "react-dom/client"
 import "./options.css"
 import OnOffSlider from "../components/onOffSlider"
 import { UserSettings } from "../types"
+import {
+  updateOption,
+  getStorageItem,
+  getEntireSyncStorage,
+} from "./optionsHelper"
 
 interface SettingsProps {
   settings: UserSettings[]
@@ -26,18 +31,10 @@ const App: React.FC<{}> = () => {
     ],
   }
 
-  function getValue() {
-    chrome.storage.sync.get(["name"], (res) => {
-      const name = res.name ?? "???"
-    })
-  }
-
-  // Function to handle slider change
-  const handleSliderChange = (googleStorageKey: string, value: boolean) => {
-    console.log("here")
-    chrome.storage.sync.set({ [googleStorageKey]: value }, () => {
-      console.log(`Setting ${googleStorageKey} is set to ${value}`)
-    })
+  async function getValue(googleStorageKey: string) {
+    console.log(googleStorageKey)
+    const boolOption = await getStorageItem<boolean>(googleStorageKey)
+    console.log(boolOption)
   }
 
   const renderMiddleSection = () => {
@@ -52,12 +49,10 @@ const App: React.FC<{}> = () => {
                 <div className="slider">
                   <OnOffSlider
                     id={index.toString()}
-                    onChange={(value) =>
-                      handleSliderChange(setting.settingName, value)
-                    }
-                    keyName={setting.settingName}
+                    googleStorageKey={setting.googleStorageKey}
                   />
                 </div>
+                <button onClick={() => getValue("ExtensionOnOFf")}></button>
               </div>
             ))}
           </>

@@ -122,22 +122,37 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_topPage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/topPage */ "./src/components/topPage.ts");
 
 const sitesToFilter = ["reddit", "wikipedia"];
+let count = 0;
 function filterGoogleSearch() {
     if (document.documentElement.dataset.addScript) {
         return;
     }
     document.documentElement.dataset.addScript = "true";
-    const observer = new MutationObserver((mutations) => {
+    const processedResults = new Set();
+    new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
-            mutation.addedNodes.forEach((element) => {
-                if (element === document.head) {
-                    addDocumentHead(element);
+            if (mutation.type !== "childList") {
+                return;
+            }
+            mutation.addedNodes.forEach((node) => {
+                if (node.nodeType !== Node.ELEMENT_NODE) {
+                    return;
                 }
-                const searchResults = document.querySelectorAll("#search .g");
+                if (node === document.head && !headAdded) {
+                    addDocumentHead();
+                }
+                const searchResults = document.querySelectorAll("#search .g:not([data-processed])");
                 searchResults.forEach((result) => {
+                    if (processedResults.has(result)) {
+                        return;
+                    }
+                    processedResults.add(result);
+                    result.setAttribute("data-processed", "true");
                     const links = result.querySelectorAll("a");
                     const cites = result.querySelectorAll("cite");
                     const shouldHide = shouldFilterResult(links, cites);
+                    console.log(count);
+                    count = count + 1;
                     if (shouldHide) {
                         addCardShow(result);
                     }
@@ -145,26 +160,19 @@ function filterGoogleSearch() {
                 filterMoreToAskSection();
             });
         });
-    });
-    //TODO add if searchResultsDiv is nothing
-    observer.observe(document.documentElement, { childList: true, subtree: true });
+    }).observe(document.documentElement, { childList: true, subtree: true });
 }
 let headAdded = false;
-function addDocumentHead(element) {
-    if (headAdded) {
-        return;
-    }
+function addDocumentHead() {
     const style = document.createElement("style");
+    style.id = "Site Blocker Custom Styles";
     style.textContent = `
-    /* Existing styles */
+    /* Display Styles */
     [card-show="true"] { display: block !important; }
     [card-show="false"] { display: none !important; }
-    
-    /* You might want to add specific display types for different elements */
-    span[card-show="true"], a[card-show="true"] { display: inline !important; }
-    div[card-show="true"] { display: block !important; }
-    
-    /* Add more styles as needed */
+
+    /* Card Color Styles */
+    [card-relevant="true"] {opacity: 0.7 !important}
   `;
     document.head.appendChild(style);
     headAdded = true;
@@ -225,6 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 function addCardShow(element) {
     element.setAttribute("card-show", (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.getResultsHidden)().toString());
+    element.setAttribute("card-relevant", "true");
 }
 
 /******/ })()
