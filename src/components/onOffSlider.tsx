@@ -11,20 +11,42 @@ function OnOffSlider({ id, googleStorageKey }: OnOffSliderProps) {
   const [isLoaded, setIsLoaded] = useState(false)
 
   useEffect(() => {
+    // get the inital state of the slider
     chrome.storage.sync.get([googleStorageKey], (result) => {
       setIsChecked(result[googleStorageKey] || false)
       setIsLoaded(true)
     })
+
+    // Listen for changes from other contexts
+    const listener = (changes: {
+      [key: string]: chrome.storage.StorageChange
+    }) => {
+      if (changes[googleStorageKey]) {
+        setIsChecked(changes[googleStorageKey].newValue)
+      }
+    }
+    chrome.storage.onChanged.addListener(listener)
+
+    return () => {
+      chrome.storage.onChanged.removeListener(listener)
+    }
   }, [googleStorageKey])
 
   const handleChange = () => {
     const newValue = !isChecked
     chrome.storage.sync.set({ [googleStorageKey]: newValue })
     setIsChecked(newValue)
+
+    // Notify other contexts about the change (for if 2 sliders are open in different contexts (e.g on/off slider in both options and popup))
+    chrome.runtime.sendMessage({
+      type: "SLIDER_CHANGED",
+      key: googleStorageKey,
+      value: newValue,
+    })
   }
 
   if (!isLoaded) {
-    return null // or a loading indicator
+    return null
   }
 
   return (

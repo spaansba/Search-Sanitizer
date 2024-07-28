@@ -1,8 +1,14 @@
-import { addTopOfPage, getResultsHidden } from "../components/topPage"
-const sitesToFilter = ["reddit", "wikipedia"]
-let count = 0
+import {
+  addTopOfPage,
+  getResultsHidden,
+  updateBlockedCount,
+} from "../components/topPage"
+const sitesToFilter = new Set(["reddit", "wikipedia"])
+let BlockedCount: number = 0
+
 function filterGoogleSearch() {
   if (document.documentElement.dataset.addScript) {
+    console.error("script already added")
     return
   }
   document.documentElement.dataset.addScript = "true"
@@ -18,9 +24,6 @@ function filterGoogleSearch() {
         if (node.nodeType !== Node.ELEMENT_NODE) {
           return
         }
-        if (node === document.head && !headAdded) {
-          addDocumentHead()
-        }
         const searchResults = document.querySelectorAll(
           "#search .g:not([data-processed])"
         )
@@ -35,8 +38,6 @@ function filterGoogleSearch() {
           const cites = result.querySelectorAll("cite")
 
           const shouldHide = shouldFilterResult(links, cites)
-          console.log(count)
-          count = count + 1
 
           if (shouldHide) {
             addCardShow(result as HTMLElement)
@@ -47,22 +48,6 @@ function filterGoogleSearch() {
       })
     })
   }).observe(document.documentElement, { childList: true, subtree: true })
-}
-
-let headAdded: boolean = false
-function addDocumentHead(): void {
-  const style = document.createElement("style")
-  style.id = "Site Blocker Custom Styles"
-  style.textContent = `
-    /* Display Styles */
-    [card-show="true"] { display: block !important; }
-    [card-show="false"] { display: none !important; }
-
-    /* Card Color Styles */
-    [card-relevant="true"] {opacity: 0.7 !important}
-  `
-  document.head.appendChild(style)
-  headAdded = true
 }
 
 function filterMoreToAskSection() {
@@ -91,7 +76,7 @@ function shouldFilterResult(
     }
   }
   for (const cite of cites) {
-    if (shouldFilterLink(cite.textContent)) {
+    if (cite.textContent && shouldFilterLink(cite.textContent)) {
       return true
     }
   }
@@ -100,36 +85,57 @@ function shouldFilterResult(
 
 function shouldFilterLink(url: string): boolean {
   if (!url) return false
-
   try {
-    const parsedUrl = new URL(url)
-    const hostname = parsedUrl.hostname
-
-    for (const site of sitesToFilter) {
-      if (hostname.includes(site)) {
-        // console.log(`Filtered: ${url} (matched: ${site})`)
-        return true
-      }
-    }
+    const { hostname } = new URL(url)
+    return Array.from(sitesToFilter).some((site) => hostname.includes(site))
   } catch (error) {
     console.log(`Invalid URL: ${url}`)
+    return false
   }
-  return false
 }
 
-// Check if the current URL starts with any of the keys in rules
-function Start() {
-  filterGoogleSearch()
-}
-
-Start()
+chrome.storage.sync.get(["ExtensionOnOff"], (result) => {
+  if (result.ExtensionOnOff) {
+    filterGoogleSearch()
+  }
+})
 
 //Since we run content script at document start (see manifest) we can only add new content on loaded dom
 document.addEventListener("DOMContentLoaded", () => {
-  addTopOfPage()
+  addDocumentHead()
+  chrome.storage.sync.get(["ExtensionOnOff"], (result) => {
+    addTopOfPage(result.ExtensionOnOff, BlockedCount)
+  })
 })
 
+function addDocumentHead(): void {
+  const style = document.createElement("style")
+  style.id = "Site Blocker Custom Styles"
+  style.textContent = `
+    /* Display Styles */
+    [card-show="true"] { display: block !important; }
+    [card-show="false"] { display: none !important; }
+
+    /* Card Color Styles */
+    [card-relevant="true"] {opacity: 0.7 !important}
+  `
+  document.head.appendChild(style)
+}
+
 function addCardShow(element: HTMLElement) {
-  element.setAttribute("card-show", getResultsHidden().toString())
-  element.setAttribute("card-relevant", "true")
+  if (isElementVisible(element)) {
+    BlockedCount = BlockedCount + 1
+    updateBlockedCount(BlockedCount)
+    element.setAttribute("card-show", getResultsHidden().toString())
+    element.setAttribute("card-relevant", "true")
+  }
+}
+
+// Otherwise we are processing way to many elements that are not even visible on the page
+function isElementVisible(element: HTMLElement): boolean {
+  return !!(
+    element.offsetWidth ||
+    element.offsetHeight ||
+    element.getClientRects().length
+  )
 }

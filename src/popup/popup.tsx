@@ -1,26 +1,14 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect } from "react"
 import { createRoot } from "react-dom/client"
 import "./popup.css"
 import OnOffSlider from "../components/onOffSlider"
-import { UserSettings } from "../types"
-import { getStorageItem, updateOption } from "../options/optionsHelper"
-
-interface BlockedWebsitesProps {
-  id: number
-  icon: string
-  url: string
-}
+import { BlockedSites } from "../types"
 
 interface AppProps {
-  blockedWebsites: BlockedWebsitesProps[]
+  blockedWebsites: BlockedSites[]
 }
 
-const OnOffSetting: UserSettings = {
-  settingName: "Extension on",
-  googleStorageKey: "ExtensionOnOff",
-}
-
-const Brands: BlockedWebsitesProps[] = [
+const Brands: BlockedSites[] = [
   {
     id: 1,
     icon: "broom.png",
@@ -69,20 +57,32 @@ const Brands: BlockedWebsitesProps[] = [
 ]
 
 const App: React.FC<AppProps> = ({ blockedWebsites }) => {
-  const [initialValue, setInitialValue] = useState<boolean | null>(null)
-
-  // Function to handle slider change
-  async function handleSliderChange(googleStorageKey: string, value: boolean) {
-    await updateOption(googleStorageKey, value)
+  function openOptionsPage() {
+    if (chrome.runtime.openOptionsPage) {
+      chrome.runtime.openOptionsPage()
+    } else {
+      window.open(chrome.runtime.getURL("options.html"))
+    }
   }
 
   useEffect(() => {
-    const fetchInitialValue = async () => {
-      const value = await getStorageItem<boolean>(OnOffSetting.googleStorageKey)
-      setInitialValue(value ?? false)
+    const messageListener = (message: any) => {
+      if (message.type === "SLIDER_CHANGED") {
+        // Update the state in the current context
+        chrome.storage.sync.get([message.key], (result) => {
+          // You might need to update your local state here, depending on how you're managing it
+          console.log(`Slider ${message.key} changed to ${result[message.key]}`)
+        })
+      }
     }
-    fetchInitialValue()
-  }, []) // Empty dependency array ensures this runs only once on mount
+
+    chrome.runtime.onMessage.addListener(messageListener)
+
+    return () => {
+      chrome.runtime.onMessage.removeListener(messageListener)
+    }
+  }, [])
+
   return (
     <div id="popup-container">
       <div id="entire-top-bar">
@@ -92,7 +92,11 @@ const App: React.FC<AppProps> = ({ blockedWebsites }) => {
         </div>
         <div id="right-top-bar" className="top-bar-section">
           <OnOffSlider id="OnOff" googleStorageKey={"ExtensionOnOff"} />
-          <div id="settings-icon" className="button-hover-effect">
+          <div
+            onClick={openOptionsPage}
+            id="settings-icon"
+            className="button-hover-effect"
+          >
             <img src="setting.png" alt="Settings icon" />
           </div>
         </div>
@@ -155,13 +159,21 @@ function onManualAddSitesClick() {
 }
 
 function openAddSiteModal() {
-  const modal: HTMLDialogElement = document.querySelector("[data-modal]")
-  modal.showModal()
+  const modal = document.querySelector(
+    "[data-modal]"
+  ) as HTMLDialogElement | null
+  if (modal) {
+    modal.showModal()
+  }
 }
 
 function closeAddSiteModal() {
-  const modal: HTMLDialogElement = document.querySelector("[data-modal]")
-  modal.close()
+  const modal = document.querySelector(
+    "[data-modal]"
+  ) as HTMLDialogElement | null
+  if (modal) {
+    modal.close()
+  }
 }
 
 const container = document.createElement("div")

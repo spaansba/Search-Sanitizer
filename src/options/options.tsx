@@ -1,28 +1,32 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { createRoot } from "react-dom/client"
 import "./options.css"
 import OnOffSlider from "../components/onOffSlider"
 import { UserSettings } from "../types"
-import {
-  updateOption,
-  getStorageItem,
-  getEntireSyncStorage,
-} from "./optionsHelper"
+import CodeMirrorEditor from "../components/codeMirrorEditor"
 
 interface SettingsProps {
   settings: UserSettings[]
 }
 
-const App: React.FC<{}> = () => {
+interface urlDataProps {
+  url: string
+  reason: string
+  onImage: boolean
+  onVideo: boolean
+  onSearch: boolean
+}
+
+const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState<
     "settings" | "blockedSites"
-  >("settings")
+  >("blockedSites")
 
   const allSettings: SettingsProps = {
     settings: [
       {
         settingName: "Extension on",
-        googleStorageKey: "ExtensionOnOFf",
+        googleStorageKey: "ExtensionOnOff",
       },
       {
         settingName: "Show a clean block page instead of funny images",
@@ -31,18 +35,26 @@ const App: React.FC<{}> = () => {
     ],
   }
 
-  async function getValue(googleStorageKey: string) {
-    console.log(googleStorageKey)
-    const boolOption = await getStorageItem<boolean>(googleStorageKey)
-    console.log(boolOption)
-  }
+  useEffect(() => {
+    const messageListener = (message: any) => {
+      if (message.type === "SLIDER_CHANGED") {
+        chrome.storage.sync.get([message.key], (result) => {
+          console.log(`Slider ${message.key} changed to ${result[message.key]}`)
+        })
+      }
+    }
+    chrome.runtime.onMessage.addListener(messageListener)
+    return () => {
+      chrome.runtime.onMessage.removeListener(messageListener)
+    }
+  }, [])
 
   const renderMiddleSection = () => {
     switch (activeSection) {
       case "settings":
         return (
           <>
-            <h2>General Settings</h2>
+            <h2 className="top-h2">General Settings</h2>
             {allSettings.settings.map((setting, index) => (
               <div key={index} className="settings-item-container">
                 <p>{setting.settingName}</p>
@@ -52,7 +64,6 @@ const App: React.FC<{}> = () => {
                     googleStorageKey={setting.googleStorageKey}
                   />
                 </div>
-                <button onClick={() => getValue("ExtensionOnOFf")}></button>
               </div>
             ))}
           </>
@@ -61,10 +72,24 @@ const App: React.FC<{}> = () => {
         return (
           <>
             <h2>Blocked Sites</h2>
-            {/* Add your blocked sites content here */}
+            <CodeMirrorEditor></CodeMirrorEditor>
+            <button className="buttons" onClick={addNEw}></button>
           </>
         )
     }
+  }
+
+  function addNEw() {
+    const urlDataList: urlDataProps = {
+      url: "www.youtube.com",
+      reason: "example",
+      onImage: true,
+      onVideo: true,
+      onSearch: true,
+    }
+    chrome.storage.sync.set({ urlDataList: urlDataList }, function () {
+      console.log("URL data saved")
+    })
   }
 
   return (
@@ -74,7 +99,7 @@ const App: React.FC<{}> = () => {
           <img src="broom.png" alt="logo" />
           <div className="header-wrapper">
             <div
-              className={`container image-offset ${
+              className={`container image-offset button ${
                 activeSection === "settings" ? "active" : ""
               }`}
               onClick={() => setActiveSection("settings")}
@@ -82,7 +107,7 @@ const App: React.FC<{}> = () => {
               <div>Settings</div>
             </div>
             <div
-              className={`container image-offset ${
+              className={`container image-offset button ${
                 activeSection === "blockedSites" ? "active" : ""
               }`}
               onClick={() => setActiveSection("blockedSites")}

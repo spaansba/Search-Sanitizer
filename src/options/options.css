@@ -81,6 +81,10 @@ h2 {
   border-bottom: var(--border);
 }
 
+.button {
+  cursor: pointer;
+}
+
 p {
   font-size: 15px;
   color: var(--light-secondary-text);
@@ -92,4 +96,48 @@ p {
 
 .active {
   color: green;
+}
+
+.custom-textarea {
+  margin: 0;
+  flex-grow: 2;
+  flex-shrink: 0;
+  display: block;
+  white-space: pre;
+  word-wrap: normal;
+  box-sizing: border-box;
+  min-height: 100%;
+  padding: 4px 0;
+  outline: none;
+}
+
+.blocked-site-container {
+  background-color: #202124;
+  border: 1px solid rgb(95, 99, 104);
+  color: #e8e8d3;
+  height: 300px;
+  overflow: hidden;
+  resize: vertical;
+}
+
+.scroll-container {
+  display: flex !important;
+  align-items: flex-start !important;
+  font-family: monospace;
+  line-height: 1.4;
+  height: 100%;
+  overflow-x: auto;
+  position: relative;
+  z-index: 0;
+}
+
+.line-number-container {
+  width: 30px;
+  overflow: hidden;
+}
+
+.buttons {
+  background-color: aqua;
+  width: 30px;
+  height: 40px;
 }

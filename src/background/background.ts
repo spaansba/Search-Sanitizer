@@ -6,3 +6,10 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
     )
   }
 })
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "SLIDER_CHANGED") {
+    // Relay the message to all other contexts
+    chrome.runtime.sendMessage(message)
+  }
+})
