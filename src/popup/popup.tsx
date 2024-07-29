@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client"
 import "./popup.css"
 import OnOffSlider from "../components/onOffSlider"
 import { BlockedSites } from "../types"
-
+import DashboardCard from "../components/dashboard/dashboardCard"
 interface AppProps {
   blockedWebsites: BlockedSites[]
 }
@@ -132,20 +132,7 @@ const App: React.FC<AppProps> = ({ blockedWebsites }) => {
           </div>
         </dialog>
         {blockedWebsites.map((website) => (
-          <div
-            className="button-hover-effect blocked-card-outline blocked-card-inside"
-            key={website.id}
-          >
-            <img
-              className="blocked-site-img"
-              src={website.icon}
-              alt={`Logo for ${website.url}`}
-            />
-            <div className="blocked-site-text-container">
-              <span className="blocked-site-url">{website.url}</span>
-              <span className="blocked-site-under-text">Blocked 12k times</span>
-            </div>
-          </div>
+          <DashboardCard website={website}></DashboardCard>
         ))}
       </div>
 

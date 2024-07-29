@@ -47,7 +47,6 @@ function AddTopExtensionOn(appBar: Element, baseButton: HTMLButtonElement) {
   })
   container.appendChild(baseButton)
   appBar.appendChild(container)
-  getBlockedAmount()
   updateButtonText(baseButton)
 }
 
@@ -59,13 +58,6 @@ function updateButtonText(button: HTMLButtonElement) {
       resultsHidden ? "hide" : "show"
     }`
   }
-}
-
-function getBlockedAmount() {
-  const hiddenElements = Array.from(
-    document.querySelectorAll('[card-show="false"]')
-  )
-  console.log(hiddenElements.values)
 }
 
 function toggleHiddenResults() {

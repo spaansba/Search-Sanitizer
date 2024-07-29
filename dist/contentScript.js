@@ -2,10 +2,10 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/components/topPage.ts":
-/*!***********************************!*\
-  !*** ./src/components/topPage.ts ***!
-  \***********************************/
+/***/ "./src/contentScript/topPage.ts":
+/*!**************************************!*\
+  !*** ./src/contentScript/topPage.ts ***!
+  \**************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -59,7 +59,6 @@ function AddTopExtensionOn(appBar, baseButton) {
     });
     container.appendChild(baseButton);
     appBar.appendChild(container);
-    getBlockedAmount();
     updateButtonText(baseButton);
 }
 function updateButtonText(button) {
@@ -69,10 +68,6 @@ function updateButtonText(button) {
     else {
         button.textContent = `We blocked ${blockedCount} search results. Click to ${resultsHidden ? "hide" : "show"}`;
     }
-}
-function getBlockedAmount() {
-    const hiddenElements = Array.from(document.querySelectorAll('[card-show="false"]'));
-    console.log(hiddenElements.values);
 }
 function toggleHiddenResults() {
     const hiddenElements = document.querySelectorAll("[card-show]");
@@ -104,6 +99,81 @@ function updateBlockedCount(newCount) {
     if (button) {
         updateButtonText(button);
     }
+}
+
+
+/***/ }),
+
+/***/ "./src/contentScript/urlFilter.ts":
+/*!****************************************!*\
+  !*** ./src/contentScript/urlFilter.ts ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   createUrlFilter: () => (/* binding */ createUrlFilter)
+/* harmony export */ });
+function createUrlFilter(initialBlockedUrls) {
+    let blockedUrls = Object.assign({}, initialBlockedUrls);
+    let urlsBlocked = false;
+    function shouldFilterLink(url) {
+        try {
+            for (const pattern of Object.keys(blockedUrls)) {
+                if (matchesPattern(url, pattern)) {
+                    console.log(`Blocked URL: ${url} matched pattern: ${pattern}`);
+                    blockedUrls[pattern].s++;
+                    return true;
+                }
+            }
+            return false;
+        }
+        catch (error) {
+            console.error(`Error processing ${url}:`, error);
+            return false;
+        }
+    }
+    function matchesPattern(hostname, pattern) {
+        hostname = hostname.toLowerCase();
+        pattern = pattern.toLowerCase();
+        const escapedPattern = pattern
+            .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+            .replace(/\\\*/g, ".*");
+        const regex = new RegExp(`^${escapedPattern}$`);
+        return regex.test(hostname);
+    }
+    function shouldFilterResult(links, cites) {
+        for (const link of links) {
+            if (shouldFilterLink(link.href)) {
+                return true;
+            }
+        }
+        for (const cite of cites) {
+            if (cite.textContent && shouldFilterLink(cite.textContent)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    function getBlockedUrls() {
+        return blockedUrls;
+    }
+    function resetUrlsBlocked() {
+        urlsBlocked = false;
+    }
+    function wereUrlsBlocked() {
+        return urlsBlocked;
+    }
+    function setBlockedUrl() {
+        chrome.storage.sync.set({ blockedUrlData: blockedUrls });
+    }
+    return {
+        setBlockedUrl,
+        shouldFilterResult,
+        getBlockedUrls,
+        resetUrlsBlocked,
+        wereUrlsBlocked,
+    };
 }
 
 
@@ -170,94 +240,104 @@ var __webpack_exports__ = {};
   !*** ./src/contentScript/contentScript.ts ***!
   \********************************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_topPage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/topPage */ "./src/components/topPage.ts");
+/* harmony import */ var _topPage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./topPage */ "./src/contentScript/topPage.ts");
+/* harmony import */ var _urlFilter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./urlFilter */ "./src/contentScript/urlFilter.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 
-const sitesToFilter = new Set(["reddit", "wikipedia"]);
-let BlockedCount = 0;
-function filterGoogleSearch() {
+
+function filterGoogleSearch(blockedUrls) {
     if (document.documentElement.dataset.addScript) {
         console.error("script already added");
         return;
     }
     document.documentElement.dataset.addScript = "true";
     const processedResults = new Set();
-    new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (mutation.type !== "childList") {
+    const urlFilter = (0,_urlFilter__WEBPACK_IMPORTED_MODULE_1__.createUrlFilter)(blockedUrls);
+    const search = document.querySelector("#search");
+    if (!search) {
+        console.error("Cant find #search");
+        return;
+    }
+    new MutationObserver(() => {
+        filterNormalSearch();
+        setTimeout(filterRelatedQuestions, 1000);
+        urlFilter.setBlockedUrl();
+    }).observe(search, {
+        childList: true,
+        subtree: true,
+        attributes: false,
+        characterData: false,
+    });
+    function filterNormalSearch() {
+        //:not([data-initq] * excludes all the "MoreToAskSection" elements
+        const searchResults = search.querySelectorAll(".g:not([data-processed]):not([data-initq] *)");
+        if (!searchResults) {
+            return;
+        }
+        searchResults.forEach((result) => {
+            if (processedResults.has(result)) {
                 return;
             }
-            mutation.addedNodes.forEach((node) => {
-                if (node.nodeType !== Node.ELEMENT_NODE) {
-                    return;
-                }
-                const searchResults = document.querySelectorAll("#search .g:not([data-processed])");
-                searchResults.forEach((result) => {
-                    if (processedResults.has(result)) {
-                        return;
-                    }
-                    processedResults.add(result);
-                    result.setAttribute("data-processed", "true");
-                    const links = result.querySelectorAll("a");
-                    const cites = result.querySelectorAll("cite");
-                    const shouldHide = shouldFilterResult(links, cites);
-                    if (shouldHide) {
-                        addCardShow(result);
-                    }
-                });
-                filterMoreToAskSection();
-            });
-        });
-    }).observe(document.documentElement, { childList: true, subtree: true });
-}
-function filterMoreToAskSection() {
-    const moreToAskSection = document.querySelector("[data-initq]");
-    if (moreToAskSection) {
-        const accordionItems = moreToAskSection.querySelectorAll('[jsname="yEVEwb"]');
-        accordionItems.forEach((item) => {
-            const links = item.querySelectorAll("a");
-            const cites = item.querySelectorAll("cite");
-            const shouldHide = shouldFilterResult(links, cites);
-            if (shouldHide) {
-                addCardShow(item);
+            processedResults.add(result);
+            result.setAttribute("data-processed", "true");
+            const links = result.querySelectorAll("a");
+            const cites = result.querySelectorAll("cite");
+            if (urlFilter.shouldFilterResult(links, cites)) {
+                console.log("blocked in normal search");
+                addCardShow(result);
             }
         });
     }
-}
-function shouldFilterResult(links, cites) {
-    for (const link of links) {
-        if (shouldFilterLink(link.href)) {
-            return true;
+    function filterRelatedQuestions() {
+        const moreToAskSections = search.querySelectorAll("[data-initq]");
+        if (!moreToAskSections) {
+            return;
         }
+        moreToAskSections.forEach((askSection) => {
+            askSection.setAttribute("data-processed", "true");
+            const relatedQuestions = askSection.querySelectorAll(".related-question-pair:not([data-processed])");
+            relatedQuestions.forEach((relatedQuestion) => {
+                if (processedResults.has(relatedQuestion)) {
+                    return;
+                }
+                processedResults.add(relatedQuestion);
+                relatedQuestion.setAttribute("data-processed", "true");
+                const links = relatedQuestion.querySelectorAll("a");
+                const cites = relatedQuestion.querySelectorAll("cite");
+                if (urlFilter.shouldFilterResult(links, cites)) {
+                    console.log("blocked in more to ask");
+                    addCardShow(relatedQuestion);
+                }
+            });
+        });
     }
-    for (const cite of cites) {
-        if (cite.textContent && shouldFilterLink(cite.textContent)) {
-            return true;
+}
+function initializeExtension() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const isExtensionOn = yield chrome.storage.sync.get(["ExtensionOnOff"]);
+        if (isExtensionOn.ExtensionOnOff) {
+            const initialValues = yield chrome.storage.sync.get(["blockedUrlData"]);
+            if (initialValues.blockedUrlData) {
+                console.log(initialValues.blockedUrlData);
+                filterGoogleSearch(initialValues.blockedUrlData);
+            }
         }
-    }
-    return false;
+    });
 }
-function shouldFilterLink(url) {
-    if (!url)
-        return false;
-    try {
-        const { hostname } = new URL(url);
-        return Array.from(sitesToFilter).some((site) => hostname.includes(site));
-    }
-    catch (error) {
-        console.log(`Invalid URL: ${url}`);
-        return false;
-    }
-}
-chrome.storage.sync.get(["ExtensionOnOff"], (result) => {
-    if (result.ExtensionOnOff) {
-        filterGoogleSearch();
-    }
-});
+let BlockedCount = 0;
 //Since we run content script at document start (see manifest) we can only add new content on loaded dom
 document.addEventListener("DOMContentLoaded", () => {
     addDocumentHead();
     chrome.storage.sync.get(["ExtensionOnOff"], (result) => {
-        (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.addTopOfPage)(result.ExtensionOnOff, BlockedCount);
+        (0,_topPage__WEBPACK_IMPORTED_MODULE_0__.addTopOfPage)(result.ExtensionOnOff, BlockedCount);
     });
 });
 function addDocumentHead() {
@@ -276,8 +356,8 @@ function addDocumentHead() {
 function addCardShow(element) {
     if (isElementVisible(element)) {
         BlockedCount = BlockedCount + 1;
-        (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.updateBlockedCount)(BlockedCount);
-        element.setAttribute("card-show", (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.getResultsHidden)().toString());
+        (0,_topPage__WEBPACK_IMPORTED_MODULE_0__.updateBlockedCount)(BlockedCount);
+        element.setAttribute("card-show", (0,_topPage__WEBPACK_IMPORTED_MODULE_0__.getResultsHidden)().toString());
         element.setAttribute("card-relevant", "true");
     }
 }
@@ -287,6 +367,7 @@ function isElementVisible(element) {
         element.offsetHeight ||
         element.getClientRects().length);
 }
+initializeExtension();
 
 /******/ })()
 ;

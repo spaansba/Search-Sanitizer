@@ -8,3 +8,11 @@ export type BlockedSites = {
   icon: string
   url: string
 }
+
+export type BlockedUrlData = {
+  [url: string]: {
+    s: number
+    i: number
+    v: number
+  }
+}

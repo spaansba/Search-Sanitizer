@@ -17,22 +17,24 @@ import {
 import { javascript } from "@codemirror/lang-javascript"
 import { history, historyKeymap, standardKeymap } from "@codemirror/commands"
 import { urlLinter } from "./linter"
+import { BlockedUrlData } from "../../types"
 
 const CodeMirrorEditor: React.FC = () => {
   const editorViewRef = useRef<EditorView | null>(null)
   const [initialDoc, setInitialDoc] = useState<string>("")
+  const [blockedUrlData, setBlockedUrlData] = useState<BlockedUrlData>({})
 
-  // Get inital blockedUrls from storage
+  // Get initial blockedUrls from storage
   useEffect(() => {
-    chrome.storage.sync.get(["blockedUrls"], (result) => {
-      if (result.blockedUrls) {
-        console.log(result.blockedUrls)
-        setInitialDoc(result.blockedUrls.join("\n"))
+    chrome.storage.sync.get(["blockedUrlData"], (result) => {
+      if (result.blockedUrlData) {
+        setBlockedUrlData(result.blockedUrlData)
+        setInitialDoc(Object.keys(result.blockedUrlData).join("\n"))
       }
     })
   }, [])
 
-  // When initalDoc is loaded add values to the editor
+  // When initialDoc is loaded add values to the editor
   useLayoutEffect(() => {
     if (editorViewRef.current) {
       editorViewRef.current.dispatch({
@@ -46,20 +48,28 @@ const CodeMirrorEditor: React.FC = () => {
     }
   }, [initialDoc])
 
-  function addNew() {
-    chrome.storage.sync.set({ ["blockedUrls"]: ["youtube.com"] }, function () {
-      console.log("URL data saved")
-    })
-  }
-
   function onSave() {
     if (editorViewRef.current) {
-      const docValues = editorViewRef.current.state.doc.toString()
-      console.log(docValues)
+      const docValues = editorViewRef.current.state.doc.toString().split("\n")
+      const newBlockedUrlData: BlockedUrlData = {}
+
+      docValues.forEach((url) => {
+        url = url.trim()
+        if (url) {
+          newBlockedUrlData[url] = {
+            i: blockedUrlData[url]?.i || 0,
+            s: blockedUrlData[url]?.s || 0,
+            v: blockedUrlData[url]?.v || 0,
+          }
+        }
+      })
+
+      console.log(newBlockedUrlData)
       chrome.storage.sync.set(
-        { ["blockedUrls"]: docValues.split("\n") },
+        { blockedUrlData: newBlockedUrlData },
         function () {
           console.log("URL data saved")
+          setBlockedUrlData(newBlockedUrlData)
         }
       )
     }
@@ -117,13 +127,10 @@ const CodeMirrorEditor: React.FC = () => {
 
   return (
     <>
-      <button className="buttons" onClick={addNew}>
-        Add New
-      </button>
+      <div ref={editor} />
       <button className="buttons" onClick={onSave}>
         Save
       </button>
-      <div ref={editor} />
     </>
   )
 }

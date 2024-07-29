@@ -4,6 +4,7 @@ import "./options.css"
 import OnOffSlider from "../components/onOffSlider"
 import { UserSettings } from "../types"
 import CodeMirrorEditor from "../components/codeMirrorEditor/codeMirrorEditor"
+import OptionBlockedCards from "../components/dashboard/optionBlockedCards"
 
 interface SettingsProps {
   settings: UserSettings[]
@@ -66,6 +67,15 @@ const App: React.FC = () => {
         return (
           <>
             <h2>Blocked Sites</h2>
+            <OptionBlockedCards></OptionBlockedCards>
+            <ul className="no-bullets">
+              <li>
+                We use match patterns to filter sites blocked from appearing on
+                Google Search Results
+              </li>
+              <li>Example: *://*.youtube.com/*</li>
+              <li>Example: *://*.wikipedia./*</li>
+            </ul>
             <CodeMirrorEditor></CodeMirrorEditor>
           </>
         )
@@ -86,6 +96,7 @@ const App: React.FC = () => {
             >
               <div>Settings</div>
             </div>
+
             <div
               className={`container image-offset button ${
                 activeSection === "blockedSites" ? "active" : ""
