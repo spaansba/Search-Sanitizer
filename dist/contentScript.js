@@ -261,14 +261,15 @@ function filterGoogleSearch(blockedUrls) {
     document.documentElement.dataset.addScript = "true";
     const processedResults = new Set();
     const urlFilter = (0,_urlFilter__WEBPACK_IMPORTED_MODULE_1__.createUrlFilter)(blockedUrls);
-    const search = document.querySelector("#search");
+    const search = getSearchElement();
+    const ds = document.querySelector("#search");
     if (!search) {
         console.error("Cant find #search");
         return;
     }
     new MutationObserver(() => {
         filterNormalSearch();
-        setTimeout(filterRelatedQuestions, 1000);
+        setTimeout(filterRelatedQuestions, 500); //TODO fix need for 500 timeout
         urlFilter.setBlockedUrl();
     }).observe(search, {
         childList: true,
@@ -291,7 +292,6 @@ function filterGoogleSearch(blockedUrls) {
             const links = result.querySelectorAll("a");
             const cites = result.querySelectorAll("cite");
             if (urlFilter.shouldFilterResult(links, cites)) {
-                console.log("blocked in normal search");
                 addCardShow(result);
             }
         });
@@ -313,11 +313,23 @@ function filterGoogleSearch(blockedUrls) {
                 const links = relatedQuestion.querySelectorAll("a");
                 const cites = relatedQuestion.querySelectorAll("cite");
                 if (urlFilter.shouldFilterResult(links, cites)) {
-                    console.log("blocked in more to ask");
                     addCardShow(relatedQuestion);
                 }
             });
         });
+    }
+    function getSearchElement() {
+        const startTime = Date.now();
+        while (Date.now() - startTime < 10000) {
+            const search = document.querySelector("#search");
+            if (search) {
+                return search;
+            }
+            const waitTill = new Date(new Date().getTime() + 100);
+            while (waitTill > new Date()) { }
+        }
+        console.error("Timeout: Can't find #search after 10 seconds");
+        return null;
     }
 }
 function initializeExtension() {
@@ -326,7 +338,7 @@ function initializeExtension() {
         if (isExtensionOn.ExtensionOnOff) {
             const initialValues = yield chrome.storage.sync.get(["blockedUrlData"]);
             if (initialValues.blockedUrlData) {
-                console.log(initialValues.blockedUrlData);
+                addDocumentHead();
                 filterGoogleSearch(initialValues.blockedUrlData);
             }
         }
@@ -335,7 +347,6 @@ function initializeExtension() {
 let BlockedCount = 0;
 //Since we run content script at document start (see manifest) we can only add new content on loaded dom
 document.addEventListener("DOMContentLoaded", () => {
-    addDocumentHead();
     chrome.storage.sync.get(["ExtensionOnOff"], (result) => {
         (0,_topPage__WEBPACK_IMPORTED_MODULE_0__.addTopOfPage)(result.ExtensionOnOff, BlockedCount);
     });

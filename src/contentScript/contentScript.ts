@@ -11,7 +11,9 @@ function filterGoogleSearch(blockedUrls: BlockedUrlData) {
 
   const processedResults = new Set()
   const urlFilter = createUrlFilter(blockedUrls)
-  const search = document.querySelector("#search")
+  const search: Element = getSearchElement()
+
+  const ds = document.querySelector("#search")
   if (!search) {
     console.error("Cant find #search")
     return
@@ -19,7 +21,7 @@ function filterGoogleSearch(blockedUrls: BlockedUrlData) {
 
   new MutationObserver(() => {
     filterNormalSearch()
-    setTimeout(filterRelatedQuestions, 1000)
+    setTimeout(filterRelatedQuestions, 500) //TODO fix need for 500 timeout
     urlFilter.setBlockedUrl()
   }).observe(search, {
     childList: true,
@@ -47,7 +49,6 @@ function filterGoogleSearch(blockedUrls: BlockedUrlData) {
       const cites = result.querySelectorAll("cite")
 
       if (urlFilter.shouldFilterResult(links, cites)) {
-        console.log("blocked in normal search")
         addCardShow(result as HTMLElement)
       }
     })
@@ -72,11 +73,26 @@ function filterGoogleSearch(blockedUrls: BlockedUrlData) {
         const links = relatedQuestion.querySelectorAll("a")
         const cites = relatedQuestion.querySelectorAll("cite")
         if (urlFilter.shouldFilterResult(links, cites)) {
-          console.log("blocked in more to ask")
           addCardShow(relatedQuestion as HTMLElement)
         }
       })
     })
+  }
+
+  function getSearchElement(): Element | null {
+    const startTime = Date.now()
+
+    while (Date.now() - startTime < 10000) {
+      const search = document.querySelector("#search")
+      if (search) {
+        return search
+      }
+      const waitTill = new Date(new Date().getTime() + 100)
+      while (waitTill > new Date()) {}
+    }
+
+    console.error("Timeout: Can't find #search after 10 seconds")
+    return null
   }
 }
 
@@ -85,7 +101,7 @@ async function initializeExtension() {
   if (isExtensionOn.ExtensionOnOff) {
     const initialValues = await chrome.storage.sync.get(["blockedUrlData"])
     if (initialValues.blockedUrlData) {
-      console.log(initialValues.blockedUrlData)
+      addDocumentHead()
       filterGoogleSearch(initialValues.blockedUrlData)
     }
   }
@@ -95,7 +111,6 @@ let BlockedCount: number = 0
 
 //Since we run content script at document start (see manifest) we can only add new content on loaded dom
 document.addEventListener("DOMContentLoaded", () => {
-  addDocumentHead()
   chrome.storage.sync.get(["ExtensionOnOff"], (result) => {
     addTopOfPage(result.ExtensionOnOff, BlockedCount)
   })
