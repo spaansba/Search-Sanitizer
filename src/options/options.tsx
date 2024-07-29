@@ -3,18 +3,10 @@ import { createRoot } from "react-dom/client"
 import "./options.css"
 import OnOffSlider from "../components/onOffSlider"
 import { UserSettings } from "../types"
-import CodeMirrorEditor from "../components/codeMirrorEditor"
+import CodeMirrorEditor from "../components/codeMirrorEditor/codeMirrorEditor"
 
 interface SettingsProps {
   settings: UserSettings[]
-}
-
-interface urlDataProps {
-  url: string
-  reason: string
-  onImage: boolean
-  onVideo: boolean
-  onSearch: boolean
 }
 
 const App: React.FC = () => {
@@ -35,6 +27,8 @@ const App: React.FC = () => {
     ],
   }
 
+  // UseEffect to subscribe to slider being changed in different part of our app.
+  // Aka. if the slider changes in the popup-page while the option page is open also change the slider on the option page
   useEffect(() => {
     const messageListener = (message: any) => {
       if (message.type === "SLIDER_CHANGED") {
@@ -73,23 +67,9 @@ const App: React.FC = () => {
           <>
             <h2>Blocked Sites</h2>
             <CodeMirrorEditor></CodeMirrorEditor>
-            <button className="buttons" onClick={addNEw}></button>
           </>
         )
     }
-  }
-
-  function addNEw() {
-    const urlDataList: urlDataProps = {
-      url: "www.youtube.com",
-      reason: "example",
-      onImage: true,
-      onVideo: true,
-      onSearch: true,
-    }
-    chrome.storage.sync.set({ urlDataList: urlDataList }, function () {
-      console.log("URL data saved")
-    })
   }
 
   return (

@@ -347,10 +347,10 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ "./src/components/codeMirrorEditor.tsx":
-/*!*********************************************!*\
-  !*** ./src/components/codeMirrorEditor.tsx ***!
-  \*********************************************/
+/***/ "./src/components/codeMirrorEditor/codeMirrorEditor.tsx":
+/*!**************************************************************!*\
+  !*** ./src/components/codeMirrorEditor/codeMirrorEditor.tsx ***!
+  \**************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -359,69 +359,240 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var codemirror__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! codemirror */ "./node_modules/codemirror/dist/index.js");
-/* harmony import */ var _codemirror_view__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @codemirror/view */ "./node_modules/@codemirror/view/dist/index.js");
-/* harmony import */ var _codemirror_state__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @codemirror/state */ "./node_modules/@codemirror/state/dist/index.js");
+/* harmony import */ var codemirror__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @codemirror/view */ "./node_modules/@codemirror/view/dist/index.js");
+/* harmony import */ var _codemirror_state__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @codemirror/state */ "./node_modules/@codemirror/state/dist/index.js");
+/* harmony import */ var _codemirror_lint__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @codemirror/lint */ "./node_modules/@codemirror/lint/dist/index.js");
+/* harmony import */ var _codemirror_lang_javascript__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @codemirror/lang-javascript */ "./node_modules/@codemirror/lang-javascript/dist/index.js");
+/* harmony import */ var _codemirror_commands__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @codemirror/commands */ "./node_modules/@codemirror/commands/dist/index.js");
+/* harmony import */ var _linter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./linter */ "./src/components/codeMirrorEditor/linter.ts");
+
+
+
+
 
 
 
 
 const CodeMirrorEditor = () => {
-    const editorRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-    const [initialDoc, setInitialDoc] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("// Your code here");
+    const editorViewRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
+    const [initialDoc, setInitialDoc] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
+    // Get inital blockedUrls from storage
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
         chrome.storage.sync.get(["blockedUrls"], (result) => {
             if (result.blockedUrls) {
                 console.log(result.blockedUrls);
-                setInitialDoc(result.blockedUrls.join(","));
+                setInitialDoc(result.blockedUrls.join("\n"));
             }
         });
     }, []);
+    // When initalDoc is loaded add values to the editor
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useLayoutEffect)(() => {
-        if (!editorRef.current)
-            return;
-        const state = _codemirror_state__WEBPACK_IMPORTED_MODULE_1__.EditorState.create({
-            doc: initialDoc,
-            extensions: [
-                codemirror__WEBPACK_IMPORTED_MODULE_2__.basicSetup,
-                (0,_codemirror_view__WEBPACK_IMPORTED_MODULE_3__.lineNumbers)(),
-                _codemirror_view__WEBPACK_IMPORTED_MODULE_3__.EditorView.theme({
-                    "&": {
-                        height: "300px",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                    },
-                    ".cm-scroller": {
-                        fontFamily: "monospace",
-                    },
-                    ".cm-content": {
-                        caretColor: "blue",
-                    },
-                    ".cm-line": {
-                        padding: "0 4px",
-                    },
-                    ".cm-activeLineGutter": {
-                        backgroundColor: "#e8f2ff",
-                    },
-                    ".cm-gutters": {
-                        backgroundColor: "#f5f5f5",
-                        color: "#333",
-                        border: "none",
-                    },
-                }),
-            ],
-        });
-        const view = new _codemirror_view__WEBPACK_IMPORTED_MODULE_3__.EditorView({
-            state,
-            parent: editorRef.current,
-        });
-        return () => {
-            view.destroy();
-        };
+        if (editorViewRef.current) {
+            editorViewRef.current.dispatch({
+                changes: {
+                    from: 0,
+                    to: editorViewRef.current.state.doc.length,
+                    insert: initialDoc,
+                },
+            });
+            editorViewRef.current.focus();
+        }
     }, [initialDoc]);
-    return react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { ref: editorRef });
+    function addNew() {
+        chrome.storage.sync.set({ ["blockedUrls"]: ["youtube.com"] }, function () {
+            console.log("URL data saved");
+        });
+    }
+    function onSave() {
+        if (editorViewRef.current) {
+            const docValues = editorViewRef.current.state.doc.toString();
+            console.log(docValues);
+            chrome.storage.sync.set({ ["blockedUrls"]: docValues.split("\n") }, function () {
+                console.log("URL data saved");
+            });
+        }
+    }
+    const editor = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((parent) => {
+        var _a;
+        if (parent) {
+            editorViewRef.current = new codemirror__WEBPACK_IMPORTED_MODULE_2__.EditorView({
+                parent,
+                state: _codemirror_state__WEBPACK_IMPORTED_MODULE_3__.EditorState.create({
+                    doc: initialDoc,
+                    extensions: [
+                        _linter__WEBPACK_IMPORTED_MODULE_1__.urlLinter,
+                        codemirror__WEBPACK_IMPORTED_MODULE_2__.keymap.of([..._codemirror_commands__WEBPACK_IMPORTED_MODULE_4__.historyKeymap, ..._codemirror_commands__WEBPACK_IMPORTED_MODULE_4__.standardKeymap]),
+                        (0,_codemirror_commands__WEBPACK_IMPORTED_MODULE_4__.history)(),
+                        (0,codemirror__WEBPACK_IMPORTED_MODULE_2__.dropCursor)(),
+                        (0,_codemirror_lang_javascript__WEBPACK_IMPORTED_MODULE_5__.javascript)(),
+                        (0,_codemirror_lint__WEBPACK_IMPORTED_MODULE_6__.lintGutter)(),
+                        (0,codemirror__WEBPACK_IMPORTED_MODULE_2__.lineNumbers)(),
+                        (0,codemirror__WEBPACK_IMPORTED_MODULE_2__.highlightActiveLineGutter)(),
+                        codemirror__WEBPACK_IMPORTED_MODULE_2__.EditorView.theme({
+                            "&": {
+                                height: "300px",
+                                border: "1px solid #ccc",
+                                borderRadius: "4px",
+                            },
+                            ".cm-scroller": {
+                                fontFamily: "monospace",
+                                fontSize: "14px",
+                            },
+                            ".cm-content": {
+                                caretColor: "blue",
+                            },
+                            ".cm-line": {
+                                padding: "0 4px",
+                            },
+                            ".cm-activeLineGutter": {
+                                backgroundColor: "#e8f2ff",
+                                color: "green",
+                            },
+                            ".cm-gutters": {
+                                backgroundColor: "#f5f5f5",
+                                color: "#333",
+                                border: "none",
+                            },
+                        }),
+                    ],
+                }),
+            });
+        }
+        else {
+            (_a = editorViewRef.current) === null || _a === void 0 ? void 0 : _a.destroy();
+            console.log("editor destroyed");
+        }
+    }, []);
+    return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null,
+        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { className: "buttons", onClick: addNew }, "Add New"),
+        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { className: "buttons", onClick: onSave }, "Save"),
+        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { ref: editor })));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CodeMirrorEditor);
+
+
+/***/ }),
+
+/***/ "./src/components/codeMirrorEditor/linter.ts":
+/*!***************************************************!*\
+  !*** ./src/components/codeMirrorEditor/linter.ts ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   urlLinter: () => (/* binding */ urlLinter)
+/* harmony export */ });
+/* harmony import */ var _codemirror_lint__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @codemirror/lint */ "./node_modules/@codemirror/lint/dist/index.js");
+
+const MAX_LINES = 200; // Maximum number of lines allowed
+const MAX_CHARS_PER_LINE = 100; // Maximum number of characters allowed per line
+const urlLinter = (0,_codemirror_lint__WEBPACK_IMPORTED_MODULE_0__.linter)((view) => {
+    let diagnostics = [];
+    let doc = view.state.doc;
+    // Check if total lines exceed MAX_LINES
+    if (doc.lines > MAX_LINES) {
+        diagnostics.push({
+            from: 0,
+            to: doc.length,
+            severity: "error",
+            message: `Too many lines. Maximum allowed: ${MAX_LINES}`,
+        });
+    }
+    for (let i = 1; i <= doc.lines; i++) {
+        let line = doc.line(i);
+        let lineText = line.text.trim();
+        // Check if line exceeds MAX_CHARS_PER_LINE
+        if (lineText.length > MAX_CHARS_PER_LINE) {
+            diagnostics.push({
+                from: line.from,
+                to: line.to,
+                severity: "error",
+                message: `Line ${i} exceeds maximum length of ${MAX_CHARS_PER_LINE} characters`,
+                actions: [
+                    {
+                        name: "Truncate line",
+                        apply(view, from, to) {
+                            view.dispatch({
+                                changes: {
+                                    from,
+                                    to,
+                                    insert: lineText.slice(0, MAX_CHARS_PER_LINE),
+                                },
+                            });
+                        },
+                    },
+                ],
+            });
+        }
+        if (lineText) {
+            if (!isValidMatchPattern(lineText)) {
+                let fixedPattern = attemptToFixMatchPattern(lineText);
+                diagnostics.push({
+                    from: line.from,
+                    to: line.to,
+                    severity: "error",
+                    message: "Invalid match pattern",
+                    actions: [
+                        {
+                            name: "Fix match pattern",
+                            apply(view, from, to) {
+                                view.dispatch({
+                                    changes: { from, to, insert: fixedPattern },
+                                });
+                            },
+                        },
+                        {
+                            name: "Remove line",
+                            apply(view, from, to) {
+                                const lineStart = view.state.doc.lineAt(from).from;
+                                const lineEnd = view.state.doc.lineAt(to).to;
+                                view.dispatch({ changes: { from: lineStart, to: lineEnd } });
+                            },
+                        },
+                    ],
+                });
+            }
+        }
+    }
+    return diagnostics;
+}, {
+    delay: 1000,
+});
+function isValidMatchPattern(input) {
+    const matchPatternRegex = /^(?:(?:\*|https?|ftp):\/\/(?:\*|(?:\*\.)?[^/*]+)(?:\/.*)?|\*:\/\/.*)$/;
+    if (!matchPatternRegex.test(input)) {
+        return false;
+    }
+    if (input.includes("://") && !input.startsWith("*://")) {
+        const [scheme, rest] = input.split("://");
+        if (!["http", "https", "ftp"].includes(scheme)) {
+            return false;
+        }
+    }
+    return true;
+}
+function attemptToFixMatchPattern(input) {
+    input = input.trim();
+    // If it's a URL, convert it to a match pattern
+    if (/^https?:\/\//.test(input)) {
+        return input.replace(/^(https?):\/\//, "*://*.");
+    }
+    // If it doesn't start with a scheme, add *://
+    if (!/^(\*|https?|ftp):\/\//.test(input)) {
+        input = "*://*." + input;
+    }
+    // If there's no path, add /*
+    if (!/\//.test(input)) {
+        input += "/*";
+    }
+    else if (!input.endsWith("*")) {
+        input += "*";
+    }
+    // Replace multiple consecutive * with a single *
+    input = input.replace(/\*+/g, "*");
+    return input;
+}
 
 
 /***/ }),
@@ -497,7 +668,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 /* harmony import */ var _options_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./options.css */ "./src/options/options.css");
 /* harmony import */ var _components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/onOffSlider */ "./src/components/onOffSlider.tsx");
-/* harmony import */ var _components_codeMirrorEditor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/codeMirrorEditor */ "./src/components/codeMirrorEditor.tsx");
+/* harmony import */ var _components_codeMirrorEditor_codeMirrorEditor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/codeMirrorEditor/codeMirrorEditor */ "./src/components/codeMirrorEditor/codeMirrorEditor.tsx");
 
 
 
@@ -517,6 +688,8 @@ const App = () => {
             },
         ],
     };
+    // UseEffect to subscribe to slider being changed in different part of our app.
+    // Aka. if the slider changes in the popup-page while the option page is open also change the slider on the option page
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
         const messageListener = (message) => {
             if (message.type === "SLIDER_CHANGED") {
@@ -542,22 +715,9 @@ const App = () => {
             case "blockedSites":
                 return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null,
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", null, "Blocked Sites"),
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_codeMirrorEditor__WEBPACK_IMPORTED_MODULE_4__["default"], null),
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { className: "buttons", onClick: addNEw })));
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_codeMirrorEditor_codeMirrorEditor__WEBPACK_IMPORTED_MODULE_4__["default"], null)));
         }
     };
-    function addNEw() {
-        const urlDataList = {
-            url: "www.youtube.com",
-            reason: "example",
-            onImage: true,
-            onVideo: true,
-            onSearch: true,
-        };
-        chrome.storage.sync.set({ urlDataList: urlDataList }, function () {
-            console.log("URL data saved");
-        });
-    }
     return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "card" },
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("header", null,
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "container" },
@@ -754,7 +914,7 @@ root.render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(App, null
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_css-loader_dist_runtime_sour-b53f7e","vendors-node_modules_codemirror_dist_index_js"], () => (__webpack_require__("./src/options/options.tsx")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_css-loader_dist_runtime_sour-b53f7e","vendors-node_modules_codemirror_commands_dist_index_js-node_modules_codemirror_lang-javascrip-e9cd47"], () => (__webpack_require__("./src/options/options.tsx")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
