@@ -21,7 +21,73 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, ``, "",{"version":3,"sources":[],"names":[],"mappings":"","sourceRoot":""}]);
+___CSS_LOADER_EXPORT___.push([module.id, `/* button */
+.button-hover-effect {
+  padding: 6px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.button-hover-effect:hover {
+  background-color: var(--light-secondary-background);
+}
+
+/* middle */
+.add-new-blocked-site {
+  padding: 0.5rem;
+  height: 4rem;
+}
+
+.cont {
+  margin: 10px;
+}
+
+.blocked-add-icon {
+  width: 44px;
+  height: 44px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.blocked-card-inside {
+  gap: 1.5rem;
+}
+
+.blocked-card-outline {
+  margin: 5px 10px 5px 10px;
+  display: flex;
+}
+
+.blocked-card-add {
+  justify-content: center;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.blocked-site-img {
+  width: 52px;
+  height: 52px;
+}
+
+.blocked-site-text-container {
+  padding-top: 0.5rem;
+  align-self: flex-start;
+  display: flex;
+  flex-direction: column;
+}
+
+.blocked-site-url {
+  font-weight: 400;
+  font-size: 18px;
+  color: #d1d1cf;
+  padding-bottom: 0.2rem;
+}
+
+.blocked-site-under-text {
+  font-size: 12px;
+  color: #7e7e74;
+}
+`, "",{"version":3,"sources":["webpack://./src/components/dashboard/dashboardCard.css"],"names":[],"mappings":"AAAA,WAAW;AACX;EACE,YAAY;EACZ,kBAAkB;EAClB,sCAAsC;AACxC;;AAEA;EACE,mDAAmD;AACrD;;AAEA,WAAW;AACX;EACE,eAAe;EACf,YAAY;AACd;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,gBAAgB;EAChB,mBAAmB;AACrB;;AAEA;EACE,WAAW;AACb;;AAEA;EACE,yBAAyB;EACzB,aAAa;AACf;;AAEA;EACE,uBAAuB;EACvB,mBAAmB;EACnB,sBAAsB;AACxB;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,mBAAmB;EACnB,sBAAsB;EACtB,aAAa;EACb,sBAAsB;AACxB;;AAEA;EACE,gBAAgB;EAChB,eAAe;EACf,cAAc;EACd,sBAAsB;AACxB;;AAEA;EACE,eAAe;EACf,cAAc;AAChB","sourcesContent":["/* button */\r\n.button-hover-effect {\r\n  padding: 6px;\r\n  border-radius: 8px;\r\n  transition: background-color 0.3s ease;\r\n}\r\n\r\n.button-hover-effect:hover {\r\n  background-color: var(--light-secondary-background);\r\n}\r\n\r\n/* middle */\r\n.add-new-blocked-site {\r\n  padding: 0.5rem;\r\n  height: 4rem;\r\n}\r\n\r\n.cont {\r\n  margin: 10px;\r\n}\r\n\r\n.blocked-add-icon {\r\n  width: 44px;\r\n  height: 44px;\r\n  padding-top: 5px;\r\n  padding-bottom: 5px;\r\n}\r\n\r\n.blocked-card-inside {\r\n  gap: 1.5rem;\r\n}\r\n\r\n.blocked-card-outline {\r\n  margin: 5px 10px 5px 10px;\r\n  display: flex;\r\n}\r\n\r\n.blocked-card-add {\r\n  justify-content: center;\r\n  padding-top: 0.5rem;\r\n  padding-bottom: 0.5rem;\r\n}\r\n\r\n.blocked-site-img {\r\n  width: 52px;\r\n  height: 52px;\r\n}\r\n\r\n.blocked-site-text-container {\r\n  padding-top: 0.5rem;\r\n  align-self: flex-start;\r\n  display: flex;\r\n  flex-direction: column;\r\n}\r\n\r\n.blocked-site-url {\r\n  font-weight: 400;\r\n  font-size: 18px;\r\n  color: #d1d1cf;\r\n  padding-bottom: 0.2rem;\r\n}\r\n\r\n.blocked-site-under-text {\r\n  font-size: 12px;\r\n  color: #7e7e74;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -223,6 +289,7 @@ body {
 .cont {
   margin: 10px;
 }
+
 .blocked-add-icon {
   width: 44px;
   height: 44px;
@@ -314,7 +381,7 @@ body {
   height: 20px;
   width: 20px;
 }
-`, "",{"version":3,"sources":["webpack://./src/popup/popup.css"],"names":[],"mappings":"AAAA;EACE,mBAAmB;EACnB,gCAAgC;EAChC,kCAAkC;EAClC,wBAAwB;EACxB,+BAA+B;EAC/B,gCAAgC;EAChC,sBAAsB;EACtB,gDAAgD;EAChD,+BAA+B;AACjC;;AAEA;EACE,SAAS;EACT,8CAA8C;EAC9C,YAAY;EACZ,aAAa;AACf;;AAEA;EACE,aAAa;EACb,sBAAsB;AACxB;;AAEA,eAAe;AACf;EACE,mDAAmD;EACnD,eAAe;EACf,YAAY;EACZ,yBAAyB;AAC3B;;AAEA,YAAY;AACZ;EACE,mDAAmD;EACnD,eAAe;EACf,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,8BAA8B;EAC9B,4BAA4B;EAC5B,2CAA2C;AAC7C;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,8BAA8B;EAC9B,WAAW;AACb;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,eAAe;EACf,mCAAmC;EACnC,oBAAoB;AACtB;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA,oBAAoB;AACpB;EACE,WAAW;EACX,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;AACzB;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,cAAc;AAChB;;AAEA;EACE,YAAY;EACZ,kBAAkB;EAClB,sCAAsC;AACxC;;AAEA;EACE,mDAAmD;AACrD;;AAEA,WAAW;AACX;EACE,iBAAiB;EACjB,gBAAgB;EAChB,kBAAkB;AACpB;;AAEA;EACE,eAAe;EACf,YAAY;AACd;;AAEA;EACE,YAAY;AACd;AACA;EACE,WAAW;EACX,YAAY;EACZ,gBAAgB;EAChB,mBAAmB;AACrB;;AAEA;EACE,WAAW;AACb;;AAEA;EACE,yBAAyB;EACzB,aAAa;AACf;;AAEA;EACE,uBAAuB;EACvB,mBAAmB;EACnB,sBAAsB;AACxB;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,mBAAmB;EACnB,sBAAsB;EACtB,aAAa;EACb,sBAAsB;AACxB;;AAEA;EACE,gBAAgB;EAChB,eAAe;EACf,cAAc;EACd,sBAAsB;AACxB;;AAEA;EACE,eAAe;EACf,cAAc;AAChB;;AAEA,+BAA+B;AAC/B;EACE,eAAe;EACf,MAAM;EACN,OAAO;EACP,QAAQ;EACR,SAAS;EACT,oCAAoC;EACpC,aAAa;EACb,uBAAuB;EACvB,mBAAmB;AACrB;;AAEA;EACE,yBAAyB;EACzB,aAAa;EACb,kBAAkB;EAClB,aAAa;EACb,sBAAsB;EACtB,SAAS;EACT,kBAAkB;EAClB,gBAAgB;AAClB;;AAEA;EACE,aAAa;EACb,yBAAyB;EACzB,cAAc;EACd,YAAY;EACZ,kBAAkB;EAClB,eAAe;EACf,sCAAsC;AACxC;;AAEA;EACE,aAAa;EACb,uBAAuB;AACzB;;AAEA;EACE,gBAAgB;EAChB,mBAAmB;EACnB,YAAY;EACZ,WAAW;AACb","sourcesContent":[":root {\r\n  color-scheme: light;\r\n  --light-main-background: #d1d1cf;\r\n  --light-secondary-background: #fff;\r\n  --light-main-text: black;\r\n  --light-secondary-text: #3a3a35;\r\n  --light-main-background: #d1d1cf;\r\n  --light-hover: #d1d1cf;\r\n  --border: 1px solid var(--light-main-background);\r\n  font-family: \"Lato\", sans-serif;\r\n}\r\n\r\nbody {\r\n  margin: 0;\r\n  background-color: var(--light-main-background);\r\n  width: 24rem;\r\n  height: 24rem;\r\n}\r\n\r\n#popup-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n}\r\n\r\n/* Bottom bar */\r\n#bottom-bar {\r\n  background-color: var(--light-secondary-background);\r\n  padding: 0.8rem;\r\n  height: 32px;\r\n  border-top: var(--border);\r\n}\r\n\r\n/* top bar */\r\n#entire-top-bar {\r\n  background-color: var(--light-secondary-background);\r\n  padding: 0.8rem;\r\n  height: 32px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  border-bottom: var(--border);\r\n  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.24);\r\n}\r\n\r\n.top-bar-section {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  gap: 0.5rem;\r\n}\r\n\r\n.header-text {\r\n  text-align: center;\r\n  font-weight: 400;\r\n  font-size: 18px;\r\n  color: var(--light-main-background);\r\n  margin-right: 0.2rem;\r\n}\r\n\r\n.top-bar-icon {\r\n  width: 32px;\r\n  height: 32px;\r\n}\r\n\r\n/* Settings Button */\r\n#settings-icon {\r\n  width: 24px;\r\n  height: 24px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n}\r\n\r\n#settings-icon img {\r\n  width: 100%;\r\n  height: 100%;\r\n  display: block;\r\n}\r\n\r\n.button-hover-effect {\r\n  padding: 6px;\r\n  border-radius: 8px;\r\n  transition: background-color 0.3s ease;\r\n}\r\n\r\n.button-hover-effect:hover {\r\n  background-color: var(--light-secondary-background);\r\n}\r\n\r\n/* middle */\r\n#middle-section {\r\n  max-height: 20rem;\r\n  overflow-y: auto;\r\n  overflow-x: hidden;\r\n}\r\n\r\n.add-new-blocked-site {\r\n  padding: 0.5rem;\r\n  height: 4rem;\r\n}\r\n\r\n.cont {\r\n  margin: 10px;\r\n}\r\n.blocked-add-icon {\r\n  width: 44px;\r\n  height: 44px;\r\n  padding-top: 5px;\r\n  padding-bottom: 5px;\r\n}\r\n\r\n.blocked-card-inside {\r\n  gap: 1.5rem;\r\n}\r\n\r\n.blocked-card-outline {\r\n  margin: 5px 10px 5px 10px;\r\n  display: flex;\r\n}\r\n\r\n.blocked-card-add {\r\n  justify-content: center;\r\n  padding-top: 0.5rem;\r\n  padding-bottom: 0.5rem;\r\n}\r\n\r\n.blocked-site-img {\r\n  width: 52px;\r\n  height: 52px;\r\n}\r\n\r\n.blocked-site-text-container {\r\n  padding-top: 0.5rem;\r\n  align-self: flex-start;\r\n  display: flex;\r\n  flex-direction: column;\r\n}\r\n\r\n.blocked-site-url {\r\n  font-weight: 400;\r\n  font-size: 18px;\r\n  color: #d1d1cf;\r\n  padding-bottom: 0.2rem;\r\n}\r\n\r\n.blocked-site-under-text {\r\n  font-size: 12px;\r\n  color: #7e7e74;\r\n}\r\n\r\n/* Popup for adding new sites */\r\n.popup-overlay {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background-color: rgba(0, 0, 0, 0.5);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n}\r\n\r\n.popup-content {\r\n  background-color: #303030;\r\n  padding: 20px;\r\n  border-radius: 8px;\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 10px;\r\n  position: relative;\r\n  min-width: 200px;\r\n}\r\n\r\n.popup-content button {\r\n  padding: 10px;\r\n  background-color: #484847;\r\n  color: #d1d1cf;\r\n  border: none;\r\n  border-radius: 8px;\r\n  cursor: pointer;\r\n  transition: background-color 0.3s ease;\r\n}\r\n\r\n.cross-button {\r\n  display: flex;\r\n  justify-content: center;\r\n}\r\n\r\n.cross-image {\r\n  padding-top: 5px;\r\n  padding-bottom: 5px;\r\n  height: 20px;\r\n  width: 20px;\r\n}\r\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/popup/popup.css"],"names":[],"mappings":"AAAA;EACE,mBAAmB;EACnB,gCAAgC;EAChC,kCAAkC;EAClC,wBAAwB;EACxB,+BAA+B;EAC/B,gCAAgC;EAChC,sBAAsB;EACtB,gDAAgD;EAChD,+BAA+B;AACjC;;AAEA;EACE,SAAS;EACT,8CAA8C;EAC9C,YAAY;EACZ,aAAa;AACf;;AAEA;EACE,aAAa;EACb,sBAAsB;AACxB;;AAEA,eAAe;AACf;EACE,mDAAmD;EACnD,eAAe;EACf,YAAY;EACZ,yBAAyB;AAC3B;;AAEA,YAAY;AACZ;EACE,mDAAmD;EACnD,eAAe;EACf,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,8BAA8B;EAC9B,4BAA4B;EAC5B,2CAA2C;AAC7C;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,8BAA8B;EAC9B,WAAW;AACb;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,eAAe;EACf,mCAAmC;EACnC,oBAAoB;AACtB;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA,oBAAoB;AACpB;EACE,WAAW;EACX,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;AACzB;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,cAAc;AAChB;;AAEA;EACE,YAAY;EACZ,kBAAkB;EAClB,sCAAsC;AACxC;;AAEA;EACE,mDAAmD;AACrD;;AAEA,WAAW;AACX;EACE,iBAAiB;EACjB,gBAAgB;EAChB,kBAAkB;AACpB;;AAEA;EACE,eAAe;EACf,YAAY;AACd;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,gBAAgB;EAChB,mBAAmB;AACrB;;AAEA;EACE,WAAW;AACb;;AAEA;EACE,yBAAyB;EACzB,aAAa;AACf;;AAEA;EACE,uBAAuB;EACvB,mBAAmB;EACnB,sBAAsB;AACxB;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,mBAAmB;EACnB,sBAAsB;EACtB,aAAa;EACb,sBAAsB;AACxB;;AAEA;EACE,gBAAgB;EAChB,eAAe;EACf,cAAc;EACd,sBAAsB;AACxB;;AAEA;EACE,eAAe;EACf,cAAc;AAChB;;AAEA,+BAA+B;AAC/B;EACE,eAAe;EACf,MAAM;EACN,OAAO;EACP,QAAQ;EACR,SAAS;EACT,oCAAoC;EACpC,aAAa;EACb,uBAAuB;EACvB,mBAAmB;AACrB;;AAEA;EACE,yBAAyB;EACzB,aAAa;EACb,kBAAkB;EAClB,aAAa;EACb,sBAAsB;EACtB,SAAS;EACT,kBAAkB;EAClB,gBAAgB;AAClB;;AAEA;EACE,aAAa;EACb,yBAAyB;EACzB,cAAc;EACd,YAAY;EACZ,kBAAkB;EAClB,eAAe;EACf,sCAAsC;AACxC;;AAEA;EACE,aAAa;EACb,uBAAuB;AACzB;;AAEA;EACE,gBAAgB;EAChB,mBAAmB;EACnB,YAAY;EACZ,WAAW;AACb","sourcesContent":[":root {\r\n  color-scheme: light;\r\n  --light-main-background: #d1d1cf;\r\n  --light-secondary-background: #fff;\r\n  --light-main-text: black;\r\n  --light-secondary-text: #3a3a35;\r\n  --light-main-background: #d1d1cf;\r\n  --light-hover: #d1d1cf;\r\n  --border: 1px solid var(--light-main-background);\r\n  font-family: \"Lato\", sans-serif;\r\n}\r\n\r\nbody {\r\n  margin: 0;\r\n  background-color: var(--light-main-background);\r\n  width: 24rem;\r\n  height: 24rem;\r\n}\r\n\r\n#popup-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n}\r\n\r\n/* Bottom bar */\r\n#bottom-bar {\r\n  background-color: var(--light-secondary-background);\r\n  padding: 0.8rem;\r\n  height: 32px;\r\n  border-top: var(--border);\r\n}\r\n\r\n/* top bar */\r\n#entire-top-bar {\r\n  background-color: var(--light-secondary-background);\r\n  padding: 0.8rem;\r\n  height: 32px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  border-bottom: var(--border);\r\n  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.24);\r\n}\r\n\r\n.top-bar-section {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  gap: 0.5rem;\r\n}\r\n\r\n.header-text {\r\n  text-align: center;\r\n  font-weight: 400;\r\n  font-size: 18px;\r\n  color: var(--light-main-background);\r\n  margin-right: 0.2rem;\r\n}\r\n\r\n.top-bar-icon {\r\n  width: 32px;\r\n  height: 32px;\r\n}\r\n\r\n/* Settings Button */\r\n#settings-icon {\r\n  width: 24px;\r\n  height: 24px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n}\r\n\r\n#settings-icon img {\r\n  width: 100%;\r\n  height: 100%;\r\n  display: block;\r\n}\r\n\r\n.button-hover-effect {\r\n  padding: 6px;\r\n  border-radius: 8px;\r\n  transition: background-color 0.3s ease;\r\n}\r\n\r\n.button-hover-effect:hover {\r\n  background-color: var(--light-secondary-background);\r\n}\r\n\r\n/* middle */\r\n#middle-section {\r\n  max-height: 20rem;\r\n  overflow-y: auto;\r\n  overflow-x: hidden;\r\n}\r\n\r\n.add-new-blocked-site {\r\n  padding: 0.5rem;\r\n  height: 4rem;\r\n}\r\n\r\n.cont {\r\n  margin: 10px;\r\n}\r\n\r\n.blocked-add-icon {\r\n  width: 44px;\r\n  height: 44px;\r\n  padding-top: 5px;\r\n  padding-bottom: 5px;\r\n}\r\n\r\n.blocked-card-inside {\r\n  gap: 1.5rem;\r\n}\r\n\r\n.blocked-card-outline {\r\n  margin: 5px 10px 5px 10px;\r\n  display: flex;\r\n}\r\n\r\n.blocked-card-add {\r\n  justify-content: center;\r\n  padding-top: 0.5rem;\r\n  padding-bottom: 0.5rem;\r\n}\r\n\r\n.blocked-site-img {\r\n  width: 52px;\r\n  height: 52px;\r\n}\r\n\r\n.blocked-site-text-container {\r\n  padding-top: 0.5rem;\r\n  align-self: flex-start;\r\n  display: flex;\r\n  flex-direction: column;\r\n}\r\n\r\n.blocked-site-url {\r\n  font-weight: 400;\r\n  font-size: 18px;\r\n  color: #d1d1cf;\r\n  padding-bottom: 0.2rem;\r\n}\r\n\r\n.blocked-site-under-text {\r\n  font-size: 12px;\r\n  color: #7e7e74;\r\n}\r\n\r\n/* Popup for adding new sites */\r\n.popup-overlay {\r\n  position: fixed;\r\n  top: 0;\r\n  left: 0;\r\n  right: 0;\r\n  bottom: 0;\r\n  background-color: rgba(0, 0, 0, 0.5);\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n}\r\n\r\n.popup-content {\r\n  background-color: #303030;\r\n  padding: 20px;\r\n  border-radius: 8px;\r\n  display: flex;\r\n  flex-direction: column;\r\n  gap: 10px;\r\n  position: relative;\r\n  min-width: 200px;\r\n}\r\n\r\n.popup-content button {\r\n  padding: 10px;\r\n  background-color: #484847;\r\n  color: #d1d1cf;\r\n  border: none;\r\n  border-radius: 8px;\r\n  cursor: pointer;\r\n  transition: background-color 0.3s ease;\r\n}\r\n\r\n.cross-button {\r\n  display: flex;\r\n  justify-content: center;\r\n}\r\n\r\n.cross-image {\r\n  padding-top: 5px;\r\n  padding-bottom: 5px;\r\n  height: 20px;\r\n  width: 20px;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -658,7 +725,7 @@ const App = ({ blockedWebsites }) => {
     return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "popup-container" },
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "entire-top-bar" },
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "left-top-bar", className: "top-bar-section" },
-                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", { className: "top-bar-icon", src: "broom.png", alt: "Broom icon" }),
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", { className: "top-bar-icon", src: "logoApp.png", alt: "Broom icon" }),
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", { className: "header-text" }, "Search Sanitzer")),
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "right-top-bar", className: "top-bar-section" },
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__["default"], { id: "OnOff", googleStorageKey: "ExtensionOnOff" }),

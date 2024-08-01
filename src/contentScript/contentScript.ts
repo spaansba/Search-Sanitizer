@@ -11,19 +11,17 @@ function filterGoogleSearch(blockedUrls: BlockedUrlData) {
 
   const processedResults = new Set()
   const urlFilter = createUrlFilter(blockedUrls)
-  const search: Element = getSearchElement()
-
-  const ds = document.querySelector("#search")
+  const search: Element = document.querySelector("#search")
   if (!search) {
-    console.error("Cant find #search")
-    return
+    console.error("#Search could not be found")
   }
 
-  new MutationObserver(() => {
+  new MutationObserver((mutataion) => {
     filterNormalSearch()
     setTimeout(filterRelatedQuestions, 500) //TODO fix need for 500 timeout
     urlFilter.setBlockedUrl()
-  }).observe(search, {
+  }).observe(search ?? document.body, {
+    //TODO: try to always get search, sometimes it just loads differently
     childList: true,
     subtree: true,
     attributes: false,
@@ -77,22 +75,6 @@ function filterGoogleSearch(blockedUrls: BlockedUrlData) {
         }
       })
     })
-  }
-
-  function getSearchElement(): Element | null {
-    const startTime = Date.now()
-
-    while (Date.now() - startTime < 10000) {
-      const search = document.querySelector("#search")
-      if (search) {
-        return search
-      }
-      const waitTill = new Date(new Date().getTime() + 100)
-      while (waitTill > new Date()) {}
-    }
-
-    console.error("Timeout: Can't find #search after 10 seconds")
-    return null
   }
 }
 

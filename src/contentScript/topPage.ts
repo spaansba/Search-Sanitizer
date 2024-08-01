@@ -3,60 +3,114 @@ let blockedCount = 0
 const styles = `
   .extension-button:hover { opacity: 0.4 !important; }
   .extension-button:active { transform: scale(0.99) !important; }
+ .blocked-count-overlay {
+  position: absolute;
+  background-color: #8e8280;
+  color: white;
+  padding-right: 2px;
+  padding-left: 2px;
+  font-size: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  min-width: 26px;
+  max-width: 60px;
+  height: 15px;
+  top: 1px;
+  right: -8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  user-select: none;
+}
+#extension-button-search-bar{
+  position: relative;
+  user-select: none;
+}
+.logo-image{
+  width: 22px;
+  heigth: 22px;
+}
 `
 
 export function addTopOfPage(ExtensionIsOn: boolean, BlockedCount: number) {
   blockedCount = BlockedCount
-  const appBar = document.querySelector("#appbar")
-  if (!appBar) {
-    console.log("App Bar could not be found")
-    return
+  let searchFormContainer = document.querySelector(".fM33ce")
+  let container = document.createElement("div")
+
+  // if for whatever reason the searchFormContainer can not be found use the more secure appbar (this is under the search bar)
+  if (!searchFormContainer) {
+    searchFormContainer = document.querySelector("#appbar")
+    container.style.marginBottom = "5px"
+    if (!searchFormContainer) {
+      return
+    }
   }
 
-  const style = document.createElement("style")
-  style.id = "top-content-styles"
-  style.textContent = styles
-  document.head.appendChild(style)
+  container.id = "extension-button-search-bar"
+  container.title = getTitle() //TODO make the title look the same as google titles
+  container.className = "XDyW0e"
 
-  const baseButton = document.createElement("button")
-  baseButton.style.width = "auto"
-  baseButton.style.height = "30px"
-  baseButton.style.marginBottom = "0.2rem"
-  baseButton.style.paddingLeft = "0.7rem"
-  baseButton.style.paddingRight = "0.7rem"
-  baseButton.style.borderWidth = "0px"
-  baseButton.style.borderRadius = "8px"
-  baseButton.style.transition = "opacity 0.3s ease"
-  baseButton.className = "extension-button"
+  const img = document.createElement("img")
+  img.src = chrome.runtime.getURL("logoApp.png")
+  img.className = "logo-image"
 
-  if (ExtensionIsOn) {
-    AddTopExtensionOn(appBar, baseButton)
+  const blockedOverlay = document.createElement("div")
+  blockedOverlay.className = "blocked-count-overlay"
+  blockedOverlay.textContent = blockedCount.toString()
+
+  container = ExtensionIsOn
+    ? getExtensionOnElement(container)
+    : getExtensionOffElement(container)
+
+  container.appendChild(img)
+  container.appendChild(blockedOverlay)
+
+  // Insert the container after the form
+  const form = searchFormContainer.querySelector(".dRYYxd")
+  if (form) {
+    form.insertAdjacentElement("afterend", container)
   } else {
-    AddTopExtensionOff(appBar, baseButton)
+    searchFormContainer.appendChild(container)
   }
+
+  addStylesToHead()
 }
 
-// Top of page when the extension is on, exists of a button to hide / show the blocked sites
-// Also contains a count of how many sites are blocked on the current page
-function AddTopExtensionOn(appBar: Element, baseButton: HTMLButtonElement) {
-  const container = document.createElement("div")
-  baseButton.addEventListener("click", () => {
+function addStylesToHead() {
+  const styleElement = document.createElement("style")
+  styleElement.textContent = styles
+  document.head.appendChild(styleElement)
+}
+
+function getExtensionOnElement(container: HTMLDivElement): HTMLDivElement {
+  container.addEventListener("click", () => {
     resultsHidden = !resultsHidden
+    container.title = getTitle()
     toggleHiddenResults()
-    updateButtonText(baseButton)
   })
-  container.appendChild(baseButton)
-  appBar.appendChild(container)
-  updateButtonText(baseButton)
+  return container
 }
 
-function updateButtonText(button: HTMLButtonElement) {
+function getExtensionOffElement(container: HTMLDivElement): HTMLDivElement {
+  container.title =
+    "Search Sanitizer is currently turned off. Click to turn back on"
+  container.style.opacity = "0.4"
+  container.addEventListener("click", () => {
+    chrome.storage.sync.set({ ExtensionOnOff: true }, () => {
+      window.location.reload()
+    })
+  })
+  return container
+}
+
+function getTitle(): string {
   if (blockedCount < 1) {
-    button.textContent = `We blocked ${blockedCount} search results`
+    return `${blockedCount} blocked search results`
   } else {
-    button.textContent = `We blocked ${blockedCount} search results. Click to ${
-      resultsHidden ? "hide" : "show"
-    }`
+    return `${blockedCount} blocked search results. Click to ${
+      !resultsHidden ? "show" : "hide"
+    } them again`
   }
 }
 
@@ -73,26 +127,19 @@ export function getResultsHidden(): boolean {
   return resultsHidden
 }
 
-// Top of page when the extension is off, exists of a text and a button to turn the extension back on/refresh the page
-function AddTopExtensionOff(appBar: Element, baseButton: HTMLButtonElement) {
-  const container = document.createElement("div")
-  baseButton.textContent =
-    "<name> is currently turned off. Click to turn back on"
-  baseButton.addEventListener("click", () => {
-    chrome.storage.sync.set({ ExtensionOnOff: true }, () => {
-      window.location.reload()
-    })
-  })
-  container.appendChild(baseButton)
-  appBar.appendChild(container)
-}
-
 export function updateBlockedCount(newCount: number) {
   blockedCount = newCount
-  const button = document.querySelector(
-    ".extension-button"
-  ) as HTMLButtonElement
-  if (button) {
-    updateButtonText(button)
+  const container = document.querySelector(
+    ".extension-button-search-bar"
+  ) as HTMLDivElement
+  if (container) {
+    container.title = getTitle()
+  }
+
+  const overlayContainer = document.querySelector(
+    ".blocked-count-overlay"
+  ) as HTMLDivElement
+  if (overlayContainer) {
+    overlayContainer.textContent = blockedCount.toString()
   }
 }

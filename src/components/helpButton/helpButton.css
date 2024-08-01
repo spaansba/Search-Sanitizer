@@ -1,0 +1,17 @@
+.helpbutton-container {
+  width: 20px;
+  height: 20px;
+  svg {
+    fill: "#e8eaed";
+    transition: 0.3;
+  }
+}
+
+.help-dialog {
+  user-select: text;
+  transform: translateY(-2px);
+  z-index: 100;
+  p {
+    font-size: 14px;
+  }
+}

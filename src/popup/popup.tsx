@@ -87,7 +87,7 @@ const App: React.FC<AppProps> = ({ blockedWebsites }) => {
     <div id="popup-container">
       <div id="entire-top-bar">
         <div id="left-top-bar" className="top-bar-section">
-          <img className="top-bar-icon" src="broom.png" alt="Broom icon" />
+          <img className="top-bar-icon" src="logoApp.png" alt="Broom icon" />
           <p className="header-text">Search Sanitzer</p>
         </div>
         <div id="right-top-bar" className="top-bar-section">

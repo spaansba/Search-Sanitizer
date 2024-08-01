@@ -121,7 +121,6 @@ const CodeMirrorEditor: React.FC = () => {
       })
     } else {
       editorViewRef.current?.destroy()
-      console.log("editor destroyed")
     }
   }, [])
 

@@ -5,6 +5,7 @@ import OnOffSlider from "../components/onOffSlider"
 import { UserSettings } from "../types"
 import CodeMirrorEditor from "../components/codeMirrorEditor/codeMirrorEditor"
 import OptionBlockedCards from "../components/dashboard/optionBlockedCards"
+import HelpButton from "../components/helpButton/helpButton"
 
 interface SettingsProps {
   settings: UserSettings[]
@@ -67,15 +68,12 @@ const App: React.FC = () => {
         return (
           <>
             <h2>Blocked Sites</h2>
+            <div className="question-text">
+              Sites can be blocked via URL or by Match Pattern
+              <HelpButton helpElement={helpMatchedPattern()}></HelpButton>
+            </div>
             <OptionBlockedCards></OptionBlockedCards>
-            <ul className="no-bullets">
-              <li>
-                We use match patterns to filter sites blocked from appearing on
-                Google Search Results
-              </li>
-              <li>Example: *://*.youtube.com/*</li>
-              <li>Example: *://*.wikipedia./*</li>
-            </ul>
+            <h3>Block in bulk</h3>
             <CodeMirrorEditor></CodeMirrorEditor>
           </>
         )
@@ -86,7 +84,7 @@ const App: React.FC = () => {
     <div className="card">
       <header>
         <div className="container">
-          <img src="broom.png" alt="logo" />
+          <img className="logo" src="logoApp.png" alt="logo" />
           <div className="header-wrapper">
             <div
               className={`container image-offset button ${
@@ -110,6 +108,67 @@ const App: React.FC = () => {
       </header>
       <div id="middle">{renderMiddleSection()}</div>
     </div>
+  )
+}
+
+const helpMatchedPattern: () => React.JSX.Element = () => {
+  return (
+    <>
+      <p>
+        A match pattern is used to specify a group of URLs.
+        <br />
+        Here are some examples and their effects:
+      </p>
+      <table style={{ borderCollapse: "collapse", width: "100%" }}>
+        <thead>
+          <tr>
+            <th style={{ border: "1px solid black", padding: "8px" }}>
+              Match Pattern
+            </th>
+            <th style={{ border: "1px solid black", padding: "8px" }}>
+              URLs Matched
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style={{ border: "1px solid black", padding: "8px" }}>
+              *://*.temu.com/*
+            </td>
+            <td style={{ border: "1px solid black", padding: "8px" }}>
+              <ul>
+                <li>https://www.temu.com/</li>
+                <li>http://shop.temu.com/products</li>
+                <li>https://us.temu.com/category/home</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td style={{ border: "1px solid black", padding: "8px" }}>
+              https://google.*
+            </td>
+            <td style={{ border: "1px solid black", padding: "8px" }}>
+              <ul>
+                <li>https://google.com/</li>
+                <li>https://google.nl/</li>
+              </ul>
+            </td>
+          </tr>
+          <tr>
+            <td style={{ border: "1px solid black", padding: "8px" }}>
+              https://*.quora.com/*
+            </td>
+            <td style={{ border: "1px solid black", padding: "8px" }}>
+              <ul>
+                <li>https://quora.com/</li>
+                <li>https://es.quora.com/</li>
+                <li>https://de.quora.com/topic/Science</li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </>
   )
 }
 
