@@ -1,7 +1,7 @@
 import React, {
   useCallback,
+  useContext,
   useEffect,
-  useLayoutEffect,
   useRef,
   useState,
 } from "react"
@@ -18,35 +18,21 @@ import { javascript } from "@codemirror/lang-javascript"
 import { history, historyKeymap, standardKeymap } from "@codemirror/commands"
 import { urlLinter } from "./linter"
 import { BlockedUrlData } from "../../types"
+import { BlockedUrlsContext } from "../../options/options"
+import "./codeMirrorEditor.css"
 
 const CodeMirrorEditor: React.FC = () => {
   const editorViewRef = useRef<EditorView | null>(null)
-  const [initialDoc, setInitialDoc] = useState<string>("")
-  const [blockedUrlData, setBlockedUrlData] = useState<BlockedUrlData>({})
+  const [blockedUrls, setBlockedUrls] = useContext(BlockedUrlsContext)
+  const [initialDoc, setInitialDoc] = useState("")
 
-  // Get initial blockedUrls from storage
   useEffect(() => {
-    chrome.storage.sync.get(["blockedUrlData"], (result) => {
-      if (result.blockedUrlData) {
-        setBlockedUrlData(result.blockedUrlData)
-        setInitialDoc(Object.keys(result.blockedUrlData).join("\n"))
-      }
-    })
-  }, [])
-
-  // When initialDoc is loaded add values to the editor
-  useLayoutEffect(() => {
-    if (editorViewRef.current) {
-      editorViewRef.current.dispatch({
-        changes: {
-          from: 0,
-          to: editorViewRef.current.state.doc.length,
-          insert: initialDoc,
-        },
-      })
-      editorViewRef.current.focus()
-    }
-  }, [initialDoc])
+    const newInitialDoc = Object.entries(blockedUrls)
+      .map(([url, data]) => `${url}`)
+      .join("\n")
+    setInitialDoc(newInitialDoc)
+    console.log(newInitialDoc)
+  }, [blockedUrls])
 
   function onSave() {
     if (editorViewRef.current) {
@@ -57,79 +43,83 @@ const CodeMirrorEditor: React.FC = () => {
         url = url.trim()
         if (url) {
           newBlockedUrlData[url] = {
-            i: blockedUrlData[url]?.i || 0,
-            s: blockedUrlData[url]?.s || 0,
-            v: blockedUrlData[url]?.v || 0,
+            i: blockedUrls[url]?.i || 0,
+            s: blockedUrls[url]?.s || 0,
+            v: blockedUrls[url]?.v || 0,
           }
         }
       })
 
-      console.log(newBlockedUrlData)
       chrome.storage.sync.set(
         { blockedUrlData: newBlockedUrlData },
         function () {
           console.log("URL data saved")
-          setBlockedUrlData(newBlockedUrlData)
+          setBlockedUrls(newBlockedUrlData)
         }
       )
     }
   }
 
-  const editor = useCallback((parent: HTMLDivElement | null) => {
-    if (parent) {
-      editorViewRef.current = new EditorView({
-        parent,
-        state: EditorState.create({
-          doc: initialDoc,
-          extensions: [
-            urlLinter,
-            keymap.of([...historyKeymap, ...standardKeymap]),
-            history(),
-            dropCursor(),
-            javascript(),
-            lintGutter(),
-            lineNumbers(),
-            highlightActiveLineGutter(),
-            EditorView.theme({
-              "&": {
-                height: "300px",
-                border: "1px solid #ccc",
-                borderRadius: "4px",
-              },
-              ".cm-scroller": {
-                fontFamily: "monospace",
-                fontSize: "14px",
-              },
-              ".cm-content": {
-                caretColor: "blue",
-              },
-              ".cm-line": {
-                padding: "0 4px",
-              },
-              ".cm-activeLineGutter": {
-                backgroundColor: "#e8f2ff",
-                color: "green",
-              },
-              ".cm-gutters": {
-                backgroundColor: "#f5f5f5",
-                color: "#333",
-                border: "none",
-              },
-            }),
-          ],
-        }),
-      })
-    } else {
-      editorViewRef.current?.destroy()
-    }
-  }, [])
+  const editor = useCallback(
+    (parent: HTMLDivElement | null) => {
+      if (parent) {
+        editorViewRef.current = new EditorView({
+          parent,
+          state: EditorState.create({
+            doc: initialDoc,
+            extensions: [
+              urlLinter,
+              keymap.of([...historyKeymap, ...standardKeymap]),
+              history(),
+              dropCursor(),
+              javascript(),
+              lintGutter(),
+              lineNumbers(),
+              highlightActiveLineGutter(),
+              EditorView.theme({
+                "&": {
+                  height: "300px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                },
+                ".cm-scroller": {
+                  fontFamily: "monospace",
+                  fontSize: "14px",
+                },
+                ".cm-content": {
+                  caretColor: "blue",
+                },
+                ".cm-line": {
+                  padding: "0 4px",
+                },
+                ".cm-activeLineGutter": {
+                  backgroundColor: "#e8f2ff",
+                  color: "green",
+                },
+                ".cm-gutters": {
+                  backgroundColor: "#f5f5f5",
+                  color: "#333",
+                  border: "none",
+                },
+              }),
+            ],
+          }),
+        })
+      } else {
+        editorViewRef.current?.destroy()
+      }
+    },
+    [initialDoc]
+  )
 
   return (
     <>
       <div ref={editor} />
-      <button className="buttons" onClick={onSave}>
-        Save
-      </button>
+      <div className="bottom-button-container">
+        <button className="button" onClick={onSave}>
+          Save
+        </button>
+      </div>
     </>
   )
 }

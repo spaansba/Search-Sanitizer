@@ -68,16 +68,12 @@ const App: React.FC<AppProps> = ({ blockedWebsites }) => {
   useEffect(() => {
     const messageListener = (message: any) => {
       if (message.type === "SLIDER_CHANGED") {
-        // Update the state in the current context
         chrome.storage.sync.get([message.key], (result) => {
-          // You might need to update your local state here, depending on how you're managing it
           console.log(`Slider ${message.key} changed to ${result[message.key]}`)
         })
       }
     }
-
     chrome.runtime.onMessage.addListener(messageListener)
-
     return () => {
       chrome.runtime.onMessage.removeListener(messageListener)
     }

@@ -142,4 +142,6 @@ export function updateBlockedCount(newCount: number) {
   if (overlayContainer) {
     overlayContainer.textContent = blockedCount.toString()
   }
+
+  chrome.runtime.sendMessage({ type: "updateBadge", count: blockedCount })
 }

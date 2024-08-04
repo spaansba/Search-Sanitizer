@@ -1,5 +1,5 @@
 {
-  "name": "Site Blocker",
+  "name": "Site Sanitizer",
   "description": "Chrome Extension to block sites",
   "version": "1.0.0",
   "manifest_version": 3,
@@ -10,10 +10,16 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "React Extension",
+    "default_title": "Search Sanitizer",
     "default_icon": "logoApp.png"
   },
-  "permissions": ["declarativeNetRequest", "storage"],
+  "permissions": [
+    "declarativeNetRequest",
+    "storage",
+    "contextMenus",
+    "notifications",
+    "action"
+  ],
   "options_ui": {
     "open_in_tab": true,
     "page": "options.html"

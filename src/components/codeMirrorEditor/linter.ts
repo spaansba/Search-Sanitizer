@@ -1,23 +1,13 @@
 import { Diagnostic, linter } from "@codemirror/lint"
 import { EditorView } from "codemirror"
+import { isValidMatchPattern, isValidUrl } from "../../helper/validUrls"
 
-const MAX_LINES = 200 // Maximum number of lines allowed
 const MAX_CHARS_PER_LINE = 100 // Maximum number of characters allowed per line
 
 export const urlLinter = linter(
   (view: EditorView) => {
     let diagnostics: Diagnostic[] = []
     let doc = view.state.doc
-
-    // Check if total lines exceed MAX_LINES
-    if (doc.lines > MAX_LINES) {
-      diagnostics.push({
-        from: 0,
-        to: doc.length,
-        severity: "error",
-        message: `Too many lines. Maximum allowed: ${MAX_LINES}`,
-      })
-    }
 
     for (let i = 1; i <= doc.lines; i++) {
       let line = doc.line(i)
@@ -29,7 +19,7 @@ export const urlLinter = linter(
           from: line.from,
           to: line.to,
           severity: "error",
-          message: `Line ${i} exceeds maximum length of ${MAX_CHARS_PER_LINE} characters`,
+          message: `Exceeds maximum length of ${MAX_CHARS_PER_LINE} characters`,
           actions: [
             {
               name: "Truncate line",
@@ -45,19 +35,29 @@ export const urlLinter = linter(
             },
           ],
         })
+        return diagnostics
       }
 
       if (lineText) {
-        if (!isValidMatchPattern(lineText)) {
+        if (!isValidMatchPattern(lineText) && !isValidUrl(lineText)) {
           let fixedPattern = attemptToFixMatchPattern(lineText)
           diagnostics.push({
             from: line.from,
             to: line.to,
             severity: "error",
-            message: "Invalid match pattern",
+            message: `Invalid match pattern or URL\n\nTurn into URL?: https://www.${lineText}.com\nOr turn into match pattern?: ${fixedPattern}\n\n`,
             actions: [
               {
-                name: "Fix match pattern",
+                name: "Convert to URL",
+                apply(view, from, to) {
+                  const convertedUrl = `https://www.${lineText}.com`
+                  view.dispatch({
+                    changes: { from, to, insert: convertedUrl },
+                  })
+                },
+              },
+              {
+                name: "Convert to Match Pattern",
                 apply(view, from, to) {
                   view.dispatch({
                     changes: { from, to, insert: fixedPattern },
@@ -65,7 +65,7 @@ export const urlLinter = linter(
                 },
               },
               {
-                name: "Remove line",
+                name: "Remove",
                 apply(view, from, to) {
                   const lineStart = view.state.doc.lineAt(from).from
                   const lineEnd = view.state.doc.lineAt(to).to
@@ -81,30 +81,17 @@ export const urlLinter = linter(
     return diagnostics
   },
   {
-    delay: 1000,
+    delay: 200,
   }
 )
 
-function isValidMatchPattern(input: string): boolean {
-  const matchPatternRegex =
-    /^(?:(?:\*|https?|ftp):\/\/(?:\*|(?:\*\.)?[^/*]+)(?:\/.*)?|\*:\/\/.*)$/
-
-  if (!matchPatternRegex.test(input)) {
-    return false
-  }
-
-  if (input.includes("://") && !input.startsWith("*://")) {
-    const [scheme, rest] = input.split("://")
-    if (!["http", "https", "ftp"].includes(scheme)) {
-      return false
-    }
-  }
-
-  return true
-}
-
 function attemptToFixMatchPattern(input: string): string {
   input = input.trim()
+
+  // If it's already a valid URL, return it as is
+  if (isValidMatchPattern(input)) {
+    return input
+  }
 
   // If it's a URL, convert it to a match pattern
   if (/^https?:\/\//.test(input)) {

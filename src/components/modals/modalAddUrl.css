@@ -1,0 +1,89 @@
+.add-url-dialog {
+  border: 1px solid #ccccca;
+  border-radius: 8px;
+  z-index: 1000;
+  background: #fffaf2;
+  animation: dialogAnimation 0.2s ease-out forwards;
+  padding: 15px;
+
+  h1 {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+
+  .url-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid hsl(204 4% 24%);
+    padding: 5px 0;
+    font-size: 14px;
+    outline: none;
+    transition: border-bottom-color 0.3s ease;
+
+    &:focus {
+      border-bottom-color: hsl(204 70% 50%);
+    }
+  }
+
+  .button-wrapper {
+    margin-top: 17px;
+    justify-content: space-between;
+    display: flex;
+  }
+
+  .url-button {
+    padding: 8px 16px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+
+.url-button.add {
+  background-color: black;
+  width: 55%;
+}
+
+.url-button.add.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.url-button.cancel {
+  background-color: #ccccca;
+  width: 40%;
+  color: black;
+}
+
+.add-url-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes dialogAnimation {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

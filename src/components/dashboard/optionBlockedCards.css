@@ -13,10 +13,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
 
 .cards-container {
-  row-gap: 12px;
+  gap: 12px;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
 }
 
 .card-container {
@@ -33,6 +32,15 @@
   box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.2),
     0px 5px 7px 1px rgba(0, 0, 0, 0.14), 0px 2px 9px 3px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
+}
+
+.card-container > .add-card-container {
+  display: flex;
+  justify-content: center;
+}
+
+.add-card-container {
+  cursor: pointer;
 }
 
 .card-container > .card-top {
@@ -68,6 +76,7 @@
 .card-container > .card-bottom .blocked-results {
   display: flex;
   gap: 8px;
+  align-items: center;
 }
 
 .card-container > .blocked-results span {
@@ -77,8 +86,6 @@
 }
 
 .card-container > .card-bottom svg {
-  width: 14px;
-  height: 14px;
   fill: rgb(36, 22, 22);
   transition: fill 0.3s ease;
 }
@@ -105,12 +112,18 @@
 }
 
 .delete-button svg {
-  width: 18px;
-  height: 18px;
   fill: rgb(36, 22, 22);
   transition: fill 0.3s ease;
 }
 
 .delete-button:hover svg {
   fill: #ff4444;
+}
+
+.secondary {
+  background: linear-gradient(rgb(168 222 240), rgb(212 234 247));
+}
+
+#card-top-lifetime {
+  background: linear-gradient(rgb(168 222 240), rgb(212 234 247));
 }

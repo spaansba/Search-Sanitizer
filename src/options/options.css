@@ -16,6 +16,8 @@ body {
 }
 
 h2 {
+  margin-top: 14px;
+  margin-bottom: 8px;
   font-size: 24px;
   font-weight: 600;
   font-style: normal;
@@ -153,13 +155,6 @@ p {
 .logo {
   width: 40px;
   height: 40px;
-}
-
-svg {
-  width: 20px;
-  height: 20px;
-  fill: rgb(36, 22, 22);
-  transition: fill 0.3s ease;
 }
 
 .question-text {

@@ -710,9 +710,7 @@ const App = ({ blockedWebsites }) => {
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
         const messageListener = (message) => {
             if (message.type === "SLIDER_CHANGED") {
-                // Update the state in the current context
                 chrome.storage.sync.get([message.key], (result) => {
-                    // You might need to update your local state here, depending on how you're managing it
                     console.log(`Slider ${message.key} changed to ${result[message.key]}`);
                 });
             }

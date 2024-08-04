@@ -2,10 +2,10 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./src/contentScript/topPage.ts":
-/*!**************************************!*\
-  !*** ./src/contentScript/topPage.ts ***!
-  \**************************************/
+/***/ "./src/components/topPage.ts":
+/*!***********************************!*\
+  !*** ./src/components/topPage.ts ***!
+  \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -137,15 +137,16 @@ function updateBlockedCount(newCount) {
     if (overlayContainer) {
         overlayContainer.textContent = blockedCount.toString();
     }
+    chrome.runtime.sendMessage({ type: "updateBadge", count: blockedCount });
 }
 
 
 /***/ }),
 
-/***/ "./src/contentScript/urlFilter.ts":
-/*!****************************************!*\
-  !*** ./src/contentScript/urlFilter.ts ***!
-  \****************************************/
+/***/ "./src/helper/urlFilter.ts":
+/*!*********************************!*\
+  !*** ./src/helper/urlFilter.ts ***!
+  \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -158,6 +159,13 @@ function createUrlFilter(initialBlockedUrls) {
     function shouldFilterLink(url) {
         try {
             for (const pattern of Object.keys(blockedUrls)) {
+                // Here we check if the pattern is an URL and if it matches the current checked URL
+                if (checkIfMatchedUrl(url, pattern)) {
+                    console.log(`Blocked URL: ${url} matched pattern: ${pattern}`);
+                    blockedUrls[pattern].s++;
+                    return true;
+                }
+                // Here we check if the pattern is a matched Pattern and if it matches the current checked URL
                 if (matchesPattern(url, pattern)) {
                     console.log(`Blocked URL: ${url} matched pattern: ${pattern}`);
                     blockedUrls[pattern].s++;
@@ -171,27 +179,69 @@ function createUrlFilter(initialBlockedUrls) {
             return false;
         }
     }
-    function matchesPattern(hostname, pattern) {
-        hostname = hostname.toLowerCase();
+    function checkIfMatchedUrl(urlString, pattern) {
+        try {
+            const url = new URL(urlString);
+            pattern = removeTrailingSlash(pattern.toLowerCase());
+            const patternVariations = [
+                pattern,
+                `www.${pattern}`,
+                `https://${pattern}`,
+                `https://www.${pattern}`,
+                `http://${pattern}`,
+                `http://www.${pattern}`,
+            ];
+            const comparisons = [
+                url.origin.toLowerCase(),
+                url.host.toLowerCase(),
+                url.hostname.toLowerCase(),
+                removeTrailingSlash(url.href.toLowerCase()),
+            ];
+            for (const comp of comparisons) {
+                for (const variation of patternVariations) {
+                    if (comp === variation) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        catch (error) {
+            console.error(`Invalid URL: ${urlString}`);
+            return false;
+        }
+    }
+    function removeTrailingSlash(s) {
+        return s.endsWith("/") ? s.slice(0, -1) : s;
+    }
+    function matchesPattern(url, pattern) {
+        url = url.toLowerCase();
         pattern = pattern.toLowerCase();
         const escapedPattern = pattern
             .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
             .replace(/\\\*/g, ".*");
         const regex = new RegExp(`^${escapedPattern}$`);
-        return regex.test(hostname);
+        return regex.test(url);
     }
     function shouldFilterResult(links, cites) {
         for (const link of links) {
-            if (shouldFilterLink(link.href)) {
+            if (isElementVisible(link) && shouldFilterLink(link.href)) {
                 return true;
             }
         }
         for (const cite of cites) {
-            if (cite.textContent && shouldFilterLink(cite.textContent)) {
+            if (cite.textContent &&
+                isElementVisible(cite) &&
+                shouldFilterLink(cite.textContent)) {
                 return true;
             }
         }
         return false;
+    }
+    function isElementVisible(element) {
+        return !!(element.offsetWidth ||
+            element.offsetHeight ||
+            element.getClientRects().length);
     }
     function getBlockedUrls() {
         return blockedUrls;
@@ -278,8 +328,8 @@ var __webpack_exports__ = {};
   !*** ./src/contentScript/contentScript.ts ***!
   \********************************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _topPage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./topPage */ "./src/contentScript/topPage.ts");
-/* harmony import */ var _urlFilter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./urlFilter */ "./src/contentScript/urlFilter.ts");
+/* harmony import */ var _components_topPage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/topPage */ "./src/components/topPage.ts");
+/* harmony import */ var _helper_urlFilter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helper/urlFilter */ "./src/helper/urlFilter.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -298,24 +348,33 @@ function filterGoogleSearch(blockedUrls) {
     }
     document.documentElement.dataset.addScript = "true";
     const processedResults = new Set();
-    const urlFilter = (0,_urlFilter__WEBPACK_IMPORTED_MODULE_1__.createUrlFilter)(blockedUrls);
-    const search = document.querySelector("#search");
-    if (!search) {
-        console.error("#Search could not be found");
-    }
-    new MutationObserver((mutataion) => {
-        filterNormalSearch();
-        setTimeout(filterRelatedQuestions, 500); //TODO fix need for 500 timeout
-        urlFilter.setBlockedUrl();
-    }).observe(search !== null && search !== void 0 ? search : document.body, {
-        //TODO: try to always get search, sometimes it just loads differently
+    const urlFilter = (0,_helper_urlFilter__WEBPACK_IMPORTED_MODULE_1__.createUrlFilter)(blockedUrls);
+    // Set up a MutationObserver to wait for the #search element
+    new MutationObserver((_, obs) => {
+        const search = document.querySelector("#search");
+        if (search) {
+            obs.disconnect(); // Stop observing once #search is found
+            setupFilteringObserver(search);
+        }
+    }).observe(document.body, {
         childList: true,
         subtree: true,
         attributes: false,
         characterData: false,
     });
-    function filterNormalSearch() {
-        //:not([data-initq] * excludes all the "MoreToAskSection" elements
+    function setupFilteringObserver(search) {
+        new MutationObserver(() => {
+            filterNormalSearch(search);
+            setTimeout(() => filterRelatedQuestions(search), 500); //TODO fix need for 500 timeout
+            urlFilter.setBlockedUrl();
+        }).observe(search, {
+            childList: true,
+            subtree: true,
+            attributes: false,
+            characterData: false,
+        });
+    }
+    function filterNormalSearch(search) {
         const searchResults = search.querySelectorAll(".g:not([data-processed]):not([data-initq] *)");
         if (!searchResults) {
             return;
@@ -333,7 +392,7 @@ function filterGoogleSearch(blockedUrls) {
             }
         });
     }
-    function filterRelatedQuestions() {
+    function filterRelatedQuestions(search) {
         const moreToAskSections = search.querySelectorAll("[data-initq]");
         if (!moreToAskSections) {
             return;
@@ -358,6 +417,7 @@ function filterGoogleSearch(blockedUrls) {
 }
 function initializeExtension() {
     return __awaiter(this, void 0, void 0, function* () {
+        checkForUrlChange();
         const isExtensionOn = yield chrome.storage.sync.get(["ExtensionOnOff"]);
         if (isExtensionOn.ExtensionOnOff) {
             const initialValues = yield chrome.storage.sync.get(["blockedUrlData"]);
@@ -369,10 +429,9 @@ function initializeExtension() {
     });
 }
 let BlockedCount = 0;
-//Since we run content script at document start (see manifest) we can only add new content on loaded dom
 document.addEventListener("DOMContentLoaded", () => {
     chrome.storage.sync.get(["ExtensionOnOff"], (result) => {
-        (0,_topPage__WEBPACK_IMPORTED_MODULE_0__.addTopOfPage)(result.ExtensionOnOff, BlockedCount);
+        (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.addTopOfPage)(result.ExtensionOnOff, BlockedCount);
     });
 });
 function addDocumentHead() {
@@ -389,19 +448,23 @@ function addDocumentHead() {
     document.head.appendChild(style);
 }
 function addCardShow(element) {
-    if (isElementVisible(element)) {
-        BlockedCount = BlockedCount + 1;
-        (0,_topPage__WEBPACK_IMPORTED_MODULE_0__.updateBlockedCount)(BlockedCount);
-        element.setAttribute("card-show", (0,_topPage__WEBPACK_IMPORTED_MODULE_0__.getResultsHidden)().toString());
-        element.setAttribute("card-relevant", "true");
+    BlockedCount = BlockedCount + 1;
+    (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.updateBlockedCount)(BlockedCount);
+    element.setAttribute("card-show", (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.getResultsHidden)().toString());
+    element.setAttribute("card-relevant", "true");
+}
+let lastUrl = location.href;
+function checkForUrlChange() {
+    if (location.href !== lastUrl) {
+        lastUrl = location.href;
+        resetBadge();
     }
 }
-// Otherwise we are processing way to many elements that are not even visible on the page
-function isElementVisible(element) {
-    return !!(element.offsetWidth ||
-        element.offsetHeight ||
-        element.getClientRects().length);
+function resetBadge() {
+    BlockedCount = 0;
+    (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.updateBlockedCount)(BlockedCount);
 }
+window.addEventListener("beforeunload", resetBadge);
 initializeExtension();
 
 /******/ })()

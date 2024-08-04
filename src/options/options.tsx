@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, createContext } from "react"
 import { createRoot } from "react-dom/client"
 import "./options.css"
 import OnOffSlider from "../components/onOffSlider"
-import { UserSettings } from "../types"
+import { BlockedUrlData, UserSettings } from "../types"
 import CodeMirrorEditor from "../components/codeMirrorEditor/codeMirrorEditor"
 import OptionBlockedCards from "../components/dashboard/optionBlockedCards"
 import HelpButton from "../components/helpButton/helpButton"
@@ -11,10 +11,24 @@ interface SettingsProps {
   settings: UserSettings[]
 }
 
+export const BlockedUrlsContext = createContext<
+  [BlockedUrlData, React.Dispatch<React.SetStateAction<BlockedUrlData>>]
+>([{}, () => {}])
+
 const App: React.FC = () => {
   const [activeSection, setActiveSection] = useState<
     "settings" | "blockedSites"
   >("blockedSites")
+  const [blockedUrls, setBlockedUrls] = useState<BlockedUrlData>({})
+
+  useEffect(() => {
+    chrome.storage.sync.get(["blockedUrlData"], (result) => {
+      console.log("Retrieved from storage:", result.blockedUrlData)
+      if (result.blockedUrlData) {
+        setBlockedUrls(result.blockedUrlData)
+      }
+    })
+  }, [])
 
   const allSettings: SettingsProps = {
     settings: [
@@ -47,6 +61,24 @@ const App: React.FC = () => {
 
   const renderMiddleSection = () => {
     switch (activeSection) {
+      case "blockedSites":
+        return (
+          <>
+            <h2>Blocked Sites</h2>
+            <div className="question-text">
+              Sites can be blocked via URL or by Match Pattern
+              <HelpButton helpElement={helpMatchedPattern()}></HelpButton>
+            </div>
+            <OptionBlockedCards></OptionBlockedCards>
+            <h2>Block in bulk</h2>
+            <div className="question-text">
+              Easy access to remove and add sites to block in bulk via URL or by
+              Match Pattern
+              <HelpButton helpElement={helpMatchedPattern()}></HelpButton>
+            </div>
+            <CodeMirrorEditor></CodeMirrorEditor>
+          </>
+        )
       case "settings":
         return (
           <>
@@ -64,50 +96,39 @@ const App: React.FC = () => {
             ))}
           </>
         )
-      case "blockedSites":
-        return (
-          <>
-            <h2>Blocked Sites</h2>
-            <div className="question-text">
-              Sites can be blocked via URL or by Match Pattern
-              <HelpButton helpElement={helpMatchedPattern()}></HelpButton>
-            </div>
-            <OptionBlockedCards></OptionBlockedCards>
-            <h3>Block in bulk</h3>
-            <CodeMirrorEditor></CodeMirrorEditor>
-          </>
-        )
     }
   }
 
   return (
-    <div className="card">
-      <header>
-        <div className="container">
-          <img className="logo" src="logoApp.png" alt="logo" />
-          <div className="header-wrapper">
-            <div
-              className={`container image-offset button ${
-                activeSection === "settings" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("settings")}
-            >
-              <div>Settings</div>
-            </div>
+    <BlockedUrlsContext.Provider value={[blockedUrls, setBlockedUrls]}>
+      <div className="card">
+        <header>
+          <div className="container">
+            <img className="logo" src="logoApp.png" alt="logo" />
+            <div className="header-wrapper">
+              <div
+                className={`container image-offset button ${
+                  activeSection === "blockedSites" ? "active" : ""
+                }`}
+                onClick={() => setActiveSection("blockedSites")}
+              >
+                <div>Blocked Sites</div>
+              </div>
 
-            <div
-              className={`container image-offset button ${
-                activeSection === "blockedSites" ? "active" : ""
-              }`}
-              onClick={() => setActiveSection("blockedSites")}
-            >
-              <div>Blocked Sites</div>
+              <div
+                className={`container image-offset button ${
+                  activeSection === "settings" ? "active" : ""
+                }`}
+                onClick={() => setActiveSection("settings")}
+              >
+                <div>Settings</div>
+              </div>
             </div>
           </div>
-        </div>
-      </header>
-      <div id="middle">{renderMiddleSection()}</div>
-    </div>
+        </header>
+        <div id="middle">{renderMiddleSection()}</div>
+      </div>
+    </BlockedUrlsContext.Provider>
   )
 }
 
@@ -126,7 +147,7 @@ const helpMatchedPattern: () => React.JSX.Element = () => {
               Match Pattern
             </th>
             <th style={{ border: "1px solid black", padding: "8px" }}>
-              URLs Matched
+              Example of URLs Matched
             </th>
           </tr>
         </thead>
