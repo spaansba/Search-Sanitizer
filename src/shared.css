@@ -1,0 +1,75 @@
+/* Mostly for shared css between options/popup */
+.url-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid hsl(202, 7%, 69%);
+  padding: 5px 0;
+  font-size: 14px;
+  outline: none;
+  transition: border-bottom-color 0.3s ease;
+
+  &:focus {
+    border-bottom-color: hsl(0, 5%, 17%);
+  }
+}
+
+.url-button {
+  padding: 8px 16px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.url-button.add {
+  background-color: black;
+  width: 55%;
+}
+
+.url-button.add.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.url-button.cancel {
+  background-color: #ccccca;
+  width: 40%;
+  color: black;
+}
+
+.button-wrapper {
+  margin-top: 17px;
+  justify-content: space-between;
+  display: flex;
+}
+
+.dialog-container {
+  border: 1px solid #ccccca;
+  border-radius: 8px;
+  z-index: 1000;
+  background: #fffaf2;
+  animation: dialogAnimation 0.2s ease-out forwards;
+  padding: 15px;
+
+  h1 {
+    font-size: 14px;
+    margin-bottom: 15px;
+  }
+}
+
+.dialog-container::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.alternatives-container.focused {
+  background-color: #f0f0f0; /* or any color you prefer */
+  outline: 2px solid #007bff; /* or any style you prefer */
+}

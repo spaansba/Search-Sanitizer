@@ -1,6 +1,11 @@
 import { Diagnostic, linter } from "@codemirror/lint"
 import { EditorView } from "codemirror"
-import { isValidMatchPattern, isValidUrl } from "../../helper/validUrls"
+import {
+  isValidMatchPattern,
+  isValidUrl,
+  stringToMatchPattern,
+  stringToUrl,
+} from "../../helper/urlHelpers"
 
 const MAX_CHARS_PER_LINE = 100 // Maximum number of characters allowed per line
 
@@ -40,17 +45,17 @@ export const urlLinter = linter(
 
       if (lineText) {
         if (!isValidMatchPattern(lineText) && !isValidUrl(lineText)) {
-          let fixedPattern = attemptToFixMatchPattern(lineText)
+          const convertedUrl = stringToUrl(lineText)
+          const fixedPattern = stringToMatchPattern(lineText)
           diagnostics.push({
             from: line.from,
             to: line.to,
             severity: "error",
-            message: `Invalid match pattern or URL\n\nTurn into URL?: https://www.${lineText}.com\nOr turn into match pattern?: ${fixedPattern}\n\n`,
+            message: `Invalid match pattern or URL\n\nTurn into URL?: ${convertedUrl}\nOr turn into match pattern?: ${fixedPattern}\n\n`,
             actions: [
               {
                 name: "Convert to URL",
                 apply(view, from, to) {
-                  const convertedUrl = `https://www.${lineText}.com`
                   view.dispatch({
                     changes: { from, to, insert: convertedUrl },
                   })
@@ -84,34 +89,3 @@ export const urlLinter = linter(
     delay: 200,
   }
 )
-
-function attemptToFixMatchPattern(input: string): string {
-  input = input.trim()
-
-  // If it's already a valid URL, return it as is
-  if (isValidMatchPattern(input)) {
-    return input
-  }
-
-  // If it's a URL, convert it to a match pattern
-  if (/^https?:\/\//.test(input)) {
-    return input.replace(/^(https?):\/\//, "*://*.")
-  }
-
-  // If it doesn't start with a scheme, add *://
-  if (!/^(\*|https?|ftp):\/\//.test(input)) {
-    input = "*://*." + input
-  }
-
-  // If there's no path, add /*
-  if (!/\//.test(input)) {
-    input += "/*"
-  } else if (!input.endsWith("*")) {
-    input += "*"
-  }
-
-  // Replace multiple consecutive * with a single *
-  input = input.replace(/\*+/g, "*")
-
-  return input
-}

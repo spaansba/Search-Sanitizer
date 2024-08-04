@@ -346,77 +346,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, `.add-url-dialog {
-  border: 1px solid #ccccca;
-  border-radius: 8px;
-  z-index: 1000;
-  background: #fffaf2;
-  animation: dialogAnimation 0.2s ease-out forwards;
-  padding: 15px;
-
-  h1 {
-    font-size: 14px;
-    margin-bottom: 15px;
-  }
-
-  .url-input {
-    width: 100%;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid hsl(204 4% 24%);
-    padding: 5px 0;
-    font-size: 14px;
-    outline: none;
-    transition: border-bottom-color 0.3s ease;
-
-    &:focus {
-      border-bottom-color: hsl(204 70% 50%);
-    }
-  }
-
-  .button-wrapper {
-    margin-top: 17px;
-    justify-content: space-between;
-    display: flex;
-  }
-
-  .url-button {
-    padding: 8px 16px;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      opacity: 0.8;
-    }
-  }
-}
-
-.url-button.add {
-  background-color: black;
-  width: 55%;
-}
-
-.url-button.add.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.url-button.cancel {
-  background-color: #ccccca;
-  width: 40%;
-  color: black;
-}
-
-.add-url-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(3px);
-  animation: fadeIn 0.2s ease-out forwards;
-}
-
-@keyframes fadeIn {
+___CSS_LOADER_EXPORT___.push([module.id, `@keyframes fadeIn {
   from {
     opacity: 0;
   }
@@ -435,79 +365,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.add-url-dialog {
     transform: scale(1);
   }
 }
-`, "",{"version":3,"sources":["webpack://./src/components/modals/modalAddUrl.css"],"names":[],"mappings":"AAAA;EACE,yBAAyB;EACzB,kBAAkB;EAClB,aAAa;EACb,mBAAmB;EACnB,iDAAiD;EACjD,aAAa;;EAEb;IACE,eAAe;IACf,mBAAmB;EACrB;;EAEA;IACE,WAAW;IACX,uBAAuB;IACvB,YAAY;IACZ,wCAAwC;IACxC,cAAc;IACd,eAAe;IACf,aAAa;IACb,yCAAyC;;IAEzC;MACE,qCAAqC;IACvC;EACF;;EAEA;IACE,gBAAgB;IAChB,8BAA8B;IAC9B,aAAa;EACf;;EAEA;IACE,iBAAiB;IACjB,YAAY;IACZ,YAAY;IACZ,kBAAkB;IAClB,eAAe;IACf,sCAAsC;;IAEtC;MACE,YAAY;IACd;EACF;AACF;;AAEA;EACE,uBAAuB;EACvB,UAAU;AACZ;;AAEA;EACE,YAAY;EACZ,mBAAmB;AACrB;;AAEA;EACE,yBAAyB;EACzB,UAAU;EACV,YAAY;AACd;;AAEA;EACE,8BAA8B;EAC9B,0BAA0B;EAC1B,wCAAwC;AAC1C;;AAEA;EACE;IACE,UAAU;EACZ;EACA;IACE,UAAU;EACZ;AACF;;AAEA;EACE;IACE,UAAU;IACV,qBAAqB;EACvB;EACA;IACE,UAAU;IACV,mBAAmB;EACrB;AACF","sourcesContent":[".add-url-dialog {\r\n  border: 1px solid #ccccca;\r\n  border-radius: 8px;\r\n  z-index: 1000;\r\n  background: #fffaf2;\r\n  animation: dialogAnimation 0.2s ease-out forwards;\r\n  padding: 15px;\r\n\r\n  h1 {\r\n    font-size: 14px;\r\n    margin-bottom: 15px;\r\n  }\r\n\r\n  .url-input {\r\n    width: 100%;\r\n    background: transparent;\r\n    border: none;\r\n    border-bottom: 1px solid hsl(204 4% 24%);\r\n    padding: 5px 0;\r\n    font-size: 14px;\r\n    outline: none;\r\n    transition: border-bottom-color 0.3s ease;\r\n\r\n    &:focus {\r\n      border-bottom-color: hsl(204 70% 50%);\r\n    }\r\n  }\r\n\r\n  .button-wrapper {\r\n    margin-top: 17px;\r\n    justify-content: space-between;\r\n    display: flex;\r\n  }\r\n\r\n  .url-button {\r\n    padding: 8px 16px;\r\n    color: white;\r\n    border: none;\r\n    border-radius: 4px;\r\n    cursor: pointer;\r\n    transition: background-color 0.3s ease;\r\n\r\n    &:hover {\r\n      opacity: 0.8;\r\n    }\r\n  }\r\n}\r\n\r\n.url-button.add {\r\n  background-color: black;\r\n  width: 55%;\r\n}\r\n\r\n.url-button.add.disabled {\r\n  opacity: 0.5;\r\n  cursor: not-allowed;\r\n}\r\n\r\n.url-button.cancel {\r\n  background-color: #ccccca;\r\n  width: 40%;\r\n  color: black;\r\n}\r\n\r\n.add-url-dialog::backdrop {\r\n  background: rgba(0, 0, 0, 0.5);\r\n  backdrop-filter: blur(3px);\r\n  animation: fadeIn 0.2s ease-out forwards;\r\n}\r\n\r\n@keyframes fadeIn {\r\n  from {\r\n    opacity: 0;\r\n  }\r\n  to {\r\n    opacity: 1;\r\n  }\r\n}\r\n\r\n@keyframes dialogAnimation {\r\n  from {\r\n    opacity: 0;\r\n    transform: scale(0.9);\r\n  }\r\n  to {\r\n    opacity: 1;\r\n    transform: scale(1);\r\n  }\r\n}\r\n"],"sourceRoot":""}]);
-// Exports
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
-
-
-/***/ }),
-
-/***/ "./node_modules/css-loader/dist/cjs.js!./src/components/onOffSlider.css":
-/*!******************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js!./src/components/onOffSlider.css ***!
-  \******************************************************************************/
-/***/ ((module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/sourceMaps.js */ "./node_modules/css-loader/dist/runtime/sourceMaps.js");
-/* harmony import */ var _node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
-/* harmony import */ var _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1__);
-// Imports
-
-
-var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
-// Module
-___CSS_LOADER_EXPORT___.push([module.id, `/* On/Off Slider */
-.slider-container {
-  width: 42.5px; /* 34px * 1.25 = 42.5px */
-  height: 26.25px; /* 21px * 1.25 = 26.25px */
-  position: relative;
-}
-
-.slider-checkbox {
-  opacity: 0;
-  width: 0;
-  height: 0;
-  position: absolute;
-}
-
-.slider-switch {
-  width: 100%;
-  height: 100%;
-  display: block;
-  background-color: #e0dfe2;
-  border-radius: 13.75px; /* 11px * 1.25 = 13.75px */
-  cursor: pointer;
-  transition: all 0.4s ease-out;
-}
-
-.slider-slider {
-  width: 22.5px; /* 18px * 1.25 = 22.5px */
-  height: 22.5px;
-  position: absolute;
-  left: calc(50% - 22.5px / 2 - 8.75px); /* Adjusted for new size */
-  top: calc(50% - 22.5px / 2);
-  border-radius: 50%;
-  background: white;
-  box-shadow: 0px 2.5px 6.25px rgba(0, 0, 0, 0.15),
-    0px 2.5px 1.25px rgba(0, 0, 0, 0.06); /* Increased shadow */
-  transition: all 0.4s ease-out;
-  cursor: pointer;
-}
-
-.slider-checkbox:checked + .slider-switch {
-  background-color: #34c759;
-}
-
-.slider-checkbox:checked + .slider-switch .slider-slider {
-  left: calc(50% - 22.5px / 2 + 8.75px); /* Adjusted for new size */
-  top: calc(50% - 22.5px / 2);
-}
-`, "",{"version":3,"sources":["webpack://./src/components/onOffSlider.css"],"names":[],"mappings":"AAAA,kBAAkB;AAClB;EACE,aAAa,EAAE,yBAAyB;EACxC,eAAe,EAAE,0BAA0B;EAC3C,kBAAkB;AACpB;;AAEA;EACE,UAAU;EACV,QAAQ;EACR,SAAS;EACT,kBAAkB;AACpB;;AAEA;EACE,WAAW;EACX,YAAY;EACZ,cAAc;EACd,yBAAyB;EACzB,sBAAsB,EAAE,0BAA0B;EAClD,eAAe;EACf,6BAA6B;AAC/B;;AAEA;EACE,aAAa,EAAE,yBAAyB;EACxC,cAAc;EACd,kBAAkB;EAClB,qCAAqC,EAAE,0BAA0B;EACjE,2BAA2B;EAC3B,kBAAkB;EAClB,iBAAiB;EACjB;wCACsC,EAAE,qBAAqB;EAC7D,6BAA6B;EAC7B,eAAe;AACjB;;AAEA;EACE,yBAAyB;AAC3B;;AAEA;EACE,qCAAqC,EAAE,0BAA0B;EACjE,2BAA2B;AAC7B","sourcesContent":["/* On/Off Slider */\r\n.slider-container {\r\n  width: 42.5px; /* 34px * 1.25 = 42.5px */\r\n  height: 26.25px; /* 21px * 1.25 = 26.25px */\r\n  position: relative;\r\n}\r\n\r\n.slider-checkbox {\r\n  opacity: 0;\r\n  width: 0;\r\n  height: 0;\r\n  position: absolute;\r\n}\r\n\r\n.slider-switch {\r\n  width: 100%;\r\n  height: 100%;\r\n  display: block;\r\n  background-color: #e0dfe2;\r\n  border-radius: 13.75px; /* 11px * 1.25 = 13.75px */\r\n  cursor: pointer;\r\n  transition: all 0.4s ease-out;\r\n}\r\n\r\n.slider-slider {\r\n  width: 22.5px; /* 18px * 1.25 = 22.5px */\r\n  height: 22.5px;\r\n  position: absolute;\r\n  left: calc(50% - 22.5px / 2 - 8.75px); /* Adjusted for new size */\r\n  top: calc(50% - 22.5px / 2);\r\n  border-radius: 50%;\r\n  background: white;\r\n  box-shadow: 0px 2.5px 6.25px rgba(0, 0, 0, 0.15),\r\n    0px 2.5px 1.25px rgba(0, 0, 0, 0.06); /* Increased shadow */\r\n  transition: all 0.4s ease-out;\r\n  cursor: pointer;\r\n}\r\n\r\n.slider-checkbox:checked + .slider-switch {\r\n  background-color: #34c759;\r\n}\r\n\r\n.slider-checkbox:checked + .slider-switch .slider-slider {\r\n  left: calc(50% - 22.5px / 2 + 8.75px); /* Adjusted for new size */\r\n  top: calc(50% - 22.5px / 2);\r\n}\r\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/components/modals/modalAddUrl.css"],"names":[],"mappings":"AAAA;EACE;IACE,UAAU;EACZ;EACA;IACE,UAAU;EACZ;AACF;;AAEA;EACE;IACE,UAAU;IACV,qBAAqB;EACvB;EACA;IACE,UAAU;IACV,mBAAmB;EACrB;AACF","sourcesContent":["@keyframes fadeIn {\r\n  from {\r\n    opacity: 0;\r\n  }\r\n  to {\r\n    opacity: 1;\r\n  }\r\n}\r\n\r\n@keyframes dialogAnimation {\r\n  from {\r\n    opacity: 0;\r\n    transform: scale(0.9);\r\n  }\r\n  to {\r\n    opacity: 1;\r\n    transform: scale(1);\r\n  }\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -913,58 +771,6 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ "./src/components/onOffSlider.css":
-/*!****************************************!*\
-  !*** ./src/components/onOffSlider.css ***!
-  \****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js */ "./node_modules/style-loader/dist/runtime/injectStylesIntoStyleTag.js");
-/* harmony import */ var _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleDomAPI.js */ "./node_modules/style-loader/dist/runtime/styleDomAPI.js");
-/* harmony import */ var _node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertBySelector.js */ "./node_modules/style-loader/dist/runtime/insertBySelector.js");
-/* harmony import */ var _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js */ "./node_modules/style-loader/dist/runtime/setAttributesWithoutAttributes.js");
-/* harmony import */ var _node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/insertStyleElement.js */ "./node_modules/style-loader/dist/runtime/insertStyleElement.js");
-/* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
-/* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_onOffSlider_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../node_modules/css-loader/dist/cjs.js!./onOffSlider.css */ "./node_modules/css-loader/dist/cjs.js!./src/components/onOffSlider.css");
-
-      
-      
-      
-      
-      
-      
-      
-      
-      
-
-var options = {};
-
-options.styleTagTransform = (_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default());
-options.setAttributes = (_node_modules_style_loader_dist_runtime_setAttributesWithoutAttributes_js__WEBPACK_IMPORTED_MODULE_3___default());
-options.insert = _node_modules_style_loader_dist_runtime_insertBySelector_js__WEBPACK_IMPORTED_MODULE_2___default().bind(null, "head");
-options.domAPI = (_node_modules_style_loader_dist_runtime_styleDomAPI_js__WEBPACK_IMPORTED_MODULE_1___default());
-options.insertStyleElement = (_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default());
-
-var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js__WEBPACK_IMPORTED_MODULE_0___default()(_node_modules_css_loader_dist_cjs_js_onOffSlider_css__WEBPACK_IMPORTED_MODULE_6__["default"], options);
-
-
-
-
-       /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_css_loader_dist_cjs_js_onOffSlider_css__WEBPACK_IMPORTED_MODULE_6__["default"] && _node_modules_css_loader_dist_cjs_js_onOffSlider_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals ? _node_modules_css_loader_dist_cjs_js_onOffSlider_css__WEBPACK_IMPORTED_MODULE_6__["default"].locals : undefined);
-
-
-/***/ }),
-
 /***/ "./src/options/options.css":
 /*!*********************************!*\
   !*** ./src/options/options.css ***!
@@ -1150,7 +956,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   urlLinter: () => (/* binding */ urlLinter)
 /* harmony export */ });
 /* harmony import */ var _codemirror_lint__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @codemirror/lint */ "./node_modules/@codemirror/lint/dist/index.js");
-/* harmony import */ var _helper_validUrls__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../helper/validUrls */ "./src/helper/validUrls.ts");
+/* harmony import */ var _helper_urlHelpers__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../helper/urlHelpers */ "./src/helper/urlHelpers.ts");
 
 
 const MAX_CHARS_PER_LINE = 100; // Maximum number of characters allowed per line
@@ -1185,18 +991,18 @@ const urlLinter = (0,_codemirror_lint__WEBPACK_IMPORTED_MODULE_1__.linter)((view
             return diagnostics;
         }
         if (lineText) {
-            if (!(0,_helper_validUrls__WEBPACK_IMPORTED_MODULE_0__.isValidMatchPattern)(lineText) && !(0,_helper_validUrls__WEBPACK_IMPORTED_MODULE_0__.isValidUrl)(lineText)) {
-                let fixedPattern = attemptToFixMatchPattern(lineText);
+            if (!(0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_0__.isValidMatchPattern)(lineText) && !(0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_0__.isValidUrl)(lineText)) {
+                const convertedUrl = (0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_0__.stringToUrl)(lineText);
+                const fixedPattern = (0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_0__.stringToMatchPattern)(lineText);
                 diagnostics.push({
                     from: line.from,
                     to: line.to,
                     severity: "error",
-                    message: `Invalid match pattern or URL\n\nTurn into URL?: https://www.${lineText}.com\nOr turn into match pattern?: ${fixedPattern}\n\n`,
+                    message: `Invalid match pattern or URL\n\nTurn into URL?: ${convertedUrl}\nOr turn into match pattern?: ${fixedPattern}\n\n`,
                     actions: [
                         {
                             name: "Convert to URL",
                             apply(view, from, to) {
-                                const convertedUrl = `https://www.${lineText}.com`;
                                 view.dispatch({
                                     changes: { from, to, insert: convertedUrl },
                                 });
@@ -1227,31 +1033,6 @@ const urlLinter = (0,_codemirror_lint__WEBPACK_IMPORTED_MODULE_1__.linter)((view
 }, {
     delay: 200,
 });
-function attemptToFixMatchPattern(input) {
-    input = input.trim();
-    // If it's already a valid URL, return it as is
-    if ((0,_helper_validUrls__WEBPACK_IMPORTED_MODULE_0__.isValidMatchPattern)(input)) {
-        return input;
-    }
-    // If it's a URL, convert it to a match pattern
-    if (/^https?:\/\//.test(input)) {
-        return input.replace(/^(https?):\/\//, "*://*.");
-    }
-    // If it doesn't start with a scheme, add *://
-    if (!/^(\*|https?|ftp):\/\//.test(input)) {
-        input = "*://*." + input;
-    }
-    // If there's no path, add /*
-    if (!/\//.test(input)) {
-        input += "/*";
-    }
-    else if (!input.endsWith("*")) {
-        input += "*";
-    }
-    // Replace multiple consecutive * with a single *
-    input = input.replace(/\*+/g, "*");
-    return input;
-}
 
 
 /***/ }),
@@ -1409,8 +1190,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _modalAddUrl_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modalAddUrl.css */ "./src/components/modals/modalAddUrl.css");
-/* harmony import */ var _options_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../options/options */ "./src/options/options.tsx");
-/* harmony import */ var _helper_validUrls__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../helper/validUrls */ "./src/helper/validUrls.ts");
+/* harmony import */ var _shared_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../shared.css */ "./src/shared.css");
+/* harmony import */ var _options_options__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../options/options */ "./src/options/options.tsx");
+/* harmony import */ var _helper_urlHelpers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../helper/urlHelpers */ "./src/helper/urlHelpers.ts");
+
 
 
 
@@ -1419,7 +1202,7 @@ function ModalAddUrl({ isOpen, onClose }) {
     const dialogRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
     const urlInput = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
     const [inputIsValid, setInputIsValid] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-    const [_, setBlockedUrls] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(_options_options__WEBPACK_IMPORTED_MODULE_2__.BlockedUrlsContext);
+    const [_, setBlockedUrls] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(_options_options__WEBPACK_IMPORTED_MODULE_3__.BlockedUrlsContext);
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
         var _a, _b;
         if (isOpen) {
@@ -1472,7 +1255,7 @@ function ModalAddUrl({ isOpen, onClose }) {
     };
     const handleOnChange = () => {
         const userInput = urlInput.current.value;
-        if ((0,_helper_validUrls__WEBPACK_IMPORTED_MODULE_3__.isValidMatchPattern)(userInput) || (0,_helper_validUrls__WEBPACK_IMPORTED_MODULE_3__.isValidUrl)(userInput)) {
+        if ((0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_4__.isValidMatchPattern)(userInput) || (0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_4__.isValidUrl)(userInput)) {
             setInputIsValid(true);
         }
         else {
@@ -1489,101 +1272,12 @@ function ModalAddUrl({ isOpen, onClose }) {
                 break;
         }
     };
-    return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("dialog", { className: "add-url-dialog", ref: dialogRef, onClose: handleClose, onKeyDown: (event) => handleOnKeyDown(event) },
+    return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("dialog", { className: "dialog-container", ref: dialogRef, onClose: handleClose, onKeyDown: (event) => handleOnKeyDown(event) },
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h1", null, "Add new URL to block"),
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", { onBlur: handleOnChange, onChange: handleOnChange, ref: urlInput, type: "url", className: "url-input", placeholder: "example.com" }),
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "button-wrapper" },
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { onClick: handleAddNewUrl, className: `url-button add ${!inputIsValid ? "disabled" : ""}`, title: !inputIsValid ? "Please enter a valid URL or match pattern" : "" }, "Add"),
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { onClick: handleClose, className: "url-button cancel" }, "Cancel"))));
-}
-
-
-/***/ }),
-
-/***/ "./src/components/onOffSlider.tsx":
-/*!****************************************!*\
-  !*** ./src/components/onOffSlider.tsx ***!
-  \****************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _onOffSlider_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./onOffSlider.css */ "./src/components/onOffSlider.css");
-
-
-function OnOffSlider({ id, googleStorageKey }) {
-    const [isChecked, setIsChecked] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-    const [isLoaded, setIsLoaded] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-        // get the inital state of the slider
-        chrome.storage.sync.get([googleStorageKey], (result) => {
-            setIsChecked(result[googleStorageKey] || false);
-            setIsLoaded(true);
-        });
-        // Listen for changes from other contexts
-        const listener = (changes) => {
-            if (changes[googleStorageKey]) {
-                setIsChecked(changes[googleStorageKey].newValue);
-            }
-        };
-        chrome.storage.onChanged.addListener(listener);
-        return () => {
-            chrome.storage.onChanged.removeListener(listener);
-        };
-    }, [googleStorageKey]);
-    const handleChange = () => {
-        const newValue = !isChecked;
-        chrome.storage.sync.set({ [googleStorageKey]: newValue });
-        setIsChecked(newValue);
-        // Notify other contexts about the change (for if 2 sliders are open in different contexts (e.g on/off slider in both options and popup))
-        chrome.runtime.sendMessage({
-            type: "SLIDER_CHANGED",
-            key: googleStorageKey,
-            value: newValue,
-        });
-    };
-    if (!isLoaded) {
-        return null;
-    }
-    return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "slider-container" },
-        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", { type: "checkbox", id: id, className: "slider-checkbox", checked: isChecked, onChange: handleChange }),
-        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("label", { className: "slider-switch", htmlFor: id },
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "slider-slider" }))));
-}
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OnOffSlider);
-
-
-/***/ }),
-
-/***/ "./src/helper/validUrls.ts":
-/*!*********************************!*\
-  !*** ./src/helper/validUrls.ts ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   isValidMatchPattern: () => (/* binding */ isValidMatchPattern),
-/* harmony export */   isValidUrl: () => (/* binding */ isValidUrl)
-/* harmony export */ });
-function isValidMatchPattern(input) {
-    const matchPatternRegex = /^(?:(?:\*|https?|ftp):\/\/(?:\*|(?:\*\.)?[^/*]+)(?:\/.*)?|\*:\/\/.*)$/;
-    return matchPatternRegex.test(input);
-}
-// valid urls should be:
-// https://www.reddit.com
-// https://.reddit.com
-// www.reddit.com
-// reddit.com
-// http://www.reddit.com
-// http://reddit.com
-function isValidUrl(input) {
-    const urlRegex = /^(www\.[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+(?:\/.*)?|[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+(?:\/.*)?|https:\/\/www\.[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+(?:\/.*)?|https?:\/\/[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+(?:\/.*)?|file:\/\/\/.*)$/;
-    return urlRegex.test(input);
 }
 
 
@@ -1906,7 +1600,7 @@ root.render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(App, null
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_css-loader_dist_runtime_sour-b53f7e","vendors-node_modules_codemirror_commands_dist_index_js-node_modules_codemirror_lang-javascrip-e9cd47"], () => (__webpack_require__("./src/options/options.tsx")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_css-loader_dist_runtime_sour-b53f7e","vendors-node_modules_codemirror_commands_dist_index_js-node_modules_codemirror_lang-javascrip-e9cd47","src_shared_css-src_components_onOffSlider_tsx-src_helper_urlHelpers_ts"], () => (__webpack_require__("./src/options/options.tsx")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

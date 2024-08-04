@@ -43,7 +43,6 @@ function updateTotalBlocked(oldData, newData) {
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     switch (message.type) {
         case "SLIDER_CHANGED":
-            // Relay the message to all other contexts
             chrome.runtime.sendMessage(message);
             break;
         case "updateBadge":
@@ -56,18 +55,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             break;
     }
 });
-//install the context menu on right clicking any page
+// Add context menu(s)
 chrome.runtime.onInstalled.addListener(function () {
     chrome.contextMenus.create({
         id: "AddCurrentURL",
-        title: "Block this site in google search",
+        title: "Block this site in Google Search",
         contexts: ["all"],
     });
 });
-// Send messages based on the menu item clicked
 chrome.contextMenus.onClicked.addListener((info, tab) => {
     switch (info.menuItemId) {
         case "AddCurrentURL":
+            chrome.action.openPopup();
             break;
     }
 });

@@ -1,7 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react"
 import "./modalAddUrl.css"
+import "../../shared.css"
 import { BlockedUrlsContext } from "../../options/options"
-import { isValidMatchPattern, isValidUrl } from "../../helper/validUrls"
+import { isValidMatchPattern, isValidUrl } from "../../helper/urlHelpers"
 
 interface ModalAddUrlProps {
   isOpen: boolean
@@ -100,7 +101,7 @@ export default function ModalAddUrl({ isOpen, onClose }: ModalAddUrlProps) {
 
   return (
     <dialog
-      className="add-url-dialog"
+      className="dialog-container"
       ref={dialogRef}
       onClose={handleClose}
       onKeyDown={(event) => handleOnKeyDown(event)}

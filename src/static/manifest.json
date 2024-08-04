@@ -18,7 +18,7 @@
     "storage",
     "contextMenus",
     "notifications",
-    "action"
+    "tabs"
   ],
   "options_ui": {
     "open_in_tab": true,
