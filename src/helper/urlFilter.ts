@@ -1,135 +1,116 @@
 import { BlockedUrlData } from "../types"
 
-export function createUrlFilter(initialBlockedUrls: BlockedUrlData) {
-  let blockedUrls = { ...initialBlockedUrls }
-  let urlsBlocked = false
-
-  function shouldFilterLink(url: string): boolean {
-    try {
-      for (const pattern of Object.keys(blockedUrls)) {
-        // Here we check if the pattern is an URL and if it matches the current checked URL
-        if (checkIfMatchedUrl(url, pattern)) {
-          console.log(`Blocked URL: ${url} matched pattern: ${pattern}`)
-          blockedUrls[pattern].s++
-          return true
-        }
-
-        // Here we check if the pattern is a matched Pattern and if it matches the current checked URL
-        if (matchesPattern(url, pattern)) {
-          console.log(`Blocked URL: ${url} matched pattern: ${pattern}`)
-          blockedUrls[pattern].s++
-          return true
-        }
-      }
-      return false
-    } catch (error) {
-      console.error(`Error processing ${url}:`, error)
-      return false
+export default function shouldFilterResult(
+  links: NodeListOf<HTMLAnchorElement>,
+  cites: NodeListOf<HTMLElement>,
+  blockedUrls: BlockedUrlData
+): boolean {
+  for (const link of links) {
+    if (isElementVisible(link) && shouldFilterLink(link.href, blockedUrls)) {
+      return true
     }
   }
 
-  function checkIfMatchedUrl(urlString: string, pattern: string): boolean {
-    try {
-      const url = new URL(urlString)
-      pattern = removeTrailingSlash(pattern.toLowerCase())
-
-      const patternVariations = [
-        pattern,
-        `www.${pattern}`,
-        `https://${pattern}`,
-        `https://www.${pattern}`,
-        `http://${pattern}`,
-        `http://www.${pattern}`,
-      ]
-
-      const comparisons = [
-        url.origin.toLowerCase(),
-        url.host.toLowerCase(),
-        url.hostname.toLowerCase(),
-        removeTrailingSlash(url.href.toLowerCase()),
-      ]
-
-      for (const comp of comparisons) {
-        for (const variation of patternVariations) {
-          if (comp === variation) {
-            return true
-          }
-        }
-      }
-
-      return false
-    } catch (error) {
-      console.error(`Invalid URL: ${urlString}`)
-      return false
+  for (const cite of cites) {
+    if (
+      cite.textContent &&
+      isElementVisible(cite) &&
+      shouldFilterLink(cite.textContent, blockedUrls)
+    ) {
+      return true
     }
   }
+  return false
+}
 
-  function removeTrailingSlash(s: string): string {
-    return s.endsWith("/") ? s.slice(0, -1) : s
-  }
-
-  function matchesPattern(url: string, pattern: string): boolean {
-    url = url.toLowerCase()
-    pattern = pattern.toLowerCase()
-
-    const escapedPattern = pattern
-      .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-      .replace(/\\\*/g, ".*")
-
-    const regex = new RegExp(`^${escapedPattern}$`)
-    return regex.test(url)
-  }
-
-  function shouldFilterResult(
-    links: NodeListOf<HTMLAnchorElement>,
-    cites: NodeListOf<HTMLElement>
-  ): boolean {
-    for (const link of links) {
-      if (isElementVisible(link) && shouldFilterLink(link.href)) {
+function shouldFilterLink(
+  urlString: string,
+  blockedUrls: BlockedUrlData
+): boolean {
+  try {
+    const url = new URL(urlString)
+    for (const pattern of Object.keys(blockedUrls.blockedUrlData)) {
+      // Here we check if the pattern is an URL and if it matches the current checked URL
+      if (checkIfMatchedUrl(url, urlString, pattern)) {
+        console.log(`Blocked URL: ${urlString} matched pattern: ${pattern}`)
+        blockedUrls.blockedUrlData[pattern].s++
         return true
       }
-    }
-    for (const cite of cites) {
-      if (
-        cite.textContent &&
-        isElementVisible(cite) &&
-        shouldFilterLink(cite.textContent)
-      ) {
+
+      // Here we check if the pattern is a matched Pattern and if it matches the current checked URL
+      if (matchesPattern(urlString, pattern)) {
+        console.log(`Blocked URL: ${url} matched pattern: ${pattern}`)
+        blockedUrls.blockedUrlData[pattern].s++
         return true
       }
     }
     return false
+  } catch (error) {
+    console.error(`Error processing ${urlString}:`, error)
+    return false
   }
+}
 
-  function isElementVisible(element: HTMLElement): boolean {
-    return !!(
-      element.offsetWidth ||
-      element.offsetHeight ||
-      element.getClientRects().length
-    )
-  }
+function checkIfMatchedUrl(
+  url: URL,
+  urlString: string,
+  pattern: string
+): boolean {
+  try {
+    pattern = removeTrailingSlash(pattern.toLowerCase())
 
-  function getBlockedUrls() {
-    return blockedUrls
-  }
+    const patternVariations = [
+      pattern,
+      `www.${pattern}`,
+      `https://${pattern}`,
+      `https://www.${pattern}`,
+      `http://${pattern}`,
+      `http://www.${pattern}`,
+    ]
 
-  function resetUrlsBlocked() {
-    urlsBlocked = false
-  }
+    const comparisons = [
+      urlString,
+      url.origin.toLowerCase(),
+      url.host.toLowerCase(),
+      url.hostname.toLowerCase(),
+      removeTrailingSlash(url.href.toLowerCase()),
+    ]
 
-  function wereUrlsBlocked() {
-    return urlsBlocked
-  }
+    for (const comp of comparisons) {
+      for (const variation of patternVariations) {
+        if (comp === variation) {
+          return true
+        }
+      }
+    }
 
-  function setBlockedUrl() {
-    chrome.storage.sync.set({ blockedUrlData: blockedUrls })
+    return false
+  } catch (error) {
+    console.error(`Invalid URL`)
+    return false
   }
+}
 
-  return {
-    setBlockedUrl,
-    shouldFilterResult,
-    getBlockedUrls,
-    resetUrlsBlocked,
-    wereUrlsBlocked,
-  }
+function removeTrailingSlash(s: string): string {
+  return s.endsWith("/") ? s.slice(0, -1) : s
+}
+
+function matchesPattern(urlString: string, pattern: string): boolean {
+  urlString = urlString.toLowerCase()
+  pattern = pattern.toLowerCase()
+
+  const escapedPattern = pattern
+    .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    .replace(/\\\*/g, ".*")
+
+  const regex = new RegExp(`^${escapedPattern}$`)
+  return regex.test(urlString)
+}
+
+function isElementVisible(element: HTMLElement): boolean {
+  return !!(
+    element.offsetWidth ||
+    element.offsetHeight ||
+    element.getClientRects().length
+  )
 }

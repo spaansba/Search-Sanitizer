@@ -7,7 +7,7 @@ function OptionBlockedCards() {
   const [blockedUrls, setBlockedUrls] = useContext(BlockedUrlsContext)
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
 
-  const formatCount = (count: number) => {
+  const formatCount = (count: number): string => {
     if (count >= 1000000) {
       return (count / 1000000).toFixed(1) + "M"
     } else if (count >= 1000) {

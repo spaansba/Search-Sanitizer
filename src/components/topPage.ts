@@ -1,5 +1,5 @@
-let resultsHidden = false
-let blockedCount = 0
+import { BlockedCountManager } from "../contentScript"
+
 const styles = `
   .extension-button:hover { opacity: 0.4 !important; }
   .extension-button:active { transform: scale(0.99) !important; }
@@ -32,9 +32,11 @@ const styles = `
   heigth: 22px;
 }
 `
-
-export function addTopOfPage(ExtensionIsOn: boolean, BlockedCount: number) {
-  blockedCount = BlockedCount
+let resultsHidden: boolean = false
+export function addTopOfPage(
+  ExtensionIsOn: boolean,
+  blockedCountManager: BlockedCountManager
+) {
   let searchFormContainer = document.querySelector(".fM33ce")
   let container = document.createElement("div")
 
@@ -48,7 +50,7 @@ export function addTopOfPage(ExtensionIsOn: boolean, BlockedCount: number) {
   }
 
   container.id = "extension-button-search-bar"
-  container.title = getTitle() //TODO make the title look the same as google titles
+  container.title = getTitle(blockedCountManager.getBlockedCount()) //TODO make the title look the same as google titles
   container.className = "XDyW0e"
 
   const img = document.createElement("img")
@@ -57,7 +59,7 @@ export function addTopOfPage(ExtensionIsOn: boolean, BlockedCount: number) {
 
   const blockedOverlay = document.createElement("div")
   blockedOverlay.className = "blocked-count-overlay"
-  blockedOverlay.textContent = blockedCount.toString()
+  blockedOverlay.textContent = blockedCountManager.getBlockedCount().toString()
 
   container = ExtensionIsOn
     ? getExtensionOnElement(container)
@@ -74,37 +76,45 @@ export function addTopOfPage(ExtensionIsOn: boolean, BlockedCount: number) {
     searchFormContainer.appendChild(container)
   }
 
-  addStylesToHead()
-}
-
-function addStylesToHead() {
-  const styleElement = document.createElement("style")
-  styleElement.textContent = styles
-  document.head.appendChild(styleElement)
-}
-
-function getExtensionOnElement(container: HTMLDivElement): HTMLDivElement {
-  container.addEventListener("click", () => {
-    resultsHidden = !resultsHidden
-    container.title = getTitle()
-    toggleHiddenResults()
-  })
-  return container
-}
-
-function getExtensionOffElement(container: HTMLDivElement): HTMLDivElement {
-  container.title =
-    "Search Sanitizer is currently turned off. Click to turn back on"
-  container.style.opacity = "0.4"
-  container.addEventListener("click", () => {
-    chrome.storage.sync.set({ ExtensionOnOff: true }, () => {
-      window.location.reload()
+  function getExtensionOnElement(container: HTMLDivElement): HTMLDivElement {
+    container.addEventListener("click", () => {
+      resultsHidden = !resultsHidden
+      container.title = getTitle(blockedCountManager.getBlockedCount())
+      toggleHiddenResults()
     })
-  })
-  return container
+    return container
+  }
+
+  addStylesToHead()
+  function addStylesToHead() {
+    const styleElement = document.createElement("style")
+    styleElement.textContent = styles
+    document.head.appendChild(styleElement)
+  }
+
+  function getExtensionOffElement(container: HTMLDivElement): HTMLDivElement {
+    container.title =
+      "Search Sanitizer is currently turned off. Click to turn back on"
+    container.style.opacity = "0.4"
+    container.addEventListener("click", () => {
+      chrome.storage.sync.set({ ExtensionOnOff: true }, () => {
+        window.location.reload()
+      })
+    })
+    return container
+  }
+
+  function toggleHiddenResults() {
+    const hiddenElements = document.querySelectorAll("[card-show]")
+    hiddenElements.forEach((element) => {
+      if (element instanceof HTMLElement) {
+        element.setAttribute("card-show", resultsHidden.toString())
+      }
+    })
+  }
 }
 
-function getTitle(): string {
+function getTitle(blockedCount: number): string {
   if (blockedCount < 1) {
     return `${blockedCount} blocked search results`
   } else {
@@ -114,26 +124,16 @@ function getTitle(): string {
   }
 }
 
-function toggleHiddenResults() {
-  const hiddenElements = document.querySelectorAll("[card-show]")
-  hiddenElements.forEach((element) => {
-    if (element instanceof HTMLElement) {
-      element.setAttribute("card-show", resultsHidden.toString())
-    }
-  })
-}
-
 export function getResultsHidden(): boolean {
   return resultsHidden
 }
 
-export function updateBlockedCount(newCount: number) {
-  blockedCount = newCount
+export function updateBlockedCount(blockedCount: number) {
   const container = document.querySelector(
     ".extension-button-search-bar"
   ) as HTMLDivElement
   if (container) {
-    container.title = getTitle()
+    container.title = getTitle(blockedCount)
   }
 
   const overlayContainer = document.querySelector(
@@ -142,6 +142,4 @@ export function updateBlockedCount(newCount: number) {
   if (overlayContainer) {
     overlayContainer.textContent = blockedCount.toString()
   }
-
-  chrome.runtime.sendMessage({ type: "updateBadge", count: blockedCount })
 }
