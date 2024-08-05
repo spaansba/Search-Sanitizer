@@ -346,7 +346,28 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_1___default()((_node_modules_css_loader_dist_runtime_sourceMaps_js__WEBPACK_IMPORTED_MODULE_0___default()));
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, `@keyframes fadeIn {
+___CSS_LOADER_EXPORT___.push([module.id, `.dialog-container {
+  width: 300px;
+  border: 1px solid #ccccca;
+  border-radius: 8px;
+  z-index: 1000;
+  background: #fffaf2;
+  animation: dialogAnimation 0.2s ease-out forwards;
+  padding: 15px;
+
+  h1 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+}
+
+.dialog-container::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+@keyframes fadeIn {
   from {
     opacity: 0;
   }
@@ -365,7 +386,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `@keyframes fadeIn {
     transform: scale(1);
   }
 }
-`, "",{"version":3,"sources":["webpack://./src/components/modals/modalAddUrl.css"],"names":[],"mappings":"AAAA;EACE;IACE,UAAU;EACZ;EACA;IACE,UAAU;EACZ;AACF;;AAEA;EACE;IACE,UAAU;IACV,qBAAqB;EACvB;EACA;IACE,UAAU;IACV,mBAAmB;EACrB;AACF","sourcesContent":["@keyframes fadeIn {\r\n  from {\r\n    opacity: 0;\r\n  }\r\n  to {\r\n    opacity: 1;\r\n  }\r\n}\r\n\r\n@keyframes dialogAnimation {\r\n  from {\r\n    opacity: 0;\r\n    transform: scale(0.9);\r\n  }\r\n  to {\r\n    opacity: 1;\r\n    transform: scale(1);\r\n  }\r\n}\r\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/components/modals/modalAddUrl.css"],"names":[],"mappings":"AAAA;EACE,YAAY;EACZ,yBAAyB;EACzB,kBAAkB;EAClB,aAAa;EACb,mBAAmB;EACnB,iDAAiD;EACjD,aAAa;;EAEb;IACE,eAAe;IACf,mBAAmB;EACrB;AACF;;AAEA;EACE,8BAA8B;EAC9B,0BAA0B;EAC1B,wCAAwC;AAC1C;;AAEA;EACE;IACE,UAAU;EACZ;EACA;IACE,UAAU;EACZ;AACF;;AAEA;EACE;IACE,UAAU;IACV,qBAAqB;EACvB;EACA;IACE,UAAU;IACV,mBAAmB;EACrB;AACF","sourcesContent":[".dialog-container {\r\n  width: 300px;\r\n  border: 1px solid #ccccca;\r\n  border-radius: 8px;\r\n  z-index: 1000;\r\n  background: #fffaf2;\r\n  animation: dialogAnimation 0.2s ease-out forwards;\r\n  padding: 15px;\r\n\r\n  h1 {\r\n    font-size: 18px;\r\n    margin-bottom: 15px;\r\n  }\r\n}\r\n\r\n.dialog-container::backdrop {\r\n  background: rgba(0, 0, 0, 0.5);\r\n  backdrop-filter: blur(3px);\r\n  animation: fadeIn 0.2s ease-out forwards;\r\n}\r\n\r\n@keyframes fadeIn {\r\n  from {\r\n    opacity: 0;\r\n  }\r\n  to {\r\n    opacity: 1;\r\n  }\r\n}\r\n\r\n@keyframes dialogAnimation {\r\n  from {\r\n    opacity: 0;\r\n    transform: scale(0.9);\r\n  }\r\n  to {\r\n    opacity: 1;\r\n    transform: scale(1);\r\n  }\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1190,19 +1211,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _modalAddUrl_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modalAddUrl.css */ "./src/components/modals/modalAddUrl.css");
-/* harmony import */ var _shared_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../shared.css */ "./src/shared.css");
-/* harmony import */ var _options_options__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../options/options */ "./src/options/options.tsx");
-/* harmony import */ var _helper_urlHelpers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../helper/urlHelpers */ "./src/helper/urlHelpers.ts");
-
+/* harmony import */ var _options_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../options/options */ "./src/options/options.tsx");
+/* harmony import */ var _urlInput__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../urlInput */ "./src/components/urlInput.tsx");
 
 
 
 
 function ModalAddUrl({ isOpen, onClose }) {
     const dialogRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-    const urlInput = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-    const [inputIsValid, setInputIsValid] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-    const [_, setBlockedUrls] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(_options_options__WEBPACK_IMPORTED_MODULE_3__.BlockedUrlsContext);
+    const [_, setBlockedUrls] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(_options_options__WEBPACK_IMPORTED_MODULE_2__.BlockedUrlsContext);
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
         var _a, _b;
         if (isOpen) {
@@ -1212,30 +1229,10 @@ function ModalAddUrl({ isOpen, onClose }) {
             (_b = dialogRef.current) === null || _b === void 0 ? void 0 : _b.close();
         }
     }, [isOpen]);
-    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-        // Listen for the custom event to open the modal
-        const handleOpenModal = (event) => {
-            var _a;
-            (_a = dialogRef.current) === null || _a === void 0 ? void 0 : _a.showModal();
-            if (urlInput.current && event.detail.url) {
-                urlInput.current.value = event.detail.url;
-                handleOnChange();
-            }
-        };
-        document.addEventListener("openAddUrlModal", handleOpenModal);
-        return () => {
-            document.removeEventListener("openAddUrlModal", handleOpenModal);
-        };
-    }, []);
     const handleClose = () => {
-        urlInput.current.value = "";
         onClose();
     };
-    const handleAddNewUrl = () => {
-        if (!inputIsValid) {
-            return;
-        }
-        const urlToAdd = urlInput.current.value;
+    function addBlockedUrl(urlToAdd) {
         if (urlToAdd) {
             chrome.storage.sync.get(["blockedUrlData"], (result) => {
                 if (result.blockedUrlData) {
@@ -1252,32 +1249,10 @@ function ModalAddUrl({ isOpen, onClose }) {
                 }
             });
         }
-    };
-    const handleOnChange = () => {
-        const userInput = urlInput.current.value;
-        if ((0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_4__.isValidMatchPattern)(userInput) || (0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_4__.isValidUrl)(userInput)) {
-            setInputIsValid(true);
-        }
-        else {
-            setInputIsValid(false);
-        }
-    };
-    const handleOnKeyDown = (event) => {
-        switch (event.key) {
-            case "Enter":
-                handleAddNewUrl();
-                break;
-            case "Escape":
-                handleClose();
-                break;
-        }
-    };
-    return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("dialog", { className: "dialog-container", ref: dialogRef, onClose: handleClose, onKeyDown: (event) => handleOnKeyDown(event) },
+    }
+    return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("dialog", { className: "dialog-container", ref: dialogRef, onClose: handleClose },
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h1", null, "Add new URL to block"),
-        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("input", { onBlur: handleOnChange, onChange: handleOnChange, ref: urlInput, type: "url", className: "url-input", placeholder: "example.com" }),
-        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "button-wrapper" },
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { onClick: handleAddNewUrl, className: `url-button add ${!inputIsValid ? "disabled" : ""}`, title: !inputIsValid ? "Please enter a valid URL or match pattern" : "" }, "Add"),
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { onClick: handleClose, className: "url-button cancel" }, "Cancel"))));
+        react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_urlInput__WEBPACK_IMPORTED_MODULE_3__["default"], { handleClose: handleClose, addBlockedUrl: addBlockedUrl, addCurrentUrl: false })));
 }
 
 
@@ -1600,7 +1575,7 @@ root.render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(App, null
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_css-loader_dist_runtime_sour-b53f7e","vendors-node_modules_codemirror_commands_dist_index_js-node_modules_codemirror_lang-javascrip-e9cd47","src_shared_css-src_components_onOffSlider_tsx-src_helper_urlHelpers_ts"], () => (__webpack_require__("./src/options/options.tsx")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_css-loader_dist_runtime_sour-b53f7e","vendors-node_modules_codemirror_commands_dist_index_js-node_modules_codemirror_lang-javascrip-e9cd47","src_components_onOffSlider_tsx-src_components_urlInput_tsx"], () => (__webpack_require__("./src/options/options.tsx")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

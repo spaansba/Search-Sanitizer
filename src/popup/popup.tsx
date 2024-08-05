@@ -1,34 +1,11 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useContext, useEffect, useRef, useState } from "react"
 import { createRoot } from "react-dom/client"
 import "./popup.css"
-import "../shared.css"
 import OnOffSlider from "../components/onOffSlider"
-import {
-  isValidMatchPattern,
-  isValidUrl,
-  stringToMatchPattern,
-  stringToUrl,
-} from "../helper/urlHelpers"
+import UrlInput from "../components/urlInput"
+import { BlockedUrlsContext } from "../options/options"
 
 const App: React.FC = () => {
-  const [inputIsValid, setInputIsValid] = useState<boolean>()
-  const urlInput = useRef<HTMLInputElement>(null)
-  const [inputAlternatives, setInputAlternatives] = useState<string[]>([])
-  const [tabUrl, setTabUrl] = useState<URL>()
-  const [inputValue, setInputValue] = useState<string>("")
-
-  // Get the opened tab to backfill the input value
-  useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0] && tabs[0].url) {
-        const newTabUrl = new URL(tabs[0].url)
-        setTabUrl(newTabUrl)
-        setInputValue(newTabUrl.hostname)
-        setInputAlternatives(getUrlAlternatives())
-      }
-    })
-  }, [])
-
   // Get slider changed message
   useEffect(() => {
     const messageListener = (message: any) => {
@@ -44,23 +21,6 @@ const App: React.FC = () => {
     }
   }, [])
 
-  useEffect(() => {
-    console.log("now " + inputIsValid + " " + inputValue)
-  }, [inputIsValid])
-
-  useEffect(() => {
-    if (tabUrl) {
-      urlInput.current.value = tabUrl.hostname
-      setInputAlternatives(getUrlAlternatives())
-      urlInput.current.focus()
-    }
-  }, [tabUrl])
-
-  useEffect(() => {
-    setInputAlternatives(getUrlAlternatives)
-    setInputIsValid(isValidMatchPattern(inputValue) || isValidUrl(inputValue))
-  }, [inputValue])
-
   function openOptionsPage() {
     if (chrome.runtime.openOptionsPage) {
       chrome.runtime.openOptionsPage()
@@ -69,41 +29,11 @@ const App: React.FC = () => {
     }
   }
 
-  function getUrlAlternatives(): string[] {
-    let alternatives: string[] = []
-    if (inputValue) {
-      alternatives.push(stringToMatchPattern(inputValue))
-      if (!isValidMatchPattern(inputValue)) {
-        // dont turn match pattern into url
-        alternatives.push(stringToUrl(inputValue))
-      }
-    }
-    if (tabUrl) {
-      alternatives.push(stringToMatchPattern(tabUrl.hostname))
-      if (tabUrl.hostname != inputValue) {
-        alternatives.push(tabUrl.hostname)
-      }
-    }
-
-    // Remove duplicates and filter some inputs
-    return [...new Set(alternatives)].filter(
-      (alt) => alt !== "*://*.*://*.*" && alt !== inputValue
-    )
+  const handleClose = () => {
+    window.close()
   }
 
-  const handleInputChange = () => {
-    if (inputValue == urlInput.current.value) {
-      return
-    }
-    setInputValue(urlInput.current.value.trim())
-  }
-
-  const handleAddNewUrl = () => {
-    if (!inputIsValid) {
-      return
-    }
-    const urlToAdd = urlInput.current.value
-
+  function addBlockedUrl(urlToAdd: string) {
     if (urlToAdd) {
       chrome.storage.sync.get(["blockedUrlData"], (result) => {
         if (result.blockedUrlData) {
@@ -118,16 +48,6 @@ const App: React.FC = () => {
         }
       })
     }
-    handleClose()
-  }
-
-  function onHandleAlternative(Alternative: string) {
-    setInputValue(Alternative.trim())
-    urlInput.current.value = Alternative
-  }
-
-  const handleClose = () => {
-    window.close()
   }
 
   return (
@@ -149,24 +69,13 @@ const App: React.FC = () => {
         </div>
       </div>
 
-      <div id="middle-section" className="scrollable-section">
+      <div id="middle-section">
         <h1>Add new URL to block</h1>
-
-        <div className="button-wrapper">
-          <button
-            disabled={!inputIsValid}
-            onClick={handleAddNewUrl}
-            className={`url-button add ${!inputIsValid ? "disabled" : ""}`}
-            title={
-              !inputIsValid ? "Please enter a valid URL or match pattern" : ""
-            }
-          >
-            Add
-          </button>
-          <button onClick={handleClose} className="url-button cancel">
-            Cancel
-          </button>
-        </div>
+        <UrlInput
+          handleClose={handleClose}
+          addBlockedUrl={addBlockedUrl}
+          addCurrentUrl={true}
+        ></UrlInput>
       </div>
     </div>
   )

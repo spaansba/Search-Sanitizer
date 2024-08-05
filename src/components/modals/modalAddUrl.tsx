@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useRef, useState } from "react"
+import React, { useContext, useEffect, useRef } from "react"
 import "./modalAddUrl.css"
-import "../../shared.css"
 import { BlockedUrlsContext } from "../../options/options"
-import { isValidMatchPattern, isValidUrl } from "../../helper/urlHelpers"
+import UrlInput from "../urlInput"
 
 interface ModalAddUrlProps {
   isOpen: boolean
@@ -11,8 +10,6 @@ interface ModalAddUrlProps {
 
 export default function ModalAddUrl({ isOpen, onClose }: ModalAddUrlProps) {
   const dialogRef = useRef<HTMLDialogElement>(null)
-  const urlInput = useRef<HTMLInputElement>(null)
-  const [inputIsValid, setInputIsValid] = useState(false)
   const [_, setBlockedUrls] = useContext(BlockedUrlsContext)
 
   useEffect(() => {
@@ -23,40 +20,11 @@ export default function ModalAddUrl({ isOpen, onClose }: ModalAddUrlProps) {
     }
   }, [isOpen])
 
-  useEffect(() => {
-    // Listen for the custom event to open the modal
-    const handleOpenModal = (event: CustomEvent) => {
-      dialogRef.current?.showModal()
-      if (urlInput.current && event.detail.url) {
-        urlInput.current.value = event.detail.url
-        handleOnChange()
-      }
-    }
-
-    document.addEventListener(
-      "openAddUrlModal",
-      handleOpenModal as EventListener
-    )
-
-    return () => {
-      document.removeEventListener(
-        "openAddUrlModal",
-        handleOpenModal as EventListener
-      )
-    }
-  }, [])
-
   const handleClose = () => {
-    urlInput.current.value = ""
     onClose()
   }
 
-  const handleAddNewUrl = () => {
-    if (!inputIsValid) {
-      return
-    }
-    const urlToAdd = urlInput.current.value
-
+  function addBlockedUrl(urlToAdd: string) {
     if (urlToAdd) {
       chrome.storage.sync.get(["blockedUrlData"], (result) => {
         if (result.blockedUrlData) {
@@ -79,56 +47,14 @@ export default function ModalAddUrl({ isOpen, onClose }: ModalAddUrlProps) {
     }
   }
 
-  const handleOnChange = () => {
-    const userInput = urlInput.current.value
-    if (isValidMatchPattern(userInput) || isValidUrl(userInput)) {
-      setInputIsValid(true)
-    } else {
-      setInputIsValid(false)
-    }
-  }
-
-  const handleOnKeyDown = (event: React.KeyboardEvent) => {
-    switch (event.key) {
-      case "Enter":
-        handleAddNewUrl()
-        break
-      case "Escape":
-        handleClose()
-        break
-    }
-  }
-
   return (
-    <dialog
-      className="dialog-container"
-      ref={dialogRef}
-      onClose={handleClose}
-      onKeyDown={(event) => handleOnKeyDown(event)}
-    >
+    <dialog className="dialog-container" ref={dialogRef} onClose={handleClose}>
       <h1>Add new URL to block</h1>
-      <input
-        onBlur={handleOnChange}
-        onChange={handleOnChange}
-        ref={urlInput}
-        type="url"
-        className="url-input"
-        placeholder="example.com"
-      />
-      <div className="button-wrapper">
-        <button
-          onClick={handleAddNewUrl}
-          className={`url-button add ${!inputIsValid ? "disabled" : ""}`}
-          title={
-            !inputIsValid ? "Please enter a valid URL or match pattern" : ""
-          }
-        >
-          Add
-        </button>
-        <button onClick={handleClose} className="url-button cancel">
-          Cancel
-        </button>
-      </div>
+      <UrlInput
+        handleClose={handleClose}
+        addBlockedUrl={addBlockedUrl}
+        addCurrentUrl={false}
+      ></UrlInput>
     </dialog>
   )
 }

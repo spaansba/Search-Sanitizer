@@ -1,6 +1,5 @@
 import React, { useContext, useRef, useState } from "react"
 import "./optionBlockedCards.css"
-import { BlockedUrlData } from "../../types"
 import { BlockedUrlsContext } from "../../options/options"
 import ModalAddUrl from "../modals/modalAddUrl"
 

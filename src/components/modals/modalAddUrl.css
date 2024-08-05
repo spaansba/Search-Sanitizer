@@ -1,3 +1,24 @@
+.dialog-container {
+  width: 300px;
+  border: 1px solid #ccccca;
+  border-radius: 8px;
+  z-index: 1000;
+  background: #fffaf2;
+  animation: dialogAnimation 0.2s ease-out forwards;
+  padding: 15px;
+
+  h1 {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+}
+
+.dialog-container::backdrop {
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
 @keyframes fadeIn {
   from {
     opacity: 0;

@@ -85,30 +85,8 @@ body {
 /* middle */
 #middle-section {
   padding: 0px 15px 15px 15px;
-}
 
-#input-wrapper {
-  display: flex;
-  flex-direction: column;
-  .url-input {
-    margin-bottom: 15px;
+  h1 {
+    font-size: 18px;
   }
-}
-
-.alternatives-container {
-  gap: 5px;
-}
-
-.alternatives {
-  opacity: 0.5;
-  text-overflow: ellipsis;
-  overflow-x: hidden;
-  white-space: nowrap;
-  height: 2rem;
-  align-content: center;
-}
-
-.alternatives:hover {
-  opacity: 1;
-  cursor: pointer;
 }

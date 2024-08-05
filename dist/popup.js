@@ -108,34 +108,12 @@ body {
 /* middle */
 #middle-section {
   padding: 0px 15px 15px 15px;
-}
 
-#input-wrapper {
-  display: flex;
-  flex-direction: column;
-  .url-input {
-    margin-bottom: 15px;
+  h1 {
+    font-size: 18px;
   }
 }
-
-.alternatives-container {
-  gap: 5px;
-}
-
-.alternatives {
-  opacity: 0.5;
-  text-overflow: ellipsis;
-  overflow-x: hidden;
-  white-space: nowrap;
-  height: 2rem;
-  align-content: center;
-}
-
-.alternatives:hover {
-  opacity: 1;
-  cursor: pointer;
-}
-`, "",{"version":3,"sources":["webpack://./src/popup/popup.css"],"names":[],"mappings":"AAAA;EACE,mBAAmB;EACnB,gCAAgC;EAChC,kCAAkC;EAClC,wBAAwB;EACxB,+BAA+B;EAC/B,gCAAgC;EAChC,sBAAsB;EACtB,gDAAgD;EAChD,iBAAiB;EACjB,+BAA+B;AACjC;;AAEA;EACE,SAAS;EACT,mDAAmD;EACnD,YAAY;AACd;;AAEA;EACE,aAAa;EACb,sBAAsB;AACxB;;AAEA,YAAY;AACZ;EACE,mDAAmD;EACnD,0BAA0B;EAC1B,oBAAoB;EACpB,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,8BAA8B;EAC9B,4BAA4B;AAC9B;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,8BAA8B;EAC9B,WAAW;AACb;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,eAAe;EACf,6BAA6B;EAC7B,mBAAmB;AACrB;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA,oBAAoB;AACpB;EACE,WAAW;EACX,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,+BAA+B;;EAE/B;IACE,iBAAiB;IACjB,WAAW;IACX,YAAY;IACZ,cAAc;EAChB;AACF;;AAEA;EACE,eAAe;EACf,0BAA0B;AAC5B;;AAEA;EACE,YAAY;EACZ,kBAAkB;EAClB,sCAAsC;AACxC;;AAEA,WAAW;AACX;EACE,2BAA2B;AAC7B;;AAEA;EACE,aAAa;EACb,sBAAsB;EACtB;IACE,mBAAmB;EACrB;AACF;;AAEA;EACE,QAAQ;AACV;;AAEA;EACE,YAAY;EACZ,uBAAuB;EACvB,kBAAkB;EAClB,mBAAmB;EACnB,YAAY;EACZ,qBAAqB;AACvB;;AAEA;EACE,UAAU;EACV,eAAe;AACjB","sourcesContent":[":root {\r\n  color-scheme: light;\r\n  --light-main-background: #d1d1cf;\r\n  --light-secondary-background: #fff;\r\n  --light-main-text: black;\r\n  --light-secondary-text: #3a3a35;\r\n  --light-main-background: #d1d1cf;\r\n  --light-hover: #d1d1cf;\r\n  --border: 1px solid var(--light-main-background);\r\n  user-select: none;\r\n  font-family: \"Lato\", sans-serif;\r\n}\r\n\r\nbody {\r\n  margin: 0;\r\n  background-color: var(--light-secondary-background);\r\n  width: 350px;\r\n}\r\n\r\n#popup-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n}\r\n\r\n/* top bar */\r\n#entire-top-bar {\r\n  background-color: var(--light-secondary-background);\r\n  margin: 15px 15px 0px 15px;\r\n  padding-bottom: 15px;\r\n  height: 32px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  border-bottom: var(--border);\r\n}\r\n\r\n.top-bar-section {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  gap: 0.5rem;\r\n}\r\n\r\n.header-text {\r\n  text-align: center;\r\n  font-weight: 400;\r\n  font-size: 18px;\r\n  color: var(--light-main-text);\r\n  margin-left: 0.5rem;\r\n}\r\n\r\n.top-bar-icon {\r\n  width: 32px;\r\n  height: 32px;\r\n}\r\n\r\n/* Settings Button */\r\n#settings-icon {\r\n  width: 24px;\r\n  height: 24px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  transition: transform 0.7s ease;\r\n\r\n  img {\r\n    user-select: none;\r\n    width: 100%;\r\n    height: 100%;\r\n    display: block;\r\n  }\r\n}\r\n\r\n#settings-icon:hover {\r\n  cursor: pointer;\r\n  transform: rotate(0.3turn);\r\n}\r\n\r\n.button-hover-effect {\r\n  padding: 6px;\r\n  border-radius: 8px;\r\n  transition: background-color 0.3s ease;\r\n}\r\n\r\n/* middle */\r\n#middle-section {\r\n  padding: 0px 15px 15px 15px;\r\n}\r\n\r\n#input-wrapper {\r\n  display: flex;\r\n  flex-direction: column;\r\n  .url-input {\r\n    margin-bottom: 15px;\r\n  }\r\n}\r\n\r\n.alternatives-container {\r\n  gap: 5px;\r\n}\r\n\r\n.alternatives {\r\n  opacity: 0.5;\r\n  text-overflow: ellipsis;\r\n  overflow-x: hidden;\r\n  white-space: nowrap;\r\n  height: 2rem;\r\n  align-content: center;\r\n}\r\n\r\n.alternatives:hover {\r\n  opacity: 1;\r\n  cursor: pointer;\r\n}\r\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/popup/popup.css"],"names":[],"mappings":"AAAA;EACE,mBAAmB;EACnB,gCAAgC;EAChC,kCAAkC;EAClC,wBAAwB;EACxB,+BAA+B;EAC/B,gCAAgC;EAChC,sBAAsB;EACtB,gDAAgD;EAChD,iBAAiB;EACjB,+BAA+B;AACjC;;AAEA;EACE,SAAS;EACT,mDAAmD;EACnD,YAAY;AACd;;AAEA;EACE,aAAa;EACb,sBAAsB;AACxB;;AAEA,YAAY;AACZ;EACE,mDAAmD;EACnD,0BAA0B;EAC1B,oBAAoB;EACpB,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,8BAA8B;EAC9B,4BAA4B;AAC9B;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,8BAA8B;EAC9B,WAAW;AACb;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,eAAe;EACf,6BAA6B;EAC7B,mBAAmB;AACrB;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA,oBAAoB;AACpB;EACE,WAAW;EACX,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,+BAA+B;;EAE/B;IACE,iBAAiB;IACjB,WAAW;IACX,YAAY;IACZ,cAAc;EAChB;AACF;;AAEA;EACE,eAAe;EACf,0BAA0B;AAC5B;;AAEA;EACE,YAAY;EACZ,kBAAkB;EAClB,sCAAsC;AACxC;;AAEA,WAAW;AACX;EACE,2BAA2B;;EAE3B;IACE,eAAe;EACjB;AACF","sourcesContent":[":root {\r\n  color-scheme: light;\r\n  --light-main-background: #d1d1cf;\r\n  --light-secondary-background: #fff;\r\n  --light-main-text: black;\r\n  --light-secondary-text: #3a3a35;\r\n  --light-main-background: #d1d1cf;\r\n  --light-hover: #d1d1cf;\r\n  --border: 1px solid var(--light-main-background);\r\n  user-select: none;\r\n  font-family: \"Lato\", sans-serif;\r\n}\r\n\r\nbody {\r\n  margin: 0;\r\n  background-color: var(--light-secondary-background);\r\n  width: 350px;\r\n}\r\n\r\n#popup-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n}\r\n\r\n/* top bar */\r\n#entire-top-bar {\r\n  background-color: var(--light-secondary-background);\r\n  margin: 15px 15px 0px 15px;\r\n  padding-bottom: 15px;\r\n  height: 32px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  border-bottom: var(--border);\r\n}\r\n\r\n.top-bar-section {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  gap: 0.5rem;\r\n}\r\n\r\n.header-text {\r\n  text-align: center;\r\n  font-weight: 400;\r\n  font-size: 18px;\r\n  color: var(--light-main-text);\r\n  margin-left: 0.5rem;\r\n}\r\n\r\n.top-bar-icon {\r\n  width: 32px;\r\n  height: 32px;\r\n}\r\n\r\n/* Settings Button */\r\n#settings-icon {\r\n  width: 24px;\r\n  height: 24px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  transition: transform 0.7s ease;\r\n\r\n  img {\r\n    user-select: none;\r\n    width: 100%;\r\n    height: 100%;\r\n    display: block;\r\n  }\r\n}\r\n\r\n#settings-icon:hover {\r\n  cursor: pointer;\r\n  transform: rotate(0.3turn);\r\n}\r\n\r\n.button-hover-effect {\r\n  padding: 6px;\r\n  border-radius: 8px;\r\n  transition: background-color 0.3s ease;\r\n}\r\n\r\n/* middle */\r\n#middle-section {\r\n  padding: 0px 15px 15px 15px;\r\n\r\n  h1 {\r\n    font-size: 18px;\r\n  }\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -208,32 +186,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 /* harmony import */ var _popup_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./popup.css */ "./src/popup/popup.css");
-/* harmony import */ var _shared_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../shared.css */ "./src/shared.css");
-/* harmony import */ var _components_onOffSlider__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/onOffSlider */ "./src/components/onOffSlider.tsx");
-/* harmony import */ var _helper_urlHelpers__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../helper/urlHelpers */ "./src/helper/urlHelpers.ts");
-
+/* harmony import */ var _components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/onOffSlider */ "./src/components/onOffSlider.tsx");
+/* harmony import */ var _components_urlInput__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/urlInput */ "./src/components/urlInput.tsx");
 
 
 
 
 
 const App = () => {
-    const [inputIsValid, setInputIsValid] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)();
-    const urlInput = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-    const [inputAlternatives, setInputAlternatives] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
-    const [tabUrl, setTabUrl] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)();
-    const [inputValue, setInputValue] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
-    // Get the opened tab to backfill the input value
-    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-            if (tabs[0] && tabs[0].url) {
-                const newTabUrl = new URL(tabs[0].url);
-                setTabUrl(newTabUrl);
-                setInputValue(newTabUrl.hostname);
-                setInputAlternatives(getUrlAlternatives());
-            }
-        });
-    }, []);
     // Get slider changed message
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
         const messageListener = (message) => {
@@ -248,20 +208,6 @@ const App = () => {
             chrome.runtime.onMessage.removeListener(messageListener);
         };
     }, []);
-    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-        console.log("now " + inputIsValid + " " + inputValue);
-    }, [inputIsValid]);
-    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-        if (tabUrl) {
-            urlInput.current.value = tabUrl.hostname;
-            setInputAlternatives(getUrlAlternatives());
-            urlInput.current.focus();
-        }
-    }, [tabUrl]);
-    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-        setInputAlternatives(getUrlAlternatives);
-        setInputIsValid((0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_5__.isValidMatchPattern)(inputValue) || (0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_5__.isValidUrl)(inputValue));
-    }, [inputValue]);
     function openOptionsPage() {
         if (chrome.runtime.openOptionsPage) {
             chrome.runtime.openOptionsPage();
@@ -270,35 +216,10 @@ const App = () => {
             window.open(chrome.runtime.getURL("options.html"));
         }
     }
-    function getUrlAlternatives() {
-        let alternatives = [];
-        if (inputValue) {
-            alternatives.push((0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_5__.stringToMatchPattern)(inputValue));
-            if (!(0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_5__.isValidMatchPattern)(inputValue)) {
-                // dont turn match pattern into url
-                alternatives.push((0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_5__.stringToUrl)(inputValue));
-            }
-        }
-        if (tabUrl) {
-            alternatives.push((0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_5__.stringToMatchPattern)(tabUrl.hostname));
-            if (tabUrl.hostname != inputValue) {
-                alternatives.push(tabUrl.hostname);
-            }
-        }
-        // Remove duplicates and filter some inputs
-        return [...new Set(alternatives)].filter((alt) => alt !== "*://*.*://*.*" && alt !== inputValue);
-    }
-    const handleInputChange = () => {
-        if (inputValue == urlInput.current.value) {
-            return;
-        }
-        setInputValue(urlInput.current.value.trim());
+    const handleClose = () => {
+        window.close();
     };
-    const handleAddNewUrl = () => {
-        if (!inputIsValid) {
-            return;
-        }
-        const urlToAdd = urlInput.current.value;
+    function addBlockedUrl(urlToAdd) {
         if (urlToAdd) {
             chrome.storage.sync.get(["blockedUrlData"], (result) => {
                 if (result.blockedUrlData) {
@@ -312,29 +233,19 @@ const App = () => {
                 }
             });
         }
-        handleClose();
-    };
-    function onHandleAlternative(Alternative) {
-        setInputValue(Alternative.trim());
-        urlInput.current.value = Alternative;
     }
-    const handleClose = () => {
-        window.close();
-    };
     return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "popup-container" },
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "entire-top-bar" },
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "left-top-bar", className: "top-bar-section" },
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", { className: "top-bar-icon", src: "logoApp.png", alt: "Broom icon" }),
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", { className: "header-text" }, "Search Sanitizer")),
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "right-top-bar", className: "top-bar-section" },
-                react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_onOffSlider__WEBPACK_IMPORTED_MODULE_4__["default"], { id: "OnOff", googleStorageKey: "ExtensionOnOff" }),
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__["default"], { id: "OnOff", googleStorageKey: "ExtensionOnOff" }),
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { onClick: openOptionsPage, id: "settings-icon", className: "button-hover-effect" },
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", { src: "setting.png", alt: "Settings icon" })))),
-        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "middle-section", className: "scrollable-section" },
+        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "middle-section" },
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h1", null, "Add new URL to block"),
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "button-wrapper" },
-                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { disabled: !inputIsValid, onClick: handleAddNewUrl, className: `url-button add ${!inputIsValid ? "disabled" : ""}`, title: !inputIsValid ? "Please enter a valid URL or match pattern" : "" }, "Add"),
-                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { onClick: handleClose, className: "url-button cancel" }, "Cancel")))));
+            react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_urlInput__WEBPACK_IMPORTED_MODULE_4__["default"], { handleClose: handleClose, addBlockedUrl: addBlockedUrl, addCurrentUrl: true }))));
 };
 const container = document.createElement("div");
 document.body.appendChild(container);
@@ -522,7 +433,7 @@ root.render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(App, null
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_css-loader_dist_runtime_sour-b53f7e","src_shared_css-src_components_onOffSlider_tsx-src_helper_urlHelpers_ts"], () => (__webpack_require__("./src/popup/popup.tsx")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_css-loader_dist_runtime_sour-b53f7e","src_components_onOffSlider_tsx-src_components_urlInput_tsx"], () => (__webpack_require__("./src/popup/popup.tsx")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()
