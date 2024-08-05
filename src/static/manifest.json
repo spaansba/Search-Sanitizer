@@ -27,7 +27,13 @@
   "background": {
     "service_worker": "background.js"
   },
-  "host_permissions": ["<all_urls>"],
+
+  "web_accessible_resources": [
+    {
+      "resources": ["logoApp.png"],
+      "matches": ["<all_urls>"]
+    }
+  ],
   "content_scripts": [
     {
       "matches": [

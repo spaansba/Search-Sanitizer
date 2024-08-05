@@ -5,6 +5,34 @@ import {
 } from "../components/topPage"
 import { BlockedUrlData } from "../types"
 import { createUrlFilter } from "../helper/urlFilter"
+import React from "react"
+
+function init() {
+  const urlParameters = new URL(window.location.href).searchParams
+  const tbm = urlParameters.get("tbm") ?? "" // Books / vids
+  const udm = urlParameters.get("udm") ?? "" // Images
+
+  urlParameters.forEach((value, key) => {
+    console.log(`${key}: ${value}`)
+  })
+
+  if (tbm.includes("bks")) {
+    console.log("books")
+  } else if (tbm.includes("vid")) {
+    console.log("videos")
+  } else if (tbm.includes("nws")) {
+    console.log("news")
+  } else if (udm.includes("14")) {
+    console.log("web")
+  } else if (udm.includes("2")) {
+    console.log("images")
+  } else {
+    console.log("regular")
+    inits()
+  }
+}
+
+init()
 
 function filterGoogleSearch(blockedUrls: BlockedUrlData) {
   if (document.documentElement.dataset.addScript) {
@@ -149,12 +177,7 @@ function resetBadge() {
 
 window.addEventListener("beforeunload", resetBadge)
 
-initializeExtension()
-
-function test() {
-  const urlParameters = new URL(window.location.href).searchParams
-  const tbm = urlParameters.get("tbm") ?? "" // Books
-  const udm = urlParameters.get("udm") ?? "" // Images
+export default function inits() {
+  console.log("inits")
+  initializeExtension()
 }
-
-test()
