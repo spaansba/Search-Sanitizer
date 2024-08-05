@@ -34,7 +34,7 @@ const App: React.FC = () => {
     settings: [
       {
         settingName: "Extension on",
-        googleStorageKey: "ExtensionOnOff",
+        googleStorageKey: "extensionOnOff",
       },
       {
         settingName: "Show a clean block page instead of funny images",

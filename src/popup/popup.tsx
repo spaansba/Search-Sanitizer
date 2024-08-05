@@ -58,7 +58,7 @@ const App: React.FC = () => {
           <p className="header-text">Search Sanitizer</p>
         </div>
         <div id="right-top-bar" className="top-bar-section">
-          <OnOffSlider id="OnOff" googleStorageKey={"ExtensionOnOff"} />
+          <OnOffSlider id="OnOff" googleStorageKey={"extensionOnOff"} />
           <div
             onClick={openOptionsPage}
             id="settings-icon"

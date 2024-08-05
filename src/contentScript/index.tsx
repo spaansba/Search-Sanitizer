@@ -4,14 +4,15 @@ import googleSearchRegular from "./contentScript"
 import { addTopOfPage } from "../components/topPage"
 
 async function isExtensionOn(): Promise<boolean> {
-  const result = await chrome.storage.sync.get(["ExtensionOnOff"])
-  return result.ExtensionOnOff === true
+  return await getStorageData<boolean>("extensionOnOff")
 }
+
 async function getBlockedUrl(): Promise<BlockedUrlData> {
-  const result = (await chrome.storage.sync.get([
-    "blockedUrlData",
-  ])) as BlockedUrlData
-  return result
+  return await getStorageData<BlockedUrlData>("blockedUrlData")
+}
+
+async function getStorageData<T>(key: string): Promise<T> {
+  return (await chrome.storage.sync.get([key]))[key] as T
 }
 
 function addDocumentHead(): void {

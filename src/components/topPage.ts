@@ -97,7 +97,7 @@ export function addTopOfPage(
       "Search Sanitizer is currently turned off. Click to turn back on"
     container.style.opacity = "0.4"
     container.addEventListener("click", () => {
-      chrome.storage.sync.set({ ExtensionOnOff: true }, () => {
+      chrome.storage.sync.set({ extensionOnOff: true }, () => {
         window.location.reload()
       })
     })

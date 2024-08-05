@@ -9,7 +9,7 @@ export interface OptionsState {
 export const allSettings: UserSettings[] = [
   {
     settingName: "Extension on",
-    googleStorageKey: "ExtensionOnOff",
+    googleStorageKey: "extensionOnOff",
   },
   {
     settingName: "Show a clean block page instead of funny images",
