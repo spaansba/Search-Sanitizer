@@ -1,3 +1,8 @@
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.action.setBadgeBackgroundColor({ color: "#666665" })
+  chrome.action.setBadgeTextColor({ color: "#fff" })
+})
+
 chrome.storage.onChanged.addListener((changes, namespace) => {
   for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
     console.log(
@@ -51,7 +56,6 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     case "updateBadge":
       if (message.count > 0) {
         chrome.action.setBadgeText({ text: message.count.toString() })
-        chrome.action.setBadgeBackgroundColor({ color: "#93827c" })
       } else {
         chrome.action.setBadgeText({ text: "" }) // Remove the badge
       }

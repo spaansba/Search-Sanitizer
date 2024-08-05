@@ -466,6 +466,13 @@ function resetBadge() {
 }
 window.addEventListener("beforeunload", resetBadge);
 initializeExtension();
+function test() {
+    var _a, _b;
+    const urlParameters = new URL(window.location.href).searchParams;
+    const tbm = (_a = urlParameters.get("tbm")) !== null && _a !== void 0 ? _a : ""; // Books
+    const udm = (_b = urlParameters.get("udm")) !== null && _b !== void 0 ? _b : ""; // Images
+}
+test();
 
 /******/ })()
 ;

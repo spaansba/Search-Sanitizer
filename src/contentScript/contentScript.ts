@@ -150,3 +150,11 @@ function resetBadge() {
 window.addEventListener("beforeunload", resetBadge)
 
 initializeExtension()
+
+function test() {
+  const urlParameters = new URL(window.location.href).searchParams
+  const tbm = urlParameters.get("tbm") ?? "" // Books
+  const udm = urlParameters.get("udm") ?? "" // Images
+}
+
+test()
