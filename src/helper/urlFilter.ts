@@ -57,6 +57,11 @@ function checkIfMatchedUrl(
   pattern: string
 ): boolean {
   try {
+    if (!pattern) {
+      debugger
+      console.log("not")
+      return
+    }
     pattern = removeTrailingSlash(pattern.toLowerCase())
 
     const patternVariations = [

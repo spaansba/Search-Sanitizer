@@ -139,9 +139,26 @@ function updateBlockedCount(blockedCount) {
 
 /***/ }),
 
-/***/ "./src/contentScript/contentScript.tsx":
+/***/ "./src/contentScript/googleImages.tsx":
+/*!********************************************!*\
+  !*** ./src/contentScript/googleImages.tsx ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ googleSearchImages)
+/* harmony export */ });
+function googleSearchImages(blockedUrlsDict, blockedCountManager, searchElement) {
+    console.log("aeshsad");
+}
+
+
+/***/ }),
+
+/***/ "./src/contentScript/googleRegular.tsx":
 /*!*********************************************!*\
-  !*** ./src/contentScript/contentScript.tsx ***!
+  !*** ./src/contentScript/googleRegular.tsx ***!
   \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -153,79 +170,56 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helper_urlFilter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helper/urlFilter */ "./src/helper/urlFilter.ts");
 
 
-function googleSearchRegular(blockedUrlsDict, blockedCountManager) {
-    filterGoogleSearch();
-    function filterGoogleSearch() {
-        if (document.documentElement.dataset.addScript) {
-            console.error("script already added");
+function googleSearchRegular(blockedUrlsDict, blockedCountManager, searchElement) {
+    const processedResults = new Set();
+    new MutationObserver(() => {
+        filterNormalSearch(searchElement);
+        setTimeout(() => filterRelatedQuestions(searchElement), 500); //TODO fix need for 500 timeout
+    }).observe(searchElement, {
+        childList: true,
+        subtree: true,
+    });
+    function filterNormalSearch(search) {
+        const searchResults = search.querySelectorAll(".g:not([data-processed]):not([data-initq] *)");
+        if (!searchResults) {
             return;
         }
-        document.documentElement.dataset.addScript = "true";
-        const processedResults = new Set();
-        // Set up a MutationObserver to wait for the #search element
-        new MutationObserver((_, obs) => {
-            const search = document.querySelector("#search");
-            if (search) {
-                obs.disconnect(); // Stop observing once #search is found
-                setupFilteringObserver(search);
-            }
-        }).observe(document.body, {
-            childList: true,
-            subtree: true,
-            attributes: false,
-            characterData: false,
-        });
-        function setupFilteringObserver(search) {
-            new MutationObserver(() => {
-                filterNormalSearch(search);
-                setTimeout(() => filterRelatedQuestions(search), 500); //TODO fix need for 500 timeout
-            }).observe(search, {
-                childList: true,
-                subtree: true,
-                attributes: false,
-                characterData: false,
-            });
-        }
-        function filterNormalSearch(search) {
-            const searchResults = search.querySelectorAll(".g:not([data-processed]):not([data-initq] *)");
-            if (!searchResults) {
+        searchResults.forEach((result) => {
+            if (processedResults.has(result)) {
                 return;
             }
-            searchResults.forEach((result) => {
-                if (processedResults.has(result)) {
+            processedResults.add(result);
+            result.setAttribute("data-processed", "true");
+            const links = result.querySelectorAll("a");
+            const cites = result.querySelectorAll("cite");
+            if ((0,_helper_urlFilter__WEBPACK_IMPORTED_MODULE_1__["default"])(links, cites, blockedUrlsDict)) {
+                console.log("yes1");
+                addCardShow(result);
+            }
+        });
+    }
+    function filterRelatedQuestions(search) {
+        const moreToAskSections = search.querySelectorAll("[data-initq]");
+        if (!moreToAskSections) {
+            console.warn("moreToAskSections not found");
+            return;
+        }
+        moreToAskSections.forEach((askSection) => {
+            askSection.setAttribute("data-processed", "true");
+            const relatedQuestions = askSection.querySelectorAll(".related-question-pair:not([data-processed])");
+            relatedQuestions.forEach((relatedQuestion) => {
+                if (processedResults.has(relatedQuestion)) {
                     return;
                 }
-                processedResults.add(result);
-                result.setAttribute("data-processed", "true");
-                const links = result.querySelectorAll("a");
-                const cites = result.querySelectorAll("cite");
+                processedResults.add(relatedQuestion);
+                relatedQuestion.setAttribute("data-processed", "true");
+                const links = relatedQuestion.querySelectorAll("a");
+                const cites = relatedQuestion.querySelectorAll("cite");
                 if ((0,_helper_urlFilter__WEBPACK_IMPORTED_MODULE_1__["default"])(links, cites, blockedUrlsDict)) {
-                    addCardShow(result);
+                    addCardShow(relatedQuestion);
                 }
             });
-        }
-        function filterRelatedQuestions(search) {
-            const moreToAskSections = search.querySelectorAll("[data-initq]");
-            if (!moreToAskSections) {
-                return;
-            }
-            moreToAskSections.forEach((askSection) => {
-                askSection.setAttribute("data-processed", "true");
-                const relatedQuestions = askSection.querySelectorAll(".related-question-pair:not([data-processed])");
-                relatedQuestions.forEach((relatedQuestion) => {
-                    if (processedResults.has(relatedQuestion)) {
-                        return;
-                    }
-                    processedResults.add(relatedQuestion);
-                    relatedQuestion.setAttribute("data-processed", "true");
-                    const links = relatedQuestion.querySelectorAll("a");
-                    const cites = relatedQuestion.querySelectorAll("cite");
-                    if ((0,_helper_urlFilter__WEBPACK_IMPORTED_MODULE_1__["default"])(links, cites, blockedUrlsDict)) {
-                        addCardShow(relatedQuestion);
-                    }
-                });
-            });
-        }
+        });
     }
     function addCardShow(element) {
         blockedCountManager.incrementBlockedCount();
@@ -289,6 +283,11 @@ function shouldFilterLink(urlString, blockedUrls) {
 }
 function checkIfMatchedUrl(url, urlString, pattern) {
     try {
+        if (!pattern) {
+            debugger;
+            console.log("not");
+            return;
+        }
         pattern = removeTrailingSlash(pattern.toLowerCase());
         const patternVariations = [
             pattern,
@@ -401,8 +400,9 @@ var __webpack_exports__ = {};
   !*** ./src/contentScript/index.tsx ***!
   \*************************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _contentScript__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./contentScript */ "./src/contentScript/contentScript.tsx");
+/* harmony import */ var _googleRegular__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./googleRegular */ "./src/contentScript/googleRegular.tsx");
 /* harmony import */ var _components_topPage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/topPage */ "./src/components/topPage.ts");
+/* harmony import */ var _googleImages__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./googleImages */ "./src/contentScript/googleImages.tsx");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -414,6 +414,47 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 };
 
 
+
+function initializeContentScript() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const extensionOn = yield isExtensionOn();
+        const urlsDict = yield getBlockedUrl();
+        const searchElement = yield findSearchElementOnGoogle();
+        if (!searchElement) {
+            console.info("Search element not found");
+            return;
+        }
+        if (!extensionOn || !urlsDict.blockedUrlData) {
+            console.info("Search Sanitizer Extension is off");
+            return;
+        }
+        addDocumentHead();
+        addEventListeners(extensionOn);
+        callContentScript(urlsDict, searchElement);
+    });
+}
+function callContentScript(urlsDict, searchElement) {
+    var _a, _b;
+    const url = new URL(window.location.href);
+    const urlParameters = url.searchParams;
+    const tbm = (_a = urlParameters.get("tbm")) !== null && _a !== void 0 ? _a : "";
+    const udm = (_b = urlParameters.get("udm")) !== null && _b !== void 0 ? _b : "";
+    if (tbm.includes("bks")) {
+        console.log("books");
+    }
+    else if (tbm.includes("vid")) {
+        console.log("videos");
+    }
+    else if (tbm.includes("nws")) {
+        console.log("news");
+    }
+    else if (udm.includes("2")) {
+        (0,_googleImages__WEBPACK_IMPORTED_MODULE_2__["default"])(urlsDict, BlockedCountManager, searchElement);
+    }
+    else {
+        (0,_googleRegular__WEBPACK_IMPORTED_MODULE_0__["default"])(urlsDict, BlockedCountManager, searchElement);
+    }
+}
 function isExtensionOn() {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield chrome.storage.sync.get("extensionOnOff");
@@ -423,8 +464,33 @@ function isExtensionOn() {
 function getBlockedUrl() {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield chrome.storage.sync.get("blockedUrlData");
-        console.log(result);
         return result;
+    });
+}
+function findSearchElementOnGoogle() {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise((resolve) => {
+            const existingSearch = document.querySelector("#search");
+            if (existingSearch) {
+                resolve(existingSearch);
+                return;
+            }
+            new MutationObserver((_, obs) => {
+                const search = document.querySelector("#search");
+                if (search) {
+                    obs.disconnect();
+                    resolve(search);
+                }
+            }).observe(document.body, {
+                childList: true,
+                subtree: true,
+            });
+        });
+    });
+}
+function addEventListeners(extensionOn) {
+    document.addEventListener("DOMContentLoaded", () => {
+        (0,_components_topPage__WEBPACK_IMPORTED_MODULE_1__.addTopOfPage)(extensionOn, BlockedCountManager);
     });
 }
 function addDocumentHead() {
@@ -440,53 +506,17 @@ function addDocumentHead() {
     `;
     document.head.appendChild(style);
 }
-function init() {
-    return __awaiter(this, void 0, void 0, function* () {
-        var _a, _b;
-        const extensionOn = yield isExtensionOn();
-        const urlsDict = yield getBlockedUrl();
-        document.addEventListener("DOMContentLoaded", () => {
-            (0,_components_topPage__WEBPACK_IMPORTED_MODULE_1__.addTopOfPage)(extensionOn, BlockedCountManager);
-        });
-        if (!extensionOn || !urlsDict.blockedUrlData) {
-            console.info("Search Sanitizer Extension is off");
-            return;
-        }
-        addDocumentHead();
-        const url = new URL(window.location.href);
-        const urlParameters = url.searchParams;
-        const tbm = (_a = urlParameters.get("tbm")) !== null && _a !== void 0 ? _a : "";
-        const udm = (_b = urlParameters.get("udm")) !== null && _b !== void 0 ? _b : "";
-        if (tbm.includes("bks")) {
-            console.log("books");
-        }
-        else if (tbm.includes("vid")) {
-            console.log("videos");
-        }
-        else if (tbm.includes("nws")) {
-            console.log("news");
-        }
-        else if (udm.includes("2")) {
-            console.log("images");
-        }
-        else {
-            (0,_contentScript__WEBPACK_IMPORTED_MODULE_0__["default"])(urlsDict, BlockedCountManager);
-        }
-    });
-}
 const BlockedCountManager = (() => {
     let blockedCount = 0;
     return {
         incrementBlockedCount: () => {
             blockedCount++;
-            // You might want to update some UI here
-            console.log("Blocked count:", blockedCount);
             return blockedCount;
         },
         getBlockedCount: () => blockedCount,
     };
 })();
-init();
+initializeContentScript();
 
 /******/ })()
 ;
