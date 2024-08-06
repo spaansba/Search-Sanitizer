@@ -188,6 +188,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _popup_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./popup.css */ "./src/popup/popup.css");
 /* harmony import */ var _components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/onOffSlider */ "./src/components/onOffSlider.tsx");
 /* harmony import */ var _components_urlInput__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/urlInput */ "./src/components/urlInput.tsx");
+// biome-ignore lint/style/useImportType: <explanation>
+
 
 
 
@@ -240,7 +242,7 @@ const App = () => {
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", { className: "top-bar-icon", src: "logoApp.png", alt: "Broom icon" }),
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", { className: "header-text" }, "Search Sanitizer")),
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "right-top-bar", className: "top-bar-section" },
-                react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__["default"], { id: "OnOff", googleStorageKey: "ExtensionOnOff" }),
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__["default"], { id: "OnOff", googleStorageKey: "extensionOnOff" }),
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { onClick: openOptionsPage, id: "settings-icon", className: "button-hover-effect" },
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", { src: "setting.png", alt: "Settings icon" })))),
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "middle-section" },

@@ -1,4 +1,4 @@
-import { UserSettings } from "../types"
+import type { UserSettings } from "../types"
 
 // Define the shape of our options state
 export interface OptionsState {

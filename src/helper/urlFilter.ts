@@ -1,4 +1,4 @@
-import { BlockedUrlData } from "../types"
+import type { BlockedUrlData } from "../types"
 
 export default function shouldFilterResult(
   links: NodeListOf<HTMLAnchorElement>,

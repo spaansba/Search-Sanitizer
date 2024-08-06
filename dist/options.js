@@ -2,10 +2,10 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./node_modules/css-loader/dist/cjs.js!./src/components/codeMirrorEditor/codeMirrorEditor.css":
-/*!****************************************************************************************************!*\
-  !*** ./node_modules/css-loader/dist/cjs.js!./src/components/codeMirrorEditor/codeMirrorEditor.css ***!
-  \****************************************************************************************************/
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/components/codeMirror/codeMirrorEditor.css":
+/*!**********************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/components/codeMirror/codeMirrorEditor.css ***!
+  \**********************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -123,7 +123,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.bottom-button-container {
     background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
   }
 }
-`, "",{"version":3,"sources":["webpack://./src/components/codeMirrorEditor/codeMirrorEditor.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,yBAAyB;EACzB,eAAe;;EAEf;IACE,gBAAgB;IAChB,iBAAiB;IACjB,kBAAkB;IAClB,iBAAiB;IACjB,kBAAkB;IAClB,yBAAyB;IACzB,cAAc;IACd,eAAe;IACf,sBAAsB;IACtB,yBAAyB;EAC3B;;EAEA;IACE,yBAAyB;EAC3B;;EAEA;;IAEE,kBAAkB;IAClB,WAAW;IACX,WAAW;IACX,SAAS;IACT,YAAY;IACZ,2BAA2B;IAC3B,cAAc;IACd,4BAA4B;EAC9B;;EAEA;IACE,SAAS;IACT;;;;;;;;2DAQuD;IACvD;+BAC2B;IAC3B,6BAA6B;IAC7B,oCAAoC;EACtC;;EAEA;IACE,YAAY;IACZ;;;;;;2DAMuD;IACvD;aACS;IACT,2BAA2B;IAC3B,uCAAuC;EACzC;AACF;;AAEA;EACE;IACE;+BAC2B;EAC7B;;EAEA;IACE;+BAC2B;EAC7B;;EAEA;IACE;+BAC2B;IAC3B,yDAAyD;EAC3D;AACF;;AAEA;EACE;IACE;sBACkB;EACpB;;EAEA;IACE;aACS;EACX;;EAEA;IACE;cACU;IACV,yDAAyD;EAC3D;AACF","sourcesContent":[".bottom-button-container {\r\n  display: flex;\r\n  justify-content: flex-end;\r\n  margin-top: 8px;\r\n\r\n  .button {\r\n    font-weight: 500;\r\n    font-size: larger;\r\n    position: relative;\r\n    padding: 8px 25px;\r\n    border-radius: 8px;\r\n    border: 1px solid #ccccca;\r\n    color: #1d1c1c;\r\n    cursor: pointer;\r\n    background-color: #fff;\r\n    transition: all 0.2s ease;\r\n  }\r\n\r\n  .button:hover {\r\n    background-color: #ccccca;\r\n  }\r\n\r\n  .button:before,\r\n  .button:after {\r\n    position: absolute;\r\n    content: \"\";\r\n    width: 150%;\r\n    left: 50%;\r\n    height: 100%;\r\n    transform: translateX(-50%);\r\n    z-index: -1000;\r\n    background-repeat: no-repeat;\r\n  }\r\n\r\n  .button:hover:before {\r\n    top: -70%;\r\n    background-image: radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, transparent 20%, #a7e48f 20%, transparent 30%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, transparent 10%, #a7e48f 15%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%);\r\n    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%,\r\n      15% 15%, 10% 10%, 18% 18%;\r\n    background-position: 50% 120%;\r\n    animation: greentopBubbles 0.6s ease;\r\n  }\r\n\r\n  .button:hover::after {\r\n    bottom: -70%;\r\n    background-image: radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, transparent 10%, #a7e48f 15%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%);\r\n    background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%,\r\n      18% 18%;\r\n    background-position: 50% 0%;\r\n    animation: greenbottomBubbles 0.6s ease;\r\n  }\r\n}\r\n\r\n@keyframes greentopBubbles {\r\n  0% {\r\n    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%,\r\n      40% 90%, 55% 90%, 70% 90%;\r\n  }\r\n\r\n  50% {\r\n    background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%,\r\n      50% 50%, 65% 20%, 90% 30%;\r\n  }\r\n\r\n  100% {\r\n    background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%,\r\n      50% 40%, 65% 10%, 90% 20%;\r\n    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;\r\n  }\r\n}\r\n\r\n@keyframes greenbottomBubbles {\r\n  0% {\r\n    background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%,\r\n      70% -10%, 70% 0%;\r\n  }\r\n\r\n  50% {\r\n    background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%,\r\n      105% 0%;\r\n  }\r\n\r\n  100% {\r\n    background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%,\r\n      110% 10%;\r\n    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;\r\n  }\r\n}\r\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/components/codeMirror/codeMirrorEditor.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,yBAAyB;EACzB,eAAe;;EAEf;IACE,gBAAgB;IAChB,iBAAiB;IACjB,kBAAkB;IAClB,iBAAiB;IACjB,kBAAkB;IAClB,yBAAyB;IACzB,cAAc;IACd,eAAe;IACf,sBAAsB;IACtB,yBAAyB;EAC3B;;EAEA;IACE,yBAAyB;EAC3B;;EAEA;;IAEE,kBAAkB;IAClB,WAAW;IACX,WAAW;IACX,SAAS;IACT,YAAY;IACZ,2BAA2B;IAC3B,cAAc;IACd,4BAA4B;EAC9B;;EAEA;IACE,SAAS;IACT;;;;;;;;2DAQuD;IACvD;+BAC2B;IAC3B,6BAA6B;IAC7B,oCAAoC;EACtC;;EAEA;IACE,YAAY;IACZ;;;;;;2DAMuD;IACvD;aACS;IACT,2BAA2B;IAC3B,uCAAuC;EACzC;AACF;;AAEA;EACE;IACE;+BAC2B;EAC7B;;EAEA;IACE;+BAC2B;EAC7B;;EAEA;IACE;+BAC2B;IAC3B,yDAAyD;EAC3D;AACF;;AAEA;EACE;IACE;sBACkB;EACpB;;EAEA;IACE;aACS;EACX;;EAEA;IACE;cACU;IACV,yDAAyD;EAC3D;AACF","sourcesContent":[".bottom-button-container {\r\n  display: flex;\r\n  justify-content: flex-end;\r\n  margin-top: 8px;\r\n\r\n  .button {\r\n    font-weight: 500;\r\n    font-size: larger;\r\n    position: relative;\r\n    padding: 8px 25px;\r\n    border-radius: 8px;\r\n    border: 1px solid #ccccca;\r\n    color: #1d1c1c;\r\n    cursor: pointer;\r\n    background-color: #fff;\r\n    transition: all 0.2s ease;\r\n  }\r\n\r\n  .button:hover {\r\n    background-color: #ccccca;\r\n  }\r\n\r\n  .button:before,\r\n  .button:after {\r\n    position: absolute;\r\n    content: \"\";\r\n    width: 150%;\r\n    left: 50%;\r\n    height: 100%;\r\n    transform: translateX(-50%);\r\n    z-index: -1000;\r\n    background-repeat: no-repeat;\r\n  }\r\n\r\n  .button:hover:before {\r\n    top: -70%;\r\n    background-image: radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, transparent 20%, #a7e48f 20%, transparent 30%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, transparent 10%, #a7e48f 15%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%);\r\n    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%,\r\n      15% 15%, 10% 10%, 18% 18%;\r\n    background-position: 50% 120%;\r\n    animation: greentopBubbles 0.6s ease;\r\n  }\r\n\r\n  .button:hover::after {\r\n    bottom: -70%;\r\n    background-image: radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, transparent 10%, #a7e48f 15%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%);\r\n    background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%,\r\n      18% 18%;\r\n    background-position: 50% 0%;\r\n    animation: greenbottomBubbles 0.6s ease;\r\n  }\r\n}\r\n\r\n@keyframes greentopBubbles {\r\n  0% {\r\n    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%,\r\n      40% 90%, 55% 90%, 70% 90%;\r\n  }\r\n\r\n  50% {\r\n    background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%,\r\n      50% 50%, 65% 20%, 90% 30%;\r\n  }\r\n\r\n  100% {\r\n    background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%,\r\n      50% 40%, 65% 10%, 90% 20%;\r\n    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;\r\n  }\r\n}\r\n\r\n@keyframes greenbottomBubbles {\r\n  0% {\r\n    background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%,\r\n      70% -10%, 70% 0%;\r\n  }\r\n\r\n  50% {\r\n    background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%,\r\n      105% 0%;\r\n  }\r\n\r\n  100% {\r\n    background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%,\r\n      110% 10%;\r\n    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;\r\n  }\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -584,10 +584,10 @@ p {
 
 /***/ }),
 
-/***/ "./src/components/codeMirrorEditor/codeMirrorEditor.css":
-/*!**************************************************************!*\
-  !*** ./src/components/codeMirrorEditor/codeMirrorEditor.css ***!
-  \**************************************************************/
+/***/ "./src/components/codeMirror/codeMirrorEditor.css":
+/*!********************************************************!*\
+  !*** ./src/components/codeMirror/codeMirrorEditor.css ***!
+  \********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -606,7 +606,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_insertStyleElement_js__WEBPACK_IMPORTED_MODULE_4__);
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! !../../../node_modules/style-loader/dist/runtime/styleTagTransform.js */ "./node_modules/style-loader/dist/runtime/styleTagTransform.js");
 /* harmony import */ var _node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_dist_runtime_styleTagTransform_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _node_modules_css_loader_dist_cjs_js_codeMirrorEditor_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js!./codeMirrorEditor.css */ "./node_modules/css-loader/dist/cjs.js!./src/components/codeMirrorEditor/codeMirrorEditor.css");
+/* harmony import */ var _node_modules_css_loader_dist_cjs_js_codeMirrorEditor_css__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! !!../../../node_modules/css-loader/dist/cjs.js!./codeMirrorEditor.css */ "./node_modules/css-loader/dist/cjs.js!./src/components/codeMirror/codeMirrorEditor.css");
 
       
       
@@ -844,10 +844,10 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
 
 /***/ }),
 
-/***/ "./src/components/codeMirrorEditor/codeMirrorEditor.tsx":
-/*!**************************************************************!*\
-  !*** ./src/components/codeMirrorEditor/codeMirrorEditor.tsx ***!
-  \**************************************************************/
+/***/ "./src/components/codeMirror/codeMirrorEditor.tsx":
+/*!********************************************************!*\
+  !*** ./src/components/codeMirror/codeMirrorEditor.tsx ***!
+  \********************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -861,9 +861,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _codemirror_lint__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @codemirror/lint */ "./node_modules/@codemirror/lint/dist/index.js");
 /* harmony import */ var _codemirror_lang_javascript__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @codemirror/lang-javascript */ "./node_modules/@codemirror/lang-javascript/dist/index.js");
 /* harmony import */ var _codemirror_commands__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @codemirror/commands */ "./node_modules/@codemirror/commands/dist/index.js");
-/* harmony import */ var _linter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./linter */ "./src/components/codeMirrorEditor/linter.ts");
+/* harmony import */ var _codeMirrorLinter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./codeMirrorLinter */ "./src/components/codeMirror/codeMirrorLinter.ts");
 /* harmony import */ var _options_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../options/options */ "./src/options/options.tsx");
-/* harmony import */ var _codeMirrorEditor_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./codeMirrorEditor.css */ "./src/components/codeMirrorEditor/codeMirrorEditor.css");
+/* harmony import */ var _codeMirrorEditor_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./codeMirrorEditor.css */ "./src/components/codeMirror/codeMirrorEditor.css");
+
 
 
 
@@ -880,7 +881,7 @@ const CodeMirrorEditor = () => {
     const [initialDoc, setInitialDoc] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
         const newInitialDoc = Object.entries(blockedUrls)
-            .map(([url, data]) => `${url}`)
+            .map(([url]) => `${url}`)
             .join("\n");
         setInitialDoc(newInitialDoc);
         console.log(newInitialDoc);
@@ -900,7 +901,7 @@ const CodeMirrorEditor = () => {
                     };
                 }
             });
-            chrome.storage.sync.set({ blockedUrlData: newBlockedUrlData }, function () {
+            chrome.storage.sync.set({ blockedUrlData: newBlockedUrlData }, () => {
                 console.log("URL data saved");
                 setBlockedUrls(newBlockedUrlData);
             });
@@ -914,7 +915,7 @@ const CodeMirrorEditor = () => {
                 state: _codemirror_state__WEBPACK_IMPORTED_MODULE_5__.EditorState.create({
                     doc: initialDoc,
                     extensions: [
-                        _linter__WEBPACK_IMPORTED_MODULE_1__.urlLinter,
+                        _codeMirrorLinter__WEBPACK_IMPORTED_MODULE_1__.urlLinter,
                         codemirror__WEBPACK_IMPORTED_MODULE_4__.keymap.of([..._codemirror_commands__WEBPACK_IMPORTED_MODULE_6__.historyKeymap, ..._codemirror_commands__WEBPACK_IMPORTED_MODULE_6__.standardKeymap]),
                         (0,_codemirror_commands__WEBPACK_IMPORTED_MODULE_6__.history)(),
                         (0,codemirror__WEBPACK_IMPORTED_MODULE_4__.dropCursor)(),
@@ -966,10 +967,10 @@ const CodeMirrorEditor = () => {
 
 /***/ }),
 
-/***/ "./src/components/codeMirrorEditor/linter.ts":
-/*!***************************************************!*\
-  !*** ./src/components/codeMirrorEditor/linter.ts ***!
-  \***************************************************/
+/***/ "./src/components/codeMirror/codeMirrorLinter.ts":
+/*!*******************************************************!*\
+  !*** ./src/components/codeMirror/codeMirrorLinter.ts ***!
+  \*******************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -982,11 +983,11 @@ __webpack_require__.r(__webpack_exports__);
 
 const MAX_CHARS_PER_LINE = 100; // Maximum number of characters allowed per line
 const urlLinter = (0,_codemirror_lint__WEBPACK_IMPORTED_MODULE_1__.linter)((view) => {
-    let diagnostics = [];
-    let doc = view.state.doc;
+    const diagnostics = [];
+    const doc = view.state.doc;
     for (let i = 1; i <= doc.lines; i++) {
-        let line = doc.line(i);
-        let lineText = line.text.trim();
+        const line = doc.line(i);
+        const lineText = line.text.trim();
         // Check if line exceeds MAX_CHARS_PER_LINE
         if (lineText.length > MAX_CHARS_PER_LINE) {
             diagnostics.push({
@@ -1177,6 +1178,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _helpButton_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./helpButton.css */ "./src/components/helpButton/helpButton.css");
 
 
+
 function HelpButton({ helpElement }) {
     const [isHelpVisible, setIsHelpVisible] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
     const helpDialog = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
@@ -1273,9 +1275,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
 /* harmony import */ var _options_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./options.css */ "./src/options/options.css");
 /* harmony import */ var _components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/onOffSlider */ "./src/components/onOffSlider.tsx");
-/* harmony import */ var _components_codeMirrorEditor_codeMirrorEditor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/codeMirrorEditor/codeMirrorEditor */ "./src/components/codeMirrorEditor/codeMirrorEditor.tsx");
+/* harmony import */ var _components_codeMirror_codeMirrorEditor__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/codeMirror/codeMirrorEditor */ "./src/components/codeMirror/codeMirrorEditor.tsx");
 /* harmony import */ var _components_dashboard_optionBlockedCards__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/dashboard/optionBlockedCards */ "./src/components/dashboard/optionBlockedCards.tsx");
 /* harmony import */ var _components_helpButton_helpButton__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../components/helpButton/helpButton */ "./src/components/helpButton/helpButton.tsx");
+// biome-ignore lint/style/useImportType: <explanation>
+
 
 
 
@@ -1299,7 +1303,7 @@ const App = () => {
         settings: [
             {
                 settingName: "Extension on",
-                googleStorageKey: "ExtensionOnOff",
+                googleStorageKey: "extensionOnOff",
             },
             {
                 settingName: "Show a clean block page instead of funny images",
@@ -1335,11 +1339,13 @@ const App = () => {
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "question-text" },
                         "Easy access to remove and add sites to block in bulk via URL or by Match Pattern",
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_helpButton_helpButton__WEBPACK_IMPORTED_MODULE_6__["default"], { helpElement: helpMatchedPattern() })),
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_codeMirrorEditor_codeMirrorEditor__WEBPACK_IMPORTED_MODULE_4__["default"], null)));
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_codeMirror_codeMirrorEditor__WEBPACK_IMPORTED_MODULE_4__["default"], null)));
             case "settings":
                 return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null,
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", { className: "top-h2" }, "General Settings"),
-                    allSettings.settings.map((setting, index) => (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { key: index, className: "settings-item-container" },
+                    allSettings.settings.map((setting, index) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { key: index, className: "settings-item-container" },
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, setting.settingName),
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "slider" },
                             react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__["default"], { id: index.toString(), googleStorageKey: setting.googleStorageKey })))))));

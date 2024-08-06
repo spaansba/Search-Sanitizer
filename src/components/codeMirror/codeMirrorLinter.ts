@@ -1,5 +1,5 @@
-import { Diagnostic, linter } from "@codemirror/lint"
-import { EditorView } from "codemirror"
+import { type Diagnostic, linter } from "@codemirror/lint"
+import type { EditorView } from "codemirror"
 import {
   isValidMatchPattern,
   isValidUrl,
@@ -11,12 +11,12 @@ const MAX_CHARS_PER_LINE = 100 // Maximum number of characters allowed per line
 
 export const urlLinter = linter(
   (view: EditorView) => {
-    let diagnostics: Diagnostic[] = []
-    let doc = view.state.doc
+    const diagnostics: Diagnostic[] = []
+    const doc = view.state.doc
 
     for (let i = 1; i <= doc.lines; i++) {
-      let line = doc.line(i)
-      let lineText = line.text.trim()
+      const line = doc.line(i)
+      const lineText = line.text.trim()
 
       // Check if line exceeds MAX_CHARS_PER_LINE
       if (lineText.length > MAX_CHARS_PER_LINE) {

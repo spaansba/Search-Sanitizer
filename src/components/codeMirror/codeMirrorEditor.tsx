@@ -1,10 +1,5 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react"
+import React from "react"
+import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { EditorView } from "codemirror"
 import { EditorState } from "@codemirror/state"
 import { lintGutter } from "@codemirror/lint"
@@ -16,8 +11,8 @@ import {
 } from "@codemirror/view"
 import { javascript } from "@codemirror/lang-javascript"
 import { history, historyKeymap, standardKeymap } from "@codemirror/commands"
-import { urlLinter } from "./linter"
-import { BlockedUrlData } from "../../types"
+import { urlLinter } from "./codeMirrorLinter"
+import type { BlockedUrlData } from "../../types"
 import { BlockedUrlsContext } from "../../options/options"
 import "./codeMirrorEditor.css"
 
@@ -28,7 +23,7 @@ const CodeMirrorEditor: React.FC = () => {
 
   useEffect(() => {
     const newInitialDoc = Object.entries(blockedUrls)
-      .map(([url, data]) => `${url}`)
+      .map(([url]) => `${url}`)
       .join("\n")
     setInitialDoc(newInitialDoc)
     console.log(newInitialDoc)
@@ -50,13 +45,10 @@ const CodeMirrorEditor: React.FC = () => {
         }
       })
 
-      chrome.storage.sync.set(
-        { blockedUrlData: newBlockedUrlData },
-        function () {
-          console.log("URL data saved")
-          setBlockedUrls(newBlockedUrlData)
-        }
-      )
+      chrome.storage.sync.set({ blockedUrlData: newBlockedUrlData }, () => {
+        console.log("URL data saved")
+        setBlockedUrls(newBlockedUrlData)
+      })
     }
   }
 

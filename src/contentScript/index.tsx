@@ -1,18 +1,16 @@
-import { useState } from "react"
-import { BlockedUrlData } from "../types"
 import googleSearchRegular from "./contentScript"
 import { addTopOfPage } from "../components/topPage"
+import type { BlockedUrlData } from "../types"
 
 async function isExtensionOn(): Promise<boolean> {
-  return await getStorageData<boolean>("extensionOnOff")
+  const result = await chrome.storage.sync.get("extensionOnOff")
+  return result.extensionOnOff as boolean
 }
 
 async function getBlockedUrl(): Promise<BlockedUrlData> {
-  return await getStorageData<BlockedUrlData>("blockedUrlData")
-}
-
-async function getStorageData<T>(key: string): Promise<T> {
-  return (await chrome.storage.sync.get([key]))[key] as T
+  const result = await chrome.storage.sync.get("blockedUrlData")
+  console.log(result as BlockedUrlData)
+  return result as BlockedUrlData
 }
 
 function addDocumentHead(): void {
@@ -30,15 +28,15 @@ function addDocumentHead(): void {
 }
 
 async function init() {
-  const extensionOn = await isExtensionOn()
-  const urls = await getBlockedUrl()
+  const extensionOn: boolean = await isExtensionOn()
+  const urlsDict: BlockedUrlData = await getBlockedUrl()
 
   document.addEventListener("DOMContentLoaded", () => {
     addTopOfPage(extensionOn, BlockedCountManager)
   })
 
-  if (!extensionOn || !urls.blockedUrlData) {
-    console.log("Extension is off")
+  if (!extensionOn || !urlsDict.blockedUrlData) {
+    console.info("Search Sanitizer Extension is off")
     return
   }
   addDocumentHead()
@@ -56,7 +54,7 @@ async function init() {
   } else if (udm.includes("2")) {
     console.log("images")
   } else {
-    googleSearchRegular(urls, BlockedCountManager)
+    googleSearchRegular(urlsDict, BlockedCountManager)
   }
 }
 

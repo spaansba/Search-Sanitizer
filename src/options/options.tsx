@@ -1,9 +1,11 @@
-import React, { useEffect, useState, createContext } from "react"
+// biome-ignore lint/style/useImportType: <explanation>
+import React from "react"
+import { useEffect, useState, createContext } from "react"
 import { createRoot } from "react-dom/client"
 import "./options.css"
 import OnOffSlider from "../components/onOffSlider"
-import { BlockedUrlData, UserSettings } from "../types"
-import CodeMirrorEditor from "../components/codeMirrorEditor/codeMirrorEditor"
+import type { BlockedUrlData, UserSettings } from "../types"
+import CodeMirrorEditor from "../components/codeMirror/codeMirrorEditor"
 import OptionBlockedCards from "../components/dashboard/optionBlockedCards"
 import HelpButton from "../components/helpButton/helpButton"
 
@@ -46,7 +48,7 @@ const App: React.FC = () => {
   // UseEffect to subscribe to slider being changed in different part of our app.
   // Aka. if the slider changes in the popup-page while the option page is open also change the slider on the option page
   useEffect(() => {
-    const messageListener = (message: any) => {
+    const messageListener = (message) => {
       if (message.type === "SLIDER_CHANGED") {
         chrome.storage.sync.get([message.key], (result) => {
           console.log(`Slider ${message.key} changed to ${result[message.key]}`)
@@ -67,16 +69,16 @@ const App: React.FC = () => {
             <h2>Blocked Sites</h2>
             <div className="question-text">
               Sites can be blocked via URL or by Match Pattern
-              <HelpButton helpElement={helpMatchedPattern()}></HelpButton>
+              <HelpButton helpElement={helpMatchedPattern()} />
             </div>
-            <OptionBlockedCards></OptionBlockedCards>
+            <OptionBlockedCards />
             <h2>Block in bulk</h2>
             <div className="question-text">
               Easy access to remove and add sites to block in bulk via URL or by
               Match Pattern
-              <HelpButton helpElement={helpMatchedPattern()}></HelpButton>
+              <HelpButton helpElement={helpMatchedPattern()} />
             </div>
-            <CodeMirrorEditor></CodeMirrorEditor>
+            <CodeMirrorEditor />
           </>
         )
       case "settings":
@@ -84,6 +86,7 @@ const App: React.FC = () => {
           <>
             <h2 className="top-h2">General Settings</h2>
             {allSettings.settings.map((setting, index) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
               <div key={index} className="settings-item-container">
                 <p>{setting.settingName}</p>
                 <div className="slider">

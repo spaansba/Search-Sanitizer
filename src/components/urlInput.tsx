@@ -49,14 +49,14 @@ export default function UrlInput({
       return
     }
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0] && tabs[0].url) {
+      if (tabs[0]?.url) {
         const newTabUrl: URL = new URL(tabs[0].url)
         setTabUrl(newTabUrl)
         setInputValue(newTabUrl.hostname)
         setInputAlternatives(getUrlAlternatives())
       }
     })
-  }, [])
+  }, [addCurrentUrl])
 
   const handleAddNewUrl = () => {
     if (inputIsValid) {
@@ -66,14 +66,14 @@ export default function UrlInput({
   }
 
   const handleInputChange = () => {
-    if (inputValue == urlInput.current.value) {
+    if (inputValue === urlInput.current.value) {
       return
     }
     setInputValue(urlInput.current.value.trim())
   }
 
   function getUrlAlternatives(): string[] {
-    let alternatives: string[] = []
+    const alternatives: string[] = []
     if (inputValue) {
       alternatives.push(stringToMatchPattern(inputValue))
       if (!isValidMatchPattern(inputValue)) {
@@ -83,7 +83,7 @@ export default function UrlInput({
     }
     if (tabUrl) {
       alternatives.push(stringToMatchPattern(tabUrl.hostname))
-      if (tabUrl.hostname != inputValue) {
+      if (tabUrl.hostname !== inputValue) {
         alternatives.push(tabUrl.hostname)
       }
     }
@@ -108,6 +108,7 @@ export default function UrlInput({
         <div
           key={index}
           className="alternatives-container"
+          // biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
           tabIndex={0}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
@@ -126,6 +127,7 @@ export default function UrlInput({
       ))}
       <div className="button-wrapper">
         <button
+          type="button"
           disabled={!inputIsValid}
           onClick={handleAddNewUrl}
           className={`url-button add ${!inputIsValid ? "disabled" : ""}`}
@@ -135,7 +137,11 @@ export default function UrlInput({
         >
           Add
         </button>
-        <button onClick={handleClose} className="url-button cancel">
+        <button
+          type="button"
+          onClick={handleClose}
+          className="url-button cancel"
+        >
           Cancel
         </button>
       </div>

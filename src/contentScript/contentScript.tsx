@@ -1,7 +1,7 @@
-import { BlockedCountManager } from "."
+import type { BlockedCountManager } from "."
+import type { BlockedUrlData } from "../types"
 import { getResultsHidden, updateBlockedCount } from "../components/topPage"
 import shouldFilterResult from "../helper/urlFilter"
-import { BlockedUrlData } from "../types"
 
 export default function googleSearchRegular(
   blockedUrlsDict: BlockedUrlData,
@@ -51,6 +51,7 @@ export default function googleSearchRegular(
       if (!searchResults) {
         return
       }
+
       searchResults.forEach((result) => {
         if (processedResults.has(result)) {
           return

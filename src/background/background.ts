@@ -4,7 +4,7 @@ chrome.runtime.onInstalled.addListener(() => {
 })
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
-  for (let [key, { oldValue, newValue }] of Object.entries(changes)) {
+  for (const [key, { oldValue, newValue }] of Object.entries(changes)) {
     console.log(
       `Storage key "${key}" in namespace "${namespace}" changed.`,
       `Old value was "${oldValue}", new value is "${newValue}".`
@@ -17,9 +17,9 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 })
 
 function updateTotalBlocked(oldData, newData) {
-  let totalChanges = { i: 0, s: 0, v: 0 }
+  const totalChanges = { i: 0, s: 0, v: 0 }
 
-  for (let url in newData) {
+  for (const url in newData) {
     if (!oldData || !oldData[url]) {
       totalChanges.i += newData[url].i
       totalChanges.s += newData[url].s
@@ -33,7 +33,7 @@ function updateTotalBlocked(oldData, newData) {
 
   if (totalChanges.i > 0 || totalChanges.s > 0 || totalChanges.v > 0) {
     chrome.storage.sync.get("totalBlocked", (result) => {
-      let totalBlocked = result.totalBlocked || {
+      const totalBlocked = result.totalBlocked || {
         "i total": 0,
         "s total": 0,
         "v total": 0,
@@ -64,7 +64,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 })
 
 // Add context menu(s)
-chrome.runtime.onInstalled.addListener(function () {
+chrome.runtime.onInstalled.addListener(() => {
   chrome.contextMenus.create({
     id: "AddCurrentURL",
     title: "Block this site in Google Search",

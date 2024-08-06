@@ -99,7 +99,7 @@ function addTopOfPage(ExtensionIsOn, blockedCountManager) {
             "Search Sanitizer is currently turned off. Click to turn back on";
         container.style.opacity = "0.4";
         container.addEventListener("click", () => {
-            chrome.storage.sync.set({ ExtensionOnOff: true }, () => {
+            chrome.storage.sync.set({ extensionOnOff: true }, () => {
                 window.location.reload();
             });
         });
@@ -416,15 +416,14 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 function isExtensionOn() {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield chrome.storage.sync.get(["ExtensionOnOff"]);
-        return result.ExtensionOnOff === true;
+        const result = yield chrome.storage.sync.get("extensionOnOff");
+        return result.extensionOnOff;
     });
 }
 function getBlockedUrl() {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = (yield chrome.storage.sync.get([
-            "blockedUrlData",
-        ]));
+        const result = yield chrome.storage.sync.get("blockedUrlData");
+        console.log(result);
         return result;
     });
 }
@@ -445,12 +444,12 @@ function init() {
     return __awaiter(this, void 0, void 0, function* () {
         var _a, _b;
         const extensionOn = yield isExtensionOn();
-        const urls = yield getBlockedUrl();
+        const urlsDict = yield getBlockedUrl();
         document.addEventListener("DOMContentLoaded", () => {
             (0,_components_topPage__WEBPACK_IMPORTED_MODULE_1__.addTopOfPage)(extensionOn, BlockedCountManager);
         });
-        if (!extensionOn || !urls.blockedUrlData) {
-            console.log("Extension is off");
+        if (!extensionOn || !urlsDict.blockedUrlData) {
+            console.info("Search Sanitizer Extension is off");
             return;
         }
         addDocumentHead();
@@ -471,7 +470,7 @@ function init() {
             console.log("images");
         }
         else {
-            (0,_contentScript__WEBPACK_IMPORTED_MODULE_0__["default"])(urls, BlockedCountManager);
+            (0,_contentScript__WEBPACK_IMPORTED_MODULE_0__["default"])(urlsDict, BlockedCountManager);
         }
     });
 }

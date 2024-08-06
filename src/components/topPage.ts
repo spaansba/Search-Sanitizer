@@ -1,4 +1,4 @@
-import { BlockedCountManager } from "../contentScript"
+import type { BlockedCountManager } from "../contentScript"
 
 const styles = `
   .extension-button:hover { opacity: 0.4 !important; }
@@ -32,7 +32,7 @@ const styles = `
   heigth: 22px;
 }
 `
-let resultsHidden: boolean = false
+let resultsHidden = false
 export function addTopOfPage(
   ExtensionIsOn: boolean,
   blockedCountManager: BlockedCountManager

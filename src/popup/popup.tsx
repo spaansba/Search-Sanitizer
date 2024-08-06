@@ -1,14 +1,15 @@
-import React, { useContext, useEffect, useRef, useState } from "react"
+// biome-ignore lint/style/useImportType: <explanation>
+import React from "react"
+import { useEffect } from "react"
 import { createRoot } from "react-dom/client"
 import "./popup.css"
 import OnOffSlider from "../components/onOffSlider"
 import UrlInput from "../components/urlInput"
-import { BlockedUrlsContext } from "../options/options"
 
 const App: React.FC = () => {
   // Get slider changed message
   useEffect(() => {
-    const messageListener = (message: any) => {
+    const messageListener = (message) => {
       if (message.type === "SLIDER_CHANGED") {
         chrome.storage.sync.get([message.key], (result) => {
           console.log(`Slider ${message.key} changed to ${result[message.key]}`)
@@ -75,7 +76,7 @@ const App: React.FC = () => {
           handleClose={handleClose}
           addBlockedUrl={addBlockedUrl}
           addCurrentUrl={true}
-        ></UrlInput>
+        />
       </div>
     </div>
   )
