@@ -142,67 +142,44 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
     });
 };
 class BlockedCountUpdateManager {
-    constructor(
-    // The current blocked URL data
-    blockedUrlsDict, 
-    // Callback to update the parent component's state
-    updateCallback) {
+    constructor(blockedUrlsDict, lifetimeBlocks, updateCallback) {
         this.blockedUrlsDict = blockedUrlsDict;
         this.updateCallback = updateCallback;
-        // Stores the count updates before they're committed to storage
         this.countUpdates = {};
-        this.lifetimeTotalBlocks = { i: 0, n: 0, v: 0, w: 0 };
-        // Initialize the debounced update function
-        this.debouncedBatchUpdate = this.debounce(() => this.batchUpdateCounts(), 1000); // 1 second
-        // Ensure updates are saved when the page is closed
+        this.lifetimeBlocks = { w: 0, i: 0, v: 0, n: 0 };
+        this.lifetimeBlocks = lifetimeBlocks;
+        this.debouncedBatchUpdate = this.debounce(() => this.batchUpdateCounts(), 1000);
         window.addEventListener("beforeunload", () => this.batchUpdateCounts());
-        // Load the lifetime total blocks count
-        this.loadLifetimeTotalBlocks();
     }
-    // Load the lifetime total blocks count from storage
-    loadLifetimeTotalBlocks() {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const result = yield chrome.storage.local.get("lifetimeTotalBlocks");
-                this.lifetimeTotalBlocks = result.lifetimeTotalBlocks || { i: 0, n: 0, v: 0, w: 0 };
-            }
-            catch (error) {
-                console.error("Failed to load lifetime total blocks:", error);
-            }
-        });
-    }
-    // Increment the count for a specific URL and search type
-    incrementCount(pattern, searchType) {
-        if (!this.countUpdates[pattern]) {
-            this.countUpdates[pattern] = { w: 0, i: 0, v: 0, n: 0 };
+    incrementCount(userPattern, searchType) {
+        if (!this.countUpdates[userPattern]) {
+            this.countUpdates[userPattern] = { w: 0, i: 0, v: 0, n: 0 };
         }
-        this.countUpdates[pattern][searchType]++;
-        this.lifetimeTotalBlocks[searchType]++;
+        this.countUpdates[userPattern][searchType]++;
         this.debouncedBatchUpdate();
     }
-    // Update the blocked URL data in storage and notify the parent component
     batchUpdateCounts() {
         return __awaiter(this, void 0, void 0, function* () {
             if (Object.keys(this.countUpdates).length === 0)
                 return;
             const updatedBlockedUrlData = Object.assign({}, this.blockedUrlsDict.blockedUrlData);
-            // Merge the count updates into the current data
+            const updatedLifeTimeBlocks = Object.assign({}, this.lifetimeBlocks);
             for (const [url, counts] of Object.entries(this.countUpdates)) {
                 if (!updatedBlockedUrlData[url]) {
                     updatedBlockedUrlData[url] = { w: 0, i: 0, v: 0, n: 0 };
                 }
                 for (const type of ["w", "i", "v", "n"]) {
                     updatedBlockedUrlData[url][type] += counts[type];
+                    updatedLifeTimeBlocks[type] += counts[type];
                 }
             }
             try {
-                // Update the storage with both blockedUrlData and lifetimeTotalBlocks
+                // Update both blockedUrlData and lifetimeTotalBlocks in storage
                 yield chrome.storage.local.set({
                     blockedUrlData: updatedBlockedUrlData,
-                    lifetimeTotalBlocks: this.lifetimeTotalBlocks,
+                    lifetimeTotalBlocks: updatedLifeTimeBlocks,
                 });
-                // Notify the parent component
-                this.updateCallback(updatedBlockedUrlData, this.lifetimeTotalBlocks);
+                this.updateCallback(updatedBlockedUrlData);
                 // Clear the accumulated updates
                 this.countUpdates = {};
             }
@@ -211,7 +188,6 @@ class BlockedCountUpdateManager {
             }
         });
     }
-    // Debounce function to limit the frequency of updates
     debounce(func, wait) {
         let timeout;
         return (...args) => {
@@ -236,15 +212,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _components_topPage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/topPage */ "./src/components/topPage.ts");
 /* harmony import */ var _blockedCountUpdateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./blockedCountUpdateManager */ "./src/contentScript/blockedCountUpdateManager.ts");
-var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 
 
 class GoogleScriptService {
@@ -258,7 +225,7 @@ class GoogleScriptService {
         this._resultsAreHidden = value;
         this.updateBlockedElementsVisibility();
     }
-    constructor(blockedUrlsDict, isExtensionOn, searchType) {
+    constructor(blockedUrlsDict, isExtensionOn, lifeTimeBlocks, searchType) {
         this.processedResults = new Set();
         this._blockedCount = 0;
         this._resultsAreHidden = false;
@@ -268,7 +235,7 @@ class GoogleScriptService {
         this.addDocumentHead();
         this.addEventListeners();
         this.searchtype = searchType;
-        this.updateManager = new _blockedCountUpdateManager__WEBPACK_IMPORTED_MODULE_1__.BlockedCountUpdateManager(blockedUrlsDict, this.updateBlockedUrlsDict.bind(this));
+        this.updateManager = new _blockedCountUpdateManager__WEBPACK_IMPORTED_MODULE_1__.BlockedCountUpdateManager(blockedUrlsDict, lifeTimeBlocks, this.updatedBlockedCallback.bind(this));
     }
     // Return a promise that resolves when the search element is found
     getSearchElement() {
@@ -305,16 +272,15 @@ class GoogleScriptService {
       `;
         document.head.appendChild(style);
     }
-    incrementBlockCount(pattern) {
+    incrementBlockCount(userPattern) {
         this._blockedCount++;
-        this.updateManager.incrementCount(pattern, this.searchtype);
+        this.updateManager.incrementCount(userPattern, this.searchtype);
     }
-    updateBlockedUrlsDict(updatedData) {
-        this.blockedUrlsDict.blockedUrlData = updatedData;
-    }
-    getBlockedURL() {
-        return __awaiter(this, void 0, void 0, function* () {
-            return yield chrome.storage.local.get("blockedUrlData");
+    updatedBlockedCallback(updatedDataUrlBlocked) {
+        this.blockedUrlsDict.blockedUrlData = updatedDataUrlBlocked;
+        chrome.runtime.sendMessage({
+            type: "updateBadge",
+            count: this._blockedCount,
         });
     }
     // Mark element as blocked and also increment the block count
@@ -379,29 +345,22 @@ class GoogleScriptService {
         return regex.test(urlString);
     }
     shouldUrlBeBlocked(googleSearchUrl) {
-        try {
-            const url = new URL(googleSearchUrl);
-            for (const pattern of Object.keys(this.blockedUrlsDict.blockedUrlData)) {
-                // Here we check if the pattern is an URL and if it matches the current checked URL
-                if (this.isPatternUrl(url, googleSearchUrl, pattern)) {
-                    console.log(`Blocked URL: ${googleSearchUrl} matched pattern: ${pattern}`);
-                    this.incrementBlockCount(pattern);
-                    return true;
-                }
-                // Here we check if the pattern is a matched Pattern and if it matches the current checked URL
-                if (this.isPatternWildcard(googleSearchUrl, pattern)) {
-                    this.incrementBlockCount(pattern);
-                    console.log(`Blocked URL: ${url} matched pattern: ${pattern}`);
-                    return true;
-                }
+        const url = new URL(googleSearchUrl);
+        for (const pattern of Object.keys(this.blockedUrlsDict.blockedUrlData)) {
+            // Here we check if the pattern is an URL and if it matches the current checked URL
+            if (this.isPatternUrl(url, googleSearchUrl, pattern)) {
+                console.log(`Blocked URL: ${googleSearchUrl} matched pattern: ${pattern}`);
+                this.incrementBlockCount(pattern);
+                return true;
             }
-            return false;
+            // Here we check if the pattern is a matched Pattern and if it matches the current checked URL
+            if (this.isPatternWildcard(googleSearchUrl, pattern)) {
+                this.incrementBlockCount(pattern);
+                console.log(`Blocked URL: ${url} matched pattern: ${pattern}`);
+                return true;
+            }
         }
-        catch (error) {
-            console.log(googleSearchUrl);
-            console.error(`Error processing:`, googleSearchUrl);
-            return false;
-        }
+        return false;
     }
     isElementVisible(element) {
         return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
@@ -473,8 +432,12 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 };
 
 function googleSearchImages(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, "i");
+    return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, lifeTimeBlocks, }) {
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks, "i");
+        // We check extension is on here so GoogleScriptService still loads custom top of page element that shows the extension is turned off
+        if (!extensionIsOn) {
+            return;
+        }
         yield ContentScript.getSearchElement();
         const queryString = ".ivg-i:not([data-processed])";
         ContentScript.processSearchResultsForBlocking(queryString);
@@ -512,8 +475,12 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 };
 
 function googleSearchNews(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, "n");
+    return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, lifeTimeBlocks, }) {
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks, "n");
+        // We check extension is on here so GoogleScriptService still loads custom top of page element that shows the extension is turned off
+        if (!extensionIsOn) {
+            return;
+        }
         yield ContentScript.getSearchElement();
         const queryString = ".SoaBEf:not([data-processed])";
         ContentScript.processSearchResultsForBlocking(queryString);
@@ -551,8 +518,12 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 };
 
 function googleSearchRegular(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, "w");
+    return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, lifeTimeBlocks, }) {
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks, "w");
+        // We check extension is on here so GoogleScriptService still loads custom top of page element that shows the extension is turned off
+        if (!extensionIsOn) {
+            return;
+        }
         yield ContentScript.getSearchElement();
         const queryString = ".g:not([data-processed]):not([data-initq] *)";
         ContentScript.processSearchResultsForBlocking(queryString);
@@ -564,7 +535,7 @@ function googleSearchRegular(_a) {
             subtree: true,
         });
         function processRelatedQuestionsForBlocking(searchElement) {
-            const moreToAskSections = searchElement.querySelectorAll("[data-initq]");
+            const moreToAskSections = searchElement.querySelectorAll(":not([data-processed])[data-initq]");
             moreToAskSections === null || moreToAskSections === void 0 ? void 0 : moreToAskSections.forEach((askSection) => {
                 askSection.setAttribute("data-processed", "true");
                 const relatedQuestions = askSection.querySelectorAll(".related-question-pair:not([data-processed])");
@@ -575,7 +546,7 @@ function googleSearchRegular(_a) {
                     ContentScript.processedResults.add(relatedQuestion);
                     relatedQuestion.setAttribute("data-processed", "true");
                     if (ContentScript.checkLinksForBlockedUrls(searchElement) ||
-                        this.checkCitesForBlockedUrls(searchElement)) {
+                        ContentScript.checkCitesForBlockedUrls(searchElement)) {
                         ContentScript.markElementAsBlocked(relatedQuestion);
                     }
                 });
@@ -609,8 +580,12 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 };
 
 function googleSearchVideos(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, "v");
+    return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, lifeTimeBlocks, }) {
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks, "v");
+        // We check extension is on here so GoogleScriptService still loads custom top of page element that shows the extension is turned off
+        if (!extensionIsOn) {
+            return;
+        }
         yield ContentScript.getSearchElement();
         const queryString = ".g:not([data-processed])";
         ContentScript.processSearchResultsForBlocking(queryString);
@@ -708,11 +683,11 @@ function initializeContentScript() {
     return __awaiter(this, void 0, void 0, function* () {
         const extensionIsOn = yield isExtensionOn();
         const urlsDict = yield getBlockedUrl();
-        if (!extensionIsOn || !urlsDict.blockedUrlData) {
-            console.info("Search Sanitizer Extension is off");
+        const lifeTimeBlocks = yield getLifeTimeBlockedUrl();
+        if (!urlsDict.blockedUrlData) {
             return;
         }
-        callContentScript({ extensionIsOn, urlsDict });
+        callContentScript({ extensionIsOn, urlsDict, lifeTimeBlocks });
     });
 }
 function callContentScript(googleContentScriptProps) {
@@ -748,6 +723,12 @@ function getBlockedUrl() {
     return __awaiter(this, void 0, void 0, function* () {
         const result = yield chrome.storage.local.get("blockedUrlData");
         return { blockedUrlData: result.blockedUrlData || {} };
+    });
+}
+function getLifeTimeBlockedUrl() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const result = yield chrome.storage.local.get("lifetimeTotalBlocks");
+        return result.lifetimeTotalBlocks;
     });
 }
 initializeContentScript();

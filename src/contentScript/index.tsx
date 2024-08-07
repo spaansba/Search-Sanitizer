@@ -1,5 +1,5 @@
 import googleSearchRegular from "./googleRegular"
-import type { BlockedUrlDataLocal } from "../types"
+import type { blockCategories, BlockedUrlDataLocal } from "../types"
 import googleSearchImages from "./googleImages"
 import googleSearchVideos from "./googleVideos"
 import googleSearchNews from "./googleNews"
@@ -7,17 +7,19 @@ import googleSearchNews from "./googleNews"
 export interface googleContentScriptProps {
   extensionIsOn: boolean
   urlsDict: { blockedUrlData: BlockedUrlDataLocal }
+  lifeTimeBlocks: blockCategories
 }
 
 async function initializeContentScript() {
   const extensionIsOn: boolean = await isExtensionOn()
   const urlsDict = await getBlockedUrl()
+  const lifeTimeBlocks = await getLifeTimeBlockedUrl()
 
-  if (!extensionIsOn || !urlsDict.blockedUrlData) {
-    console.info("Search Sanitizer Extension is off")
+  if (!urlsDict.blockedUrlData) {
     return
   }
-  callContentScript({ extensionIsOn, urlsDict })
+
+  callContentScript({ extensionIsOn, urlsDict, lifeTimeBlocks })
 }
 
 function callContentScript(googleContentScriptProps: googleContentScriptProps) {
@@ -47,6 +49,11 @@ async function isExtensionOn(): Promise<boolean> {
 async function getBlockedUrl(): Promise<{ blockedUrlData: BlockedUrlDataLocal }> {
   const result = await chrome.storage.local.get("blockedUrlData")
   return { blockedUrlData: result.blockedUrlData || {} }
+}
+
+async function getLifeTimeBlockedUrl(): Promise<blockCategories> {
+  const result = await chrome.storage.local.get("lifetimeTotalBlocks")
+  return result.lifetimeTotalBlocks as blockCategories
 }
 
 initializeContentScript()

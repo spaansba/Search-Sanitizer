@@ -3,18 +3,16 @@ export type UserSettings = {
   googleStorageKey: string
 }
 
-export type BlockedSites = {
-  id: number
-  icon: string
-  url: string
-}
-
 ///
 //w = web
 // i = image
 // v = video
 // n = news
+export type blockCategories = { i: number; n: number; v: number; w: number }
 export type BlockedUrlDataLocal = {
-  [url: string]: { w: number; i: number; v: number; n: number }
+  [url: string]: blockCategories
 }
+
+export type searchCategories = "w" | "i" | "v" | "n"
+
 export type ScriptSettings = {}

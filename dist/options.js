@@ -66,8 +66,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.bottom-button-container {
       radial-gradient(circle, #a7e48f 20%, transparent 20%),
       radial-gradient(circle, #a7e48f 20%, transparent 20%),
       radial-gradient(circle, #a7e48f 20%, transparent 20%);
-    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%,
-      15% 15%, 10% 10%, 18% 18%;
+    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;
     background-position: 50% 120%;
     animation: greentopBubbles 0.6s ease;
   }
@@ -81,49 +80,60 @@ ___CSS_LOADER_EXPORT___.push([module.id, `.bottom-button-container {
       radial-gradient(circle, #a7e48f 20%, transparent 20%),
       radial-gradient(circle, #a7e48f 20%, transparent 20%),
       radial-gradient(circle, #a7e48f 20%, transparent 20%);
-    background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%,
-      18% 18%;
+    background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%, 18% 18%;
     background-position: 50% 0%;
     animation: greenbottomBubbles 0.6s ease;
   }
 }
 
+.text-button-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.unsaved-changes-text {
+  font-size: 16px;
+  font-weight: 400;
+  padding-right: 20px;
+  text-align: center;
+  font-style: italic;
+  padding-bottom: 5px;
+  color: #7b2c45;
+}
+
 @keyframes greentopBubbles {
   0% {
-    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%,
-      40% 90%, 55% 90%, 70% 90%;
+    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%,
+      70% 90%;
   }
 
   50% {
-    background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%,
-      50% 50%, 65% 20%, 90% 30%;
+    background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%,
+      90% 30%;
   }
 
   100% {
-    background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%,
-      50% 40%, 65% 10%, 90% 20%;
+    background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%, 50% 40%, 65% 10%,
+      90% 20%;
     background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
   }
 }
 
 @keyframes greenbottomBubbles {
   0% {
-    background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%,
-      70% -10%, 70% 0%;
+    background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%, 70% -10%, 70% 0%;
   }
 
   50% {
-    background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%,
-      105% 0%;
+    background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%, 105% 0%;
   }
 
   100% {
-    background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%,
-      110% 10%;
+    background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;
     background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
   }
 }
-`, "",{"version":3,"sources":["webpack://./src/components/codeMirror/codeMirrorEditor.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,yBAAyB;EACzB,eAAe;;EAEf;IACE,gBAAgB;IAChB,iBAAiB;IACjB,kBAAkB;IAClB,iBAAiB;IACjB,kBAAkB;IAClB,yBAAyB;IACzB,cAAc;IACd,eAAe;IACf,sBAAsB;IACtB,yBAAyB;EAC3B;;EAEA;IACE,yBAAyB;EAC3B;;EAEA;;IAEE,kBAAkB;IAClB,WAAW;IACX,WAAW;IACX,SAAS;IACT,YAAY;IACZ,2BAA2B;IAC3B,cAAc;IACd,4BAA4B;EAC9B;;EAEA;IACE,SAAS;IACT;;;;;;;;2DAQuD;IACvD;+BAC2B;IAC3B,6BAA6B;IAC7B,oCAAoC;EACtC;;EAEA;IACE,YAAY;IACZ;;;;;;2DAMuD;IACvD;aACS;IACT,2BAA2B;IAC3B,uCAAuC;EACzC;AACF;;AAEA;EACE;IACE;+BAC2B;EAC7B;;EAEA;IACE;+BAC2B;EAC7B;;EAEA;IACE;+BAC2B;IAC3B,yDAAyD;EAC3D;AACF;;AAEA;EACE;IACE;sBACkB;EACpB;;EAEA;IACE;aACS;EACX;;EAEA;IACE;cACU;IACV,yDAAyD;EAC3D;AACF","sourcesContent":[".bottom-button-container {\r\n  display: flex;\r\n  justify-content: flex-end;\r\n  margin-top: 8px;\r\n\r\n  .button {\r\n    font-weight: 500;\r\n    font-size: larger;\r\n    position: relative;\r\n    padding: 8px 25px;\r\n    border-radius: 8px;\r\n    border: 1px solid #ccccca;\r\n    color: #1d1c1c;\r\n    cursor: pointer;\r\n    background-color: #fff;\r\n    transition: all 0.2s ease;\r\n  }\r\n\r\n  .button:hover {\r\n    background-color: #ccccca;\r\n  }\r\n\r\n  .button:before,\r\n  .button:after {\r\n    position: absolute;\r\n    content: \"\";\r\n    width: 150%;\r\n    left: 50%;\r\n    height: 100%;\r\n    transform: translateX(-50%);\r\n    z-index: -1000;\r\n    background-repeat: no-repeat;\r\n  }\r\n\r\n  .button:hover:before {\r\n    top: -70%;\r\n    background-image: radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, transparent 20%, #a7e48f 20%, transparent 30%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, transparent 10%, #a7e48f 15%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%);\r\n    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%,\r\n      15% 15%, 10% 10%, 18% 18%;\r\n    background-position: 50% 120%;\r\n    animation: greentopBubbles 0.6s ease;\r\n  }\r\n\r\n  .button:hover::after {\r\n    bottom: -70%;\r\n    background-image: radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, transparent 10%, #a7e48f 15%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%);\r\n    background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%,\r\n      18% 18%;\r\n    background-position: 50% 0%;\r\n    animation: greenbottomBubbles 0.6s ease;\r\n  }\r\n}\r\n\r\n@keyframes greentopBubbles {\r\n  0% {\r\n    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%,\r\n      40% 90%, 55% 90%, 70% 90%;\r\n  }\r\n\r\n  50% {\r\n    background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%,\r\n      50% 50%, 65% 20%, 90% 30%;\r\n  }\r\n\r\n  100% {\r\n    background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%,\r\n      50% 40%, 65% 10%, 90% 20%;\r\n    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;\r\n  }\r\n}\r\n\r\n@keyframes greenbottomBubbles {\r\n  0% {\r\n    background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%,\r\n      70% -10%, 70% 0%;\r\n  }\r\n\r\n  50% {\r\n    background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%,\r\n      105% 0%;\r\n  }\r\n\r\n  100% {\r\n    background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%,\r\n      110% 10%;\r\n    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;\r\n  }\r\n}\r\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/components/codeMirror/codeMirrorEditor.css"],"names":[],"mappings":"AAAA;EACE,aAAa;EACb,yBAAyB;EACzB,eAAe;;EAEf;IACE,gBAAgB;IAChB,iBAAiB;IACjB,kBAAkB;IAClB,iBAAiB;IACjB,kBAAkB;IAClB,yBAAyB;IACzB,cAAc;IACd,eAAe;IACf,sBAAsB;IACtB,yBAAyB;EAC3B;;EAEA;IACE,yBAAyB;EAC3B;;EAEA;;IAEE,kBAAkB;IAClB,WAAW;IACX,WAAW;IACX,SAAS;IACT,YAAY;IACZ,2BAA2B;IAC3B,cAAc;IACd,4BAA4B;EAC9B;;EAEA;IACE,SAAS;IACT;;;;;;;;2DAQuD;IACvD,gGAAgG;IAChG,6BAA6B;IAC7B,oCAAoC;EACtC;;EAEA;IACE,YAAY;IACZ;;;;;;2DAMuD;IACvD,8EAA8E;IAC9E,2BAA2B;IAC3B,uCAAuC;EACzC;AACF;;AAEA;EACE,aAAa;EACb,mBAAmB;AACrB;;AAEA;EACE,eAAe;EACf,gBAAgB;EAChB,mBAAmB;EACnB,kBAAkB;EAClB,kBAAkB;EAClB,mBAAmB;EACnB,cAAc;AAChB;;AAEA;EACE;IACE;aACS;EACX;;EAEA;IACE;aACS;EACX;;EAEA;IACE;aACS;IACT,yDAAyD;EAC3D;AACF;;AAEA;EACE;IACE,sFAAsF;EACxF;;EAEA;IACE,kFAAkF;EACpF;;EAEA;IACE,mFAAmF;IACnF,yDAAyD;EAC3D;AACF","sourcesContent":[".bottom-button-container {\r\n  display: flex;\r\n  justify-content: flex-end;\r\n  margin-top: 8px;\r\n\r\n  .button {\r\n    font-weight: 500;\r\n    font-size: larger;\r\n    position: relative;\r\n    padding: 8px 25px;\r\n    border-radius: 8px;\r\n    border: 1px solid #ccccca;\r\n    color: #1d1c1c;\r\n    cursor: pointer;\r\n    background-color: #fff;\r\n    transition: all 0.2s ease;\r\n  }\r\n\r\n  .button:hover {\r\n    background-color: #ccccca;\r\n  }\r\n\r\n  .button:before,\r\n  .button:after {\r\n    position: absolute;\r\n    content: \"\";\r\n    width: 150%;\r\n    left: 50%;\r\n    height: 100%;\r\n    transform: translateX(-50%);\r\n    z-index: -1000;\r\n    background-repeat: no-repeat;\r\n  }\r\n\r\n  .button:hover:before {\r\n    top: -70%;\r\n    background-image: radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, transparent 20%, #a7e48f 20%, transparent 30%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, transparent 10%, #a7e48f 15%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%);\r\n    background-size: 10% 10%, 20% 20%, 15% 15%, 20% 20%, 18% 18%, 10% 10%, 15% 15%, 10% 10%, 18% 18%;\r\n    background-position: 50% 120%;\r\n    animation: greentopBubbles 0.6s ease;\r\n  }\r\n\r\n  .button:hover::after {\r\n    bottom: -70%;\r\n    background-image: radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, transparent 10%, #a7e48f 15%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%),\r\n      radial-gradient(circle, #a7e48f 20%, transparent 20%);\r\n    background-size: 15% 15%, 20% 20%, 18% 18%, 20% 20%, 15% 15%, 20% 20%, 18% 18%;\r\n    background-position: 50% 0%;\r\n    animation: greenbottomBubbles 0.6s ease;\r\n  }\r\n}\r\n\r\n.text-button-wrapper {\r\n  display: flex;\r\n  align-items: center;\r\n}\r\n\r\n.unsaved-changes-text {\r\n  font-size: 16px;\r\n  font-weight: 400;\r\n  padding-right: 20px;\r\n  text-align: center;\r\n  font-style: italic;\r\n  padding-bottom: 5px;\r\n  color: #7b2c45;\r\n}\r\n\r\n@keyframes greentopBubbles {\r\n  0% {\r\n    background-position: 5% 90%, 10% 90%, 10% 90%, 15% 90%, 25% 90%, 25% 90%, 40% 90%, 55% 90%,\r\n      70% 90%;\r\n  }\r\n\r\n  50% {\r\n    background-position: 0% 80%, 0% 20%, 10% 40%, 20% 0%, 30% 30%, 22% 50%, 50% 50%, 65% 20%,\r\n      90% 30%;\r\n  }\r\n\r\n  100% {\r\n    background-position: 0% 70%, 0% 10%, 10% 30%, 20% -10%, 30% 20%, 22% 40%, 50% 40%, 65% 10%,\r\n      90% 20%;\r\n    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;\r\n  }\r\n}\r\n\r\n@keyframes greenbottomBubbles {\r\n  0% {\r\n    background-position: 10% -10%, 30% 10%, 55% -10%, 70% -10%, 85% -10%, 70% -10%, 70% 0%;\r\n  }\r\n\r\n  50% {\r\n    background-position: 0% 80%, 20% 80%, 45% 60%, 60% 100%, 75% 70%, 95% 60%, 105% 0%;\r\n  }\r\n\r\n  100% {\r\n    background-position: 0% 90%, 20% 90%, 45% 70%, 60% 110%, 75% 80%, 95% 70%, 110% 10%;\r\n    background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;\r\n  }\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -891,6 +901,7 @@ const CodeMirrorEditor = () => {
     const editorViewRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
     const [blockedUrls, setBlockedUrls] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(_options_options__WEBPACK_IMPORTED_MODULE_2__.BlockedUrlsContext);
     const [initialDoc, setInitialDoc] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
+    const [hasUnsavedChanges, setHasUnsavedChanges] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
         const newInitialDoc = Object.entries(blockedUrls)
             .map(([url]) => `${url}`)
@@ -898,6 +909,18 @@ const CodeMirrorEditor = () => {
         setInitialDoc(newInitialDoc);
         console.log(newInitialDoc);
     }, [blockedUrls]);
+    //Show a popup if the user tries to leave the page with unsaved changes in the editor
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+        const handleBeforeUnload = (event) => {
+            if (hasUnsavedChanges) {
+                event.preventDefault();
+            }
+        };
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, [hasUnsavedChanges]);
     function onSave() {
         if (editorViewRef.current) {
             const docValues = editorViewRef.current.state.doc.toString().split("\n");
@@ -920,6 +943,18 @@ const CodeMirrorEditor = () => {
             });
         }
     }
+    // If the editor changes from the original doc display a message that there are unsaved changes
+    function onEditorChange() {
+        if (editorViewRef.current) {
+            const currentDoc = editorViewRef.current.state.doc.toString();
+            if (currentDoc === initialDoc) {
+                setHasUnsavedChanges(false);
+            }
+            else {
+                setHasUnsavedChanges(true);
+            }
+        }
+    }
     const editor = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((parent) => {
         var _a;
         if (parent) {
@@ -930,6 +965,11 @@ const CodeMirrorEditor = () => {
                     extensions: [
                         _codeMirrorLinter__WEBPACK_IMPORTED_MODULE_1__.urlLinter,
                         codemirror__WEBPACK_IMPORTED_MODULE_4__.keymap.of([..._codemirror_commands__WEBPACK_IMPORTED_MODULE_6__.historyKeymap, ..._codemirror_commands__WEBPACK_IMPORTED_MODULE_6__.standardKeymap]),
+                        codemirror__WEBPACK_IMPORTED_MODULE_4__.EditorView.updateListener.of((update) => {
+                            if (update.docChanged) {
+                                onEditorChange();
+                            }
+                        }),
                         (0,_codemirror_commands__WEBPACK_IMPORTED_MODULE_6__.history)(),
                         (0,codemirror__WEBPACK_IMPORTED_MODULE_4__.dropCursor)(),
                         (0,_codemirror_lang_javascript__WEBPACK_IMPORTED_MODULE_7__.javascript)(),
@@ -973,7 +1013,9 @@ const CodeMirrorEditor = () => {
     return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null,
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { ref: editor }),
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "bottom-button-container" },
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { className: "button", onClick: onSave }, "Save"))));
+            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "text-button-wrapper" },
+                hasUnsavedChanges && (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "unsaved-changes-text" }, "Editor has unsaved changes")),
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { className: "button", onClick: onSave }, "Save")))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CodeMirrorEditor);
 
@@ -1094,6 +1136,7 @@ __webpack_require__.r(__webpack_exports__);
 function OptionBlockedCards() {
     const [blockedUrls, setBlockedUrls] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(_options_options__WEBPACK_IMPORTED_MODULE_2__.BlockedUrlsContext);
     const [isAddModalOpen, setIsAddModalOpen] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+    const [lifeTimeBlocks, setLifeTimeBlocks] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({ w: 0, i: 0, v: 0, n: 0 });
     const formatCount = (count) => {
         if (count >= 1000000) {
             return (count / 1000000).toFixed(1) + "M";
@@ -1101,12 +1144,16 @@ function OptionBlockedCards() {
         else if (count >= 1000) {
             return (count / 1000).toFixed(1) + "K";
         }
-        console.log(count);
         if (count) {
             return count.toString();
         }
         return "0";
     };
+    (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+        chrome.storage.local.get(["lifetimeTotalBlocks"], (result) => {
+            setLifeTimeBlocks(result.lifetimeTotalBlocks);
+        });
+    }, []);
     function onClickDeleteButton(urlToDelete) {
         chrome.storage.local.get(["blockedUrlData"], (result) => {
             if (result.blockedUrlData) {
@@ -1127,32 +1174,32 @@ function OptionBlockedCards() {
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" })))),
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "card-container secondary" },
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "card-top-lifetime", className: "card-top", title: "Total lifetime blocked sites" },
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, " Lifetime Blocks")),
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Lifetime Blocks")),
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "card-bottom" },
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${1} Lifetime blocked regular search results` },
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(lifeTimeBlocks.w)} Lifetime blocked regular search results` },
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22px", height: "22px" },
                             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zm-2-5h4v2h-4V9z" })),
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" },
                             " ",
-                            formatCount(13))),
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${1} Lifetime blocked image search results` },
+                            formatCount(lifeTimeBlocks.w))),
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(lifeTimeBlocks.i)} Lifetime blocked image search results` },
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22px", height: "22px" },
                             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" })),
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" },
                             " ",
-                            formatCount(12))),
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${1} Lifetime blocked video search results` },
+                            formatCount(lifeTimeBlocks.i))),
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(lifeTimeBlocks.v)} Lifetime blocked video search results` },
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22px", height: "22px" },
                             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z" })),
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" },
                             " ",
-                            formatCount(12))),
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${1} Lifetime blocked video search results` },
+                            formatCount(lifeTimeBlocks.v))),
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(lifeTimeBlocks.n)} Lifetime blocked news search results` },
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { height: "22px", viewBox: "0 -960 960 960", width: "22px" },
                             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M165.5-110.91q-37.54 0-64.27-26.73-26.73-26.74-26.73-64.27v-649.57l68.67 67.72 66.96-67.72 67.72 67.72 67.72-67.72 66.95 67.72L480-851.48l67.48 67.72 66.95-67.72 67.72 67.72 67.72-67.72 66.96 67.72 68.67-67.72v649.57q0 37.53-26.73 64.27-26.73 26.73-64.27 26.73h-629Zm0-91h270.91v-240H165.5v240Zm358.09 0H794.5v-76.18H523.59v76.18Zm0-163.59H794.5v-76.41H523.59v76.41ZM165.5-529.09h629v-112.82h-629v112.82Z" })),
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" },
                             " ",
-                            formatCount(12))))),
+                            formatCount(lifeTimeBlocks.n))))),
             Object.entries(blockedUrls).map(([blockedUrl, count], index) => (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { key: index, className: "card-container" },
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "delete-button", onClick: () => onClickDeleteButton(blockedUrl) },
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "20px", height: "20px" },

@@ -1,5 +1,5 @@
 import { addTopOfPage, updateBlockedCount } from "../components/topPage"
-import { BlockedUrlDataLocal } from "../types"
+import { blockCategories, BlockedUrlDataLocal, searchCategories } from "../types"
 import { BlockedCountUpdateManager } from "./blockedCountUpdateManager"
 
 export class GoogleScriptService {
@@ -19,13 +19,14 @@ export class GoogleScriptService {
   }
   private isExtensionOn: boolean = true
   blockedUrlsDict: { blockedUrlData: BlockedUrlDataLocal }
-  searchtype: "w" | "i" | "v" | "n"
+  searchtype: searchCategories
   private updateManager: BlockedCountUpdateManager
 
   constructor(
     blockedUrlsDict: { blockedUrlData: BlockedUrlDataLocal },
     isExtensionOn: boolean,
-    searchType: "w" | "i" | "v" | "n"
+    lifeTimeBlocks: blockCategories,
+    searchType: searchCategories
   ) {
     this.blockedUrlsDict = blockedUrlsDict
     this.isExtensionOn = isExtensionOn
@@ -34,7 +35,8 @@ export class GoogleScriptService {
     this.searchtype = searchType
     this.updateManager = new BlockedCountUpdateManager(
       blockedUrlsDict,
-      this.updateBlockedUrlsDict.bind(this)
+      lifeTimeBlocks,
+      this.updatedBlockedCallback.bind(this)
     )
   }
 
@@ -81,17 +83,17 @@ export class GoogleScriptService {
     document.head.appendChild(style)
   }
 
-  private incrementBlockCount(pattern: string) {
+  private incrementBlockCount(userPattern: string) {
     this._blockedCount++
-    this.updateManager.incrementCount(pattern, this.searchtype)
+    this.updateManager.incrementCount(userPattern, this.searchtype)
   }
 
-  private updateBlockedUrlsDict(updatedData: BlockedUrlDataLocal) {
-    this.blockedUrlsDict.blockedUrlData = updatedData
-  }
-
-  async getBlockedURL() {
-    return await chrome.storage.local.get("blockedUrlData")
+  private updatedBlockedCallback(updatedDataUrlBlocked: BlockedUrlDataLocal) {
+    this.blockedUrlsDict.blockedUrlData = updatedDataUrlBlocked
+    chrome.runtime.sendMessage({
+      type: "updateBadge",
+      count: this._blockedCount,
+    })
   }
 
   // Mark element as blocked and also increment the block count
@@ -166,29 +168,23 @@ export class GoogleScriptService {
   }
 
   shouldUrlBeBlocked(googleSearchUrl: string): boolean {
-    try {
-      const url = new URL(googleSearchUrl)
-      for (const pattern of Object.keys(this.blockedUrlsDict.blockedUrlData)) {
-        // Here we check if the pattern is an URL and if it matches the current checked URL
-        if (this.isPatternUrl(url, googleSearchUrl, pattern)) {
-          console.log(`Blocked URL: ${googleSearchUrl} matched pattern: ${pattern}`)
-          this.incrementBlockCount(pattern)
-          return true
-        }
-
-        // Here we check if the pattern is a matched Pattern and if it matches the current checked URL
-        if (this.isPatternWildcard(googleSearchUrl, pattern)) {
-          this.incrementBlockCount(pattern)
-          console.log(`Blocked URL: ${url} matched pattern: ${pattern}`)
-          return true
-        }
+    const url = new URL(googleSearchUrl)
+    for (const pattern of Object.keys(this.blockedUrlsDict.blockedUrlData)) {
+      // Here we check if the pattern is an URL and if it matches the current checked URL
+      if (this.isPatternUrl(url, googleSearchUrl, pattern)) {
+        console.log(`Blocked URL: ${googleSearchUrl} matched pattern: ${pattern}`)
+        this.incrementBlockCount(pattern)
+        return true
       }
-      return false
-    } catch (error) {
-      console.log(googleSearchUrl)
-      console.error(`Error processing:`, googleSearchUrl)
-      return false
+
+      // Here we check if the pattern is a matched Pattern and if it matches the current checked URL
+      if (this.isPatternWildcard(googleSearchUrl, pattern)) {
+        this.incrementBlockCount(pattern)
+        console.log(`Blocked URL: ${url} matched pattern: ${pattern}`)
+        return true
+      }
     }
+    return false
   }
 
   private isElementVisible(element: HTMLElement): boolean {

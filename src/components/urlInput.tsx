@@ -13,20 +13,18 @@ interface UrlInputProps {
   addCurrentUrl: boolean
 }
 
-export default function UrlInput({
-  handleClose,
-  addBlockedUrl,
-  addCurrentUrl,
-}: UrlInputProps) {
+export default function UrlInput({ handleClose, addBlockedUrl, addCurrentUrl }: UrlInputProps) {
   const [inputValue, setInputValue] = useState<string>("")
   const urlInput = useRef<HTMLInputElement>(null)
   const [tabUrl, setTabUrl] = useState<URL>()
   const [inputAlternatives, setInputAlternatives] = useState<string[]>([])
   const [inputIsValid, setInputIsValid] = useState<boolean>()
+  const addButton = useRef<HTMLButtonElement>(null)
 
   function onHandleAlternative(Alternative: string) {
     setInputValue(Alternative.trim())
     urlInput.current.value = Alternative
+    urlInput.current.focus()
   }
 
   useEffect(() => {
@@ -89,14 +87,18 @@ export default function UrlInput({
     }
 
     // Remove duplicates and filter some inputs
-    return [...new Set(alternatives)].filter(
-      (alt) => alt !== "*://*.*://*.*" && alt !== inputValue
-    )
+    return [...new Set(alternatives)].filter((alt) => alt !== "*://*.*://*.*" && alt !== inputValue)
   }
 
   return (
     <div id="input-wrapper">
       <input
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && inputIsValid) {
+            e.preventDefault()
+            handleAddNewUrl()
+          }
+        }}
         onBlur={handleInputChange}
         onChange={handleInputChange}
         ref={urlInput}
@@ -108,7 +110,6 @@ export default function UrlInput({
         <div
           key={index}
           className="alternatives-container"
-          // biome-ignore lint/a11y/noNoninteractiveTabindex: <explanation>
           tabIndex={0}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
@@ -127,21 +128,16 @@ export default function UrlInput({
       ))}
       <div className="button-wrapper">
         <button
+          ref={addButton}
           type="button"
           disabled={!inputIsValid}
           onClick={handleAddNewUrl}
           className={`url-button add ${!inputIsValid ? "disabled" : ""}`}
-          title={
-            !inputIsValid ? "Please enter a valid URL or match pattern" : ""
-          }
+          title={!inputIsValid ? "Please enter a valid URL or match pattern" : ""}
         >
           Add
         </button>
-        <button
-          type="button"
-          onClick={handleClose}
-          className="url-button cancel"
-        >
+        <button type="button" onClick={handleClose} className="url-button cancel">
           Cancel
         </button>
       </div>

@@ -14,7 +14,8 @@ import "./codeMirrorEditor.css"
 const CodeMirrorEditor: React.FC = () => {
   const editorViewRef = useRef<EditorView | null>(null)
   const [blockedUrls, setBlockedUrls] = useContext(BlockedUrlsContext)
-  const [initialDoc, setInitialDoc] = useState("")
+  const [initialDoc, setInitialDoc] = useState<string>("")
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false)
 
   useEffect(() => {
     const newInitialDoc = Object.entries(blockedUrls)
@@ -23,6 +24,21 @@ const CodeMirrorEditor: React.FC = () => {
     setInitialDoc(newInitialDoc)
     console.log(newInitialDoc)
   }, [blockedUrls])
+
+  //Show a popup if the user tries to leave the page with unsaved changes in the editor
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        event.preventDefault()
+      }
+    }
+
+    window.addEventListener("beforeunload", handleBeforeUnload)
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload)
+    }
+  }, [hasUnsavedChanges])
 
   function onSave() {
     if (editorViewRef.current) {
@@ -48,6 +64,18 @@ const CodeMirrorEditor: React.FC = () => {
     }
   }
 
+  // If the editor changes from the original doc display a message that there are unsaved changes
+  function onEditorChange() {
+    if (editorViewRef.current) {
+      const currentDoc = editorViewRef.current.state.doc.toString()
+      if (currentDoc === initialDoc) {
+        setHasUnsavedChanges(false)
+      } else {
+        setHasUnsavedChanges(true)
+      }
+    }
+  }
+
   const editor = useCallback(
     (parent: HTMLDivElement | null) => {
       if (parent) {
@@ -58,6 +86,11 @@ const CodeMirrorEditor: React.FC = () => {
             extensions: [
               urlLinter,
               keymap.of([...historyKeymap, ...standardKeymap]),
+              EditorView.updateListener.of((update) => {
+                if (update.docChanged) {
+                  onEditorChange()
+                }
+              }),
               history(),
               dropCursor(),
               javascript(),
@@ -104,9 +137,14 @@ const CodeMirrorEditor: React.FC = () => {
     <>
       <div ref={editor} />
       <div className="bottom-button-container">
-        <button className="button" onClick={onSave}>
-          Save
-        </button>
+        <div className="text-button-wrapper">
+          {hasUnsavedChanges && (
+            <span className="unsaved-changes-text">Editor has unsaved changes</span>
+          )}
+          <button className="button" onClick={onSave}>
+            Save
+          </button>
+        </div>
       </div>
     </>
   )
