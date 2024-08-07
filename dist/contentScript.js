@@ -139,6 +139,25 @@ function updateBlockedCount(blockedCount) {
 
 /***/ }),
 
+/***/ "./src/contentScript/googleHelper.ts":
+/*!*******************************************!*\
+  !*** ./src/contentScript/googleHelper.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   isElementVisible: () => (/* binding */ isElementVisible)
+/* harmony export */ });
+function isElementVisible(element) {
+    return !!(element.offsetWidth ||
+        element.offsetHeight ||
+        element.getClientRects().length);
+}
+
+
+/***/ }),
+
 /***/ "./src/contentScript/googleImages.tsx":
 /*!********************************************!*\
   !*** ./src/contentScript/googleImages.tsx ***!
@@ -149,8 +168,55 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ googleSearchImages)
 /* harmony export */ });
+/* harmony import */ var _googleHelper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./googleHelper */ "./src/contentScript/googleHelper.ts");
+/* harmony import */ var _googleRegular__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./googleRegular */ "./src/contentScript/googleRegular.tsx");
+
+
 function googleSearchImages(blockedUrlsDict, blockedCountManager, searchElement) {
-    console.log("aeshsad");
+    const processedResults = new Set();
+    new MutationObserver(() => {
+        filterImageResults(searchElement);
+    }).observe(searchElement, {
+        childList: true,
+        subtree: true,
+    });
+    function filterImageResults(search) {
+        const searchResults = search.querySelectorAll(".ivg-i:not([data-processed]):not([data-initq] *)");
+        searchResults.forEach((result) => {
+            if (processedResults.has(result)) {
+                return;
+            }
+            processedResults.add(result);
+            result.setAttribute("data-processed", "true");
+            const links = result.querySelectorAll("a");
+            const cites = result.querySelectorAll("cite");
+            for (const link of links) {
+                if (link.href &&
+                    (0,_googleRegular__WEBPACK_IMPORTED_MODULE_1__.shouldFilterLink)(link.href, blockedUrlsDict) &&
+                    (0,_googleHelper__WEBPACK_IMPORTED_MODULE_0__.isElementVisible)(link)) {
+                    console.log("yes");
+                    addCardShow(result);
+                    return;
+                }
+            }
+            for (const cite of cites) {
+                console.log(cite);
+                if (cite.textContent &&
+                    (0,_googleRegular__WEBPACK_IMPORTED_MODULE_1__.shouldFilterLink)(cite.textContent, blockedUrlsDict) &&
+                    (0,_googleHelper__WEBPACK_IMPORTED_MODULE_0__.isElementVisible)(cite)) {
+                    console.log("yes");
+                    addCardShow(result);
+                    return;
+                }
+            }
+        });
+    }
+    function addCardShow(element) {
+        blockedCountManager.incrementBlockedCount();
+        // updateBlockedCount(blockedCountManager.getBlockedCount())
+        element.setAttribute("card-show", "true");
+        element.setAttribute("card-relevant", "true");
+    }
 }
 
 
@@ -164,10 +230,11 @@ function googleSearchImages(blockedUrlsDict, blockedCountManager, searchElement)
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ googleSearchRegular)
+/* harmony export */   "default": () => (/* binding */ googleSearchRegular),
+/* harmony export */   shouldFilterLink: () => (/* binding */ shouldFilterLink)
 /* harmony export */ });
 /* harmony import */ var _components_topPage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/topPage */ "./src/components/topPage.ts");
-/* harmony import */ var _helper_urlFilter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helper/urlFilter */ "./src/helper/urlFilter.ts");
+/* harmony import */ var _googleHelper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./googleHelper */ "./src/contentScript/googleHelper.ts");
 
 
 function googleSearchRegular(blockedUrlsDict, blockedCountManager, searchElement) {
@@ -181,9 +248,6 @@ function googleSearchRegular(blockedUrlsDict, blockedCountManager, searchElement
     });
     function filterNormalSearch(search) {
         const searchResults = search.querySelectorAll(".g:not([data-processed]):not([data-initq] *)");
-        if (!searchResults) {
-            return;
-        }
         searchResults.forEach((result) => {
             if (processedResults.has(result)) {
                 return;
@@ -192,18 +256,26 @@ function googleSearchRegular(blockedUrlsDict, blockedCountManager, searchElement
             result.setAttribute("data-processed", "true");
             const links = result.querySelectorAll("a");
             const cites = result.querySelectorAll("cite");
-            if ((0,_helper_urlFilter__WEBPACK_IMPORTED_MODULE_1__["default"])(links, cites, blockedUrlsDict)) {
-                console.log("yes1");
-                addCardShow(result);
+            for (const link of links) {
+                if (link.href &&
+                    shouldFilterLink(link.href, blockedUrlsDict) &&
+                    (0,_googleHelper__WEBPACK_IMPORTED_MODULE_1__.isElementVisible)(link)) {
+                    addCardShow(result);
+                    return;
+                }
+            }
+            for (const cite of cites) {
+                if (cite.textContent &&
+                    shouldFilterLink(cite.textContent, blockedUrlsDict) &&
+                    (0,_googleHelper__WEBPACK_IMPORTED_MODULE_1__.isElementVisible)(cite)) {
+                    addCardShow(result);
+                    return;
+                }
             }
         });
     }
     function filterRelatedQuestions(search) {
         const moreToAskSections = search.querySelectorAll("[data-initq]");
-        if (!moreToAskSections) {
-            console.warn("moreToAskSections not found");
-            return;
-        }
         moreToAskSections.forEach((askSection) => {
             askSection.setAttribute("data-processed", "true");
             const relatedQuestions = askSection.querySelectorAll(".related-question-pair:not([data-processed])");
@@ -215,8 +287,18 @@ function googleSearchRegular(blockedUrlsDict, blockedCountManager, searchElement
                 relatedQuestion.setAttribute("data-processed", "true");
                 const links = relatedQuestion.querySelectorAll("a");
                 const cites = relatedQuestion.querySelectorAll("cite");
-                if ((0,_helper_urlFilter__WEBPACK_IMPORTED_MODULE_1__["default"])(links, cites, blockedUrlsDict)) {
-                    addCardShow(relatedQuestion);
+                for (const link of links) {
+                    if (shouldFilterLink(link.href, blockedUrlsDict)) {
+                        addCardShow(relatedQuestion);
+                        return;
+                    }
+                }
+                for (const cite of cites) {
+                    if (cite.textContent &&
+                        shouldFilterLink(cite.textContent, blockedUrlsDict)) {
+                        addCardShow(relatedQuestion);
+                        return;
+                    }
                 }
             });
         });
@@ -228,35 +310,7 @@ function googleSearchRegular(blockedUrlsDict, blockedCountManager, searchElement
         element.setAttribute("card-relevant", "true");
     }
 }
-
-
-/***/ }),
-
-/***/ "./src/helper/urlFilter.ts":
-/*!*********************************!*\
-  !*** ./src/helper/urlFilter.ts ***!
-  \*********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ shouldFilterResult)
-/* harmony export */ });
-function shouldFilterResult(links, cites, blockedUrls) {
-    for (const link of links) {
-        if (isElementVisible(link) && shouldFilterLink(link.href, blockedUrls)) {
-            return true;
-        }
-    }
-    for (const cite of cites) {
-        if (cite.textContent &&
-            isElementVisible(cite) &&
-            shouldFilterLink(cite.textContent, blockedUrls)) {
-            return true;
-        }
-    }
-    return false;
-}
+// url filter functions ///////////////
 function shouldFilterLink(urlString, blockedUrls) {
     try {
         const url = new URL(urlString);
@@ -329,11 +383,6 @@ function matchesPattern(urlString, pattern) {
         .replace(/\\\*/g, ".*");
     const regex = new RegExp(`^${escapedPattern}$`);
     return regex.test(urlString);
-}
-function isElementVisible(element) {
-    return !!(element.offsetWidth ||
-        element.offsetHeight ||
-        element.getClientRects().length);
 }
 
 

@@ -16,3 +16,5 @@ export type BlockedUrlData = {
     v: number
   }
 }
+
+export type ScriptSettings = {}

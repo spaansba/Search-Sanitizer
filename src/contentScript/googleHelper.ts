@@ -1,1 +1,7 @@
-// Set up a MutationObserver to wait for the #search element
+export function isElementVisible(element: HTMLElement): boolean {
+  return !!(
+    element.offsetWidth ||
+    element.offsetHeight ||
+    element.getClientRects().length
+  )
+}
