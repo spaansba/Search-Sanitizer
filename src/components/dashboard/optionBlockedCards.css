@@ -29,8 +29,8 @@
   justify-content: center;
   padding: 10px;
   font-family: "Roboto";
-  box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.2),
-    0px 5px 7px 1px rgba(0, 0, 0, 0.14), 0px 2px 9px 3px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.2), 0px 5px 7px 1px rgba(0, 0, 0, 0.14),
+    0px 2px 9px 3px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
 }
 
@@ -45,7 +45,7 @@
 
 .card-container > .card-top {
   background: linear-gradient(rgb(234, 240, 168), rgb(244, 247, 212));
-  height: 60%;
+  height: 55%;
   padding-left: 3px;
   padding-right: 3px;
   display: flex;
@@ -68,7 +68,7 @@
   flex-direction: row;
   justify-content: space-between;
   background-color: #fff;
-  height: 40%;
+  height: 45%;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
 }
@@ -77,12 +77,7 @@
   display: flex;
   gap: 8px;
   align-items: center;
-}
-
-.card-container > .blocked-results span {
-  font-weight: 500;
-  font-size: 10px;
-  text-align: center;
+  position: relative;
 }
 
 .card-container > .card-bottom svg {
@@ -126,4 +121,21 @@
 
 #card-top-lifetime {
   background: linear-gradient(rgb(168 222 240), rgb(212 234 247));
+}
+
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #efefef;
+  color: #000;
+  border-radius: 50%;
+  width: 23px;
+  height: 16px;
+  font-size: 8px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 }

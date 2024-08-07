@@ -179,8 +179,8 @@ ___CSS_LOADER_EXPORT___.push([module.id, `:root {
   justify-content: center;
   padding: 10px;
   font-family: "Roboto";
-  box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.2),
-    0px 5px 7px 1px rgba(0, 0, 0, 0.14), 0px 2px 9px 3px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.2), 0px 5px 7px 1px rgba(0, 0, 0, 0.14),
+    0px 2px 9px 3px rgba(0, 0, 0, 0.12);
   border-radius: 8px;
 }
 
@@ -195,7 +195,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `:root {
 
 .card-container > .card-top {
   background: linear-gradient(rgb(234, 240, 168), rgb(244, 247, 212));
-  height: 60%;
+  height: 55%;
   padding-left: 3px;
   padding-right: 3px;
   display: flex;
@@ -218,7 +218,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `:root {
   flex-direction: row;
   justify-content: space-between;
   background-color: #fff;
-  height: 40%;
+  height: 45%;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px;
 }
@@ -227,12 +227,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `:root {
   display: flex;
   gap: 8px;
   align-items: center;
-}
-
-.card-container > .blocked-results span {
-  font-weight: 500;
-  font-size: 10px;
-  text-align: center;
+  position: relative;
 }
 
 .card-container > .card-bottom svg {
@@ -277,7 +272,24 @@ ___CSS_LOADER_EXPORT___.push([module.id, `:root {
 #card-top-lifetime {
   background: linear-gradient(rgb(168 222 240), rgb(212 234 247));
 }
-`, "",{"version":3,"sources":["webpack://./src/components/dashboard/optionBlockedCards.css"],"names":[],"mappings":"AAAA;EACE,mBAAmB;EACnB,gCAAgC;EAChC,kCAAkC;EAClC,wBAAwB;EACxB,+BAA+B;EAC/B,gCAAgC;EAChC,sBAAsB;EACtB,gDAAgD;EAChD,+BAA+B;AACjC;;AAIA;EACE,SAAS;EACT,aAAa;EACb,eAAe;AACjB;;AAEA;EACE,mEAAmE;EACnE,kBAAkB;EAClB,aAAa;EACb,YAAY;EACZ,+BAA+B;EAC/B,aAAa;EACb,sBAAsB;EACtB,uBAAuB;EACvB,aAAa;EACb,qBAAqB;EACrB;4EAC0E;EAC1E,kBAAkB;AACpB;;AAEA;EACE,aAAa;EACb,uBAAuB;AACzB;;AAEA;EACE,eAAe;AACjB;;AAEA;EACE,mEAAmE;EACnE,WAAW;EACX,iBAAiB;EACjB,kBAAkB;EAClB,aAAa;EACb,mBAAmB;EACnB,uBAAuB;;EAEvB;IACE,eAAe;IACf,gBAAgB;IAChB,uBAAuB;IACvB,kBAAkB;EACpB;AACF;;AAEA;EACE,qBAAqB;EACrB,oBAAoB;EACpB,mBAAmB;EACnB,aAAa;EACb,mBAAmB;EACnB,8BAA8B;EAC9B,sBAAsB;EACtB,WAAW;EACX,8BAA8B;EAC9B,+BAA+B;AACjC;;AAEA;EACE,aAAa;EACb,QAAQ;EACR,mBAAmB;AACrB;;AAEA;EACE,gBAAgB;EAChB,eAAe;EACf,kBAAkB;AACpB;;AAEA;EACE,qBAAqB;EACrB,0BAA0B;AAC5B;;AAEA;EACE,2BAA2B;;EAE3B;IACE,YAAY;EACd;EACA;IACE,WAAW;EACb;AACF;;AAEA;EACE,YAAY;EACZ,kBAAkB;EAClB,QAAQ;EACR,UAAU;EACV,UAAU;EACV,eAAe;EACf,6BAA6B;AAC/B;;AAEA;EACE,qBAAqB;EACrB,0BAA0B;AAC5B;;AAEA;EACE,aAAa;AACf;;AAEA;EACE,+DAA+D;AACjE;;AAEA;EACE,+DAA+D;AACjE","sourcesContent":[":root {\r\n  color-scheme: light;\r\n  --light-main-background: #d1d1cf;\r\n  --light-secondary-background: #fff;\r\n  --light-main-text: black;\r\n  --light-secondary-text: #3a3a35;\r\n  --light-main-background: #d1d1cf;\r\n  --light-hover: #d1d1cf;\r\n  --border: 1px solid var(--light-main-background);\r\n  font-family: \"Lato\", sans-serif;\r\n}\r\n\r\n@import url(\"https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap\");\r\n\r\n.cards-container {\r\n  gap: 12px;\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n}\r\n\r\n.card-container {\r\n  background: linear-gradient(rgb(234, 240, 168), rgb(244, 247, 212));\r\n  position: relative;\r\n  height: 100px;\r\n  width: 210px;\r\n  transition: transform 0.3s ease;\r\n  display: flex;\r\n  flex-direction: column;\r\n  justify-content: center;\r\n  padding: 10px;\r\n  font-family: \"Roboto\";\r\n  box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.2),\r\n    0px 5px 7px 1px rgba(0, 0, 0, 0.14), 0px 2px 9px 3px rgba(0, 0, 0, 0.12);\r\n  border-radius: 8px;\r\n}\r\n\r\n.card-container > .add-card-container {\r\n  display: flex;\r\n  justify-content: center;\r\n}\r\n\r\n.add-card-container {\r\n  cursor: pointer;\r\n}\r\n\r\n.card-container > .card-top {\r\n  background: linear-gradient(rgb(234, 240, 168), rgb(244, 247, 212));\r\n  height: 60%;\r\n  padding-left: 3px;\r\n  padding-right: 3px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n\r\n  p {\r\n    font-size: 14px;\r\n    font-weight: 700;\r\n    text-overflow: ellipsis;\r\n    overflow-x: hidden;\r\n  }\r\n}\r\n\r\n.card-container > .card-bottom {\r\n  padding-right: 1.2rem;\r\n  padding-left: 1.2rem;\r\n  align-items: center;\r\n  display: flex;\r\n  flex-direction: row;\r\n  justify-content: space-between;\r\n  background-color: #fff;\r\n  height: 40%;\r\n  border-bottom-left-radius: 4px;\r\n  border-bottom-right-radius: 4px;\r\n}\r\n\r\n.card-container > .card-bottom .blocked-results {\r\n  display: flex;\r\n  gap: 8px;\r\n  align-items: center;\r\n}\r\n\r\n.card-container > .blocked-results span {\r\n  font-weight: 500;\r\n  font-size: 10px;\r\n  text-align: center;\r\n}\r\n\r\n.card-container > .card-bottom svg {\r\n  fill: rgb(36, 22, 22);\r\n  transition: fill 0.3s ease;\r\n}\r\n\r\n.card-container:hover {\r\n  transform: translateY(-5px);\r\n\r\n  .delete-button {\r\n    opacity: 0.9;\r\n  }\r\n  .card-bottom svg {\r\n    fill: black;\r\n  }\r\n}\r\n\r\n.delete-button {\r\n  opacity: 0.3;\r\n  position: absolute;\r\n  top: 5px;\r\n  right: 5px;\r\n  z-index: 1;\r\n  cursor: pointer;\r\n  transition: opacity 0.3s ease;\r\n}\r\n\r\n.delete-button svg {\r\n  fill: rgb(36, 22, 22);\r\n  transition: fill 0.3s ease;\r\n}\r\n\r\n.delete-button:hover svg {\r\n  fill: #ff4444;\r\n}\r\n\r\n.secondary {\r\n  background: linear-gradient(rgb(168 222 240), rgb(212 234 247));\r\n}\r\n\r\n#card-top-lifetime {\r\n  background: linear-gradient(rgb(168 222 240), rgb(212 234 247));\r\n}\r\n"],"sourceRoot":""}]);
+
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: #efefef;
+  color: #000;
+  border-radius: 50%;
+  width: 23px;
+  height: 16px;
+  font-size: 8px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+`, "",{"version":3,"sources":["webpack://./src/components/dashboard/optionBlockedCards.css"],"names":[],"mappings":"AAAA;EACE,mBAAmB;EACnB,gCAAgC;EAChC,kCAAkC;EAClC,wBAAwB;EACxB,+BAA+B;EAC/B,gCAAgC;EAChC,sBAAsB;EACtB,gDAAgD;EAChD,+BAA+B;AACjC;;AAIA;EACE,SAAS;EACT,aAAa;EACb,eAAe;AACjB;;AAEA;EACE,mEAAmE;EACnE,kBAAkB;EAClB,aAAa;EACb,YAAY;EACZ,+BAA+B;EAC/B,aAAa;EACb,sBAAsB;EACtB,uBAAuB;EACvB,aAAa;EACb,qBAAqB;EACrB;uCACqC;EACrC,kBAAkB;AACpB;;AAEA;EACE,aAAa;EACb,uBAAuB;AACzB;;AAEA;EACE,eAAe;AACjB;;AAEA;EACE,mEAAmE;EACnE,WAAW;EACX,iBAAiB;EACjB,kBAAkB;EAClB,aAAa;EACb,mBAAmB;EACnB,uBAAuB;;EAEvB;IACE,eAAe;IACf,gBAAgB;IAChB,uBAAuB;IACvB,kBAAkB;EACpB;AACF;;AAEA;EACE,qBAAqB;EACrB,oBAAoB;EACpB,mBAAmB;EACnB,aAAa;EACb,mBAAmB;EACnB,8BAA8B;EAC9B,sBAAsB;EACtB,WAAW;EACX,8BAA8B;EAC9B,+BAA+B;AACjC;;AAEA;EACE,aAAa;EACb,QAAQ;EACR,mBAAmB;EACnB,kBAAkB;AACpB;;AAEA;EACE,qBAAqB;EACrB,0BAA0B;AAC5B;;AAEA;EACE,2BAA2B;;EAE3B;IACE,YAAY;EACd;EACA;IACE,WAAW;EACb;AACF;;AAEA;EACE,YAAY;EACZ,kBAAkB;EAClB,QAAQ;EACR,UAAU;EACV,UAAU;EACV,eAAe;EACf,6BAA6B;AAC/B;;AAEA;EACE,qBAAqB;EACrB,0BAA0B;AAC5B;;AAEA;EACE,aAAa;AACf;;AAEA;EACE,+DAA+D;AACjE;;AAEA;EACE,+DAA+D;AACjE;;AAEA;EACE,kBAAkB;EAClB,SAAS;EACT,WAAW;EACX,yBAAyB;EACzB,WAAW;EACX,kBAAkB;EAClB,WAAW;EACX,YAAY;EACZ,cAAc;EACd,iBAAiB;EACjB,aAAa;EACb,uBAAuB;EACvB,mBAAmB;EACnB,gBAAgB;AAClB","sourcesContent":[":root {\r\n  color-scheme: light;\r\n  --light-main-background: #d1d1cf;\r\n  --light-secondary-background: #fff;\r\n  --light-main-text: black;\r\n  --light-secondary-text: #3a3a35;\r\n  --light-main-background: #d1d1cf;\r\n  --light-hover: #d1d1cf;\r\n  --border: 1px solid var(--light-main-background);\r\n  font-family: \"Lato\", sans-serif;\r\n}\r\n\r\n@import url(\"https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap\");\r\n\r\n.cards-container {\r\n  gap: 12px;\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n}\r\n\r\n.card-container {\r\n  background: linear-gradient(rgb(234, 240, 168), rgb(244, 247, 212));\r\n  position: relative;\r\n  height: 100px;\r\n  width: 210px;\r\n  transition: transform 0.3s ease;\r\n  display: flex;\r\n  flex-direction: column;\r\n  justify-content: center;\r\n  padding: 10px;\r\n  font-family: \"Roboto\";\r\n  box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.2), 0px 5px 7px 1px rgba(0, 0, 0, 0.14),\r\n    0px 2px 9px 3px rgba(0, 0, 0, 0.12);\r\n  border-radius: 8px;\r\n}\r\n\r\n.card-container > .add-card-container {\r\n  display: flex;\r\n  justify-content: center;\r\n}\r\n\r\n.add-card-container {\r\n  cursor: pointer;\r\n}\r\n\r\n.card-container > .card-top {\r\n  background: linear-gradient(rgb(234, 240, 168), rgb(244, 247, 212));\r\n  height: 55%;\r\n  padding-left: 3px;\r\n  padding-right: 3px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n\r\n  p {\r\n    font-size: 14px;\r\n    font-weight: 700;\r\n    text-overflow: ellipsis;\r\n    overflow-x: hidden;\r\n  }\r\n}\r\n\r\n.card-container > .card-bottom {\r\n  padding-right: 1.2rem;\r\n  padding-left: 1.2rem;\r\n  align-items: center;\r\n  display: flex;\r\n  flex-direction: row;\r\n  justify-content: space-between;\r\n  background-color: #fff;\r\n  height: 45%;\r\n  border-bottom-left-radius: 4px;\r\n  border-bottom-right-radius: 4px;\r\n}\r\n\r\n.card-container > .card-bottom .blocked-results {\r\n  display: flex;\r\n  gap: 8px;\r\n  align-items: center;\r\n  position: relative;\r\n}\r\n\r\n.card-container > .card-bottom svg {\r\n  fill: rgb(36, 22, 22);\r\n  transition: fill 0.3s ease;\r\n}\r\n\r\n.card-container:hover {\r\n  transform: translateY(-5px);\r\n\r\n  .delete-button {\r\n    opacity: 0.9;\r\n  }\r\n  .card-bottom svg {\r\n    fill: black;\r\n  }\r\n}\r\n\r\n.delete-button {\r\n  opacity: 0.3;\r\n  position: absolute;\r\n  top: 5px;\r\n  right: 5px;\r\n  z-index: 1;\r\n  cursor: pointer;\r\n  transition: opacity 0.3s ease;\r\n}\r\n\r\n.delete-button svg {\r\n  fill: rgb(36, 22, 22);\r\n  transition: fill 0.3s ease;\r\n}\r\n\r\n.delete-button:hover svg {\r\n  fill: #ff4444;\r\n}\r\n\r\n.secondary {\r\n  background: linear-gradient(rgb(168 222 240), rgb(212 234 247));\r\n}\r\n\r\n#card-top-lifetime {\r\n  background: linear-gradient(rgb(168 222 240), rgb(212 234 247));\r\n}\r\n\r\n.badge {\r\n  position: absolute;\r\n  top: -8px;\r\n  right: -8px;\r\n  background-color: #efefef;\r\n  color: #000;\r\n  border-radius: 50%;\r\n  width: 23px;\r\n  height: 16px;\r\n  font-size: 8px;\r\n  font-weight: bold;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  overflow: hidden;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -891,13 +903,14 @@ const CodeMirrorEditor = () => {
             const docValues = editorViewRef.current.state.doc.toString().split("\n");
             const newBlockedUrlData = {};
             docValues.forEach((url) => {
-                var _a, _b, _c;
+                var _a, _b, _c, _d;
                 url = url.trim();
                 if (url) {
                     newBlockedUrlData[url] = {
-                        i: ((_a = blockedUrls[url]) === null || _a === void 0 ? void 0 : _a.i) || 0,
-                        s: ((_b = blockedUrls[url]) === null || _b === void 0 ? void 0 : _b.s) || 0,
+                        w: ((_a = blockedUrls[url]) === null || _a === void 0 ? void 0 : _a.w) || 0,
+                        i: ((_b = blockedUrls[url]) === null || _b === void 0 ? void 0 : _b.i) || 0,
                         v: ((_c = blockedUrls[url]) === null || _c === void 0 ? void 0 : _c.v) || 0,
+                        n: ((_d = blockedUrls[url]) === null || _d === void 0 ? void 0 : _d.n) || 0,
                     };
                 }
             });
@@ -1088,7 +1101,11 @@ function OptionBlockedCards() {
         else if (count >= 1000) {
             return (count / 1000).toFixed(1) + "K";
         }
-        return count.toString();
+        console.log(count);
+        if (count) {
+            return count.toString();
+        }
+        return "0";
     };
     function onClickDeleteButton(urlToDelete) {
         chrome.storage.sync.get(["blockedUrlData"], (result) => {
@@ -1106,57 +1123,61 @@ function OptionBlockedCards() {
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_modals_modalAddUrl__WEBPACK_IMPORTED_MODULE_3__["default"], { isOpen: isAddModalOpen, onClose: () => setIsAddModalOpen(false) }),
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "card-container secondary add-card-container", onClick: () => setIsAddModalOpen(true) },
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "add-card-container", title: "Add singular URL or match pattern" },
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "56", height: "56", fill: "currentColor" },
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "56px", height: "56px" },
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" })))),
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "card-container secondary" },
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "card-top-lifetime", className: "card-top", title: "Total lifetime blocked sites" },
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, " Lifetime Blocks")),
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "card-bottom" },
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${1} Lifetime blocked regular search results` },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22", height: "22", fill: "currentColor" },
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22px", height: "22px" },
                             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zm-2-5h4v2h-4V9z" })),
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null,
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" },
                             " ",
                             formatCount(13))),
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${1} Lifetime blocked image search results` },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22", height: "22", fill: "currentColor" },
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22px", height: "22px" },
                             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" })),
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "count-text" },
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" },
                             " ",
                             formatCount(12))),
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${1} Lifetime blocked video search results` },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22", height: "22", fill: "currentColor" },
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22px", height: "22px" },
                             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z" })),
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null,
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" },
+                            " ",
+                            formatCount(12))),
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${1} Lifetime blocked video search results` },
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { height: "22px", viewBox: "0 -960 960 960", width: "22px" },
+                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M165.5-110.91q-37.54 0-64.27-26.73-26.73-26.74-26.73-64.27v-649.57l68.67 67.72 66.96-67.72 67.72 67.72 67.72-67.72 66.95 67.72L480-851.48l67.48 67.72 66.95-67.72 67.72 67.72 67.72-67.72 66.96 67.72 68.67-67.72v649.57q0 37.53-26.73 64.27-26.73 26.73-64.27 26.73h-629Zm0-91h270.91v-240H165.5v240Zm358.09 0H794.5v-76.18H523.59v76.18Zm0-163.59H794.5v-76.41H523.59v76.41ZM165.5-529.09h629v-112.82h-629v112.82Z" })),
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" },
                             " ",
                             formatCount(12))))),
             Object.entries(blockedUrls).map(([blockedUrl, count], index) => (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { key: index, className: "card-container" },
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "delete-button", onClick: () => onClickDeleteButton(blockedUrl) },
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "20", height: "20", fill: "currentColor" },
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "20px", height: "20px" },
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" }))),
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "card-top" },
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", { title: blockedUrl },
                         " ",
                         blockedUrl)),
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "card-bottom" },
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(count.s)} Blocked regular search results` },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22", height: "22", fill: "currentColor" },
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(count.w)} Blocked regular search results` },
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22px", height: "22px" },
                             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zm-2-5h4v2h-4V9z" })),
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null,
-                            " ",
-                            formatCount(count.s))),
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" }, formatCount(count.w))),
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(count.i)} Blocked image search results` },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22", height: "22", fill: "currentColor" },
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22px", height: "22px" },
                             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" })),
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "count-text" },
-                            " ",
-                            formatCount(count.i))),
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" }, formatCount(count.i))),
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(count.v)} Blocked video search results` },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22", height: "22", fill: "currentColor" },
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22px", height: "22px" },
                             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z" })),
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", null,
-                            " ",
-                            formatCount(count.v))))))))));
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" }, formatCount(count.v))),
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(count.n)} Blocked news search results` },
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { height: "22px", viewBox: "0 -960 960 960", width: "22px" },
+                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M165.5-110.91q-37.54 0-64.27-26.73-26.73-26.74-26.73-64.27v-649.57l68.67 67.72 66.96-67.72 67.72 67.72 67.72-67.72 66.95 67.72L480-851.48l67.48 67.72 66.95-67.72 67.72 67.72 67.72-67.72 66.96 67.72 68.67-67.72v649.57q0 37.53-26.73 64.27-26.73 26.73-64.27 26.73h-629Zm0-91h270.91v-240H165.5v240Zm358.09 0H794.5v-76.18H523.59v76.18Zm0-163.59H794.5v-76.41H523.59v76.41ZM165.5-529.09h629v-112.82h-629v112.82Z" })),
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" }, formatCount(count.n))))))))));
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OptionBlockedCards);
 

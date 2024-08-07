@@ -9,11 +9,17 @@ export type BlockedSites = {
   url: string
 }
 
+///
+//w = web
+// i = image
+// v = video
+// n = news
 export type BlockedUrlData = {
   [url: string]: {
-    s: number
+    w: number
     i: number
     v: number
+    n: number
   }
 }
 

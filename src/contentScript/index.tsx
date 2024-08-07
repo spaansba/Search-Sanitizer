@@ -5,19 +5,19 @@ import googleSearchVideos from "./googleVideos"
 import googleSearchNews from "./googleNews"
 
 export interface googleContentScriptProps {
-  extensionOn: boolean
+  extensionIsOn: boolean
   urlsDict: BlockedUrlData
 }
 
 async function initializeContentScript() {
-  const extensionOn: boolean = await isExtensionOn()
+  const extensionIsOn: boolean = await isExtensionOn()
   const urlsDict: BlockedUrlData = await getBlockedUrl()
 
-  if (!extensionOn || !urlsDict.blockedUrlData) {
+  if (!extensionIsOn || !urlsDict.blockedUrlData) {
     console.info("Search Sanitizer Extension is off")
     return
   }
-  callContentScript({ extensionOn, urlsDict })
+  callContentScript({ extensionIsOn, urlsDict })
 }
 
 function callContentScript(googleContentScriptProps: googleContentScriptProps) {

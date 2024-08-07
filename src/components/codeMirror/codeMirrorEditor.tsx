@@ -3,12 +3,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { EditorView } from "codemirror"
 import { EditorState } from "@codemirror/state"
 import { lintGutter } from "@codemirror/lint"
-import {
-  lineNumbers,
-  highlightActiveLineGutter,
-  dropCursor,
-  keymap,
-} from "@codemirror/view"
+import { lineNumbers, highlightActiveLineGutter, dropCursor, keymap } from "@codemirror/view"
 import { javascript } from "@codemirror/lang-javascript"
 import { history, historyKeymap, standardKeymap } from "@codemirror/commands"
 import { urlLinter } from "./codeMirrorLinter"
@@ -38,9 +33,10 @@ const CodeMirrorEditor: React.FC = () => {
         url = url.trim()
         if (url) {
           newBlockedUrlData[url] = {
+            w: blockedUrls[url]?.w || 0,
             i: blockedUrls[url]?.i || 0,
-            s: blockedUrls[url]?.s || 0,
             v: blockedUrls[url]?.v || 0,
+            n: blockedUrls[url]?.n || 0,
           }
         }
       })

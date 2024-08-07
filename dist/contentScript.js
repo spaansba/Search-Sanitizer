@@ -138,6 +138,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_topPage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/topPage */ "./src/components/topPage.ts");
 
 class GoogleScriptService {
+    get blockedCount() {
+        return this._blockedCount;
+    }
+    get resultsAreHidden() {
+        return this._resultsAreHidden;
+    }
+    setBlockedElementsVisibility(value) {
+        this._resultsAreHidden = value;
+        this.updateBlockedElementsVisibility();
+    }
     constructor(blockedUrlsDict, isExtensionOn) {
         this.processedResults = new Set();
         this._blockedCount = 0;
@@ -146,7 +156,7 @@ class GoogleScriptService {
         this.blockedUrlsDict = blockedUrlsDict;
         this.isExtensionOn = isExtensionOn;
         this.addDocumentHead();
-        this.addEventListeners(this.isExtensionOn);
+        this.addEventListeners();
     }
     // Return a promise that resolves when the search element is found
     getSearchElement() {
@@ -164,9 +174,9 @@ class GoogleScriptService {
             });
         });
     }
-    addEventListeners(extensionOn) {
+    addEventListeners() {
         document.addEventListener("DOMContentLoaded", () => {
-            (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.addTopOfPage)(() => this.getBlockedElementsVisibility(), (value) => this.setBlockedElementsVisibility(value), this.blockedCount, this.isExtensionOn);
+            (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.addTopOfPage)(() => this.resultsAreHidden, (value) => this.setBlockedElementsVisibility(value), this.blockedCount, this.isExtensionOn);
         });
     }
     // Adds extra styles to the head of the document
@@ -179,12 +189,9 @@ class GoogleScriptService {
         [card-show="false"] { display: none !important; }
     
         /* Card Color Styles */
-        [card-relevant="true"] {opacity: 0.7 !important}
+        [card-relevant="true"] {opacity: 0.3 !important}
       `;
         document.head.appendChild(style);
-    }
-    get blockedCount() {
-        return this._blockedCount;
     }
     incrementBlockedCount() {
         this._blockedCount++;
@@ -193,15 +200,8 @@ class GoogleScriptService {
     markElementAsBlocked(element) {
         this.incrementBlockedCount();
         (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.updateBlockedCount)(this.blockedCount);
-        element.setAttribute("card-show", this.getBlockedElementsVisibility().toString());
+        element.setAttribute("card-show", this.resultsAreHidden.toString());
         element.setAttribute("card-relevant", "true");
-    }
-    getBlockedElementsVisibility() {
-        return this._resultsAreHidden;
-    }
-    setBlockedElementsVisibility(value) {
-        this._resultsAreHidden = value;
-        this.updateBlockedElementsVisibility();
     }
     // Users can toggle if blocked content is hidden or visible
     updateBlockedElementsVisibility() {
@@ -261,27 +261,28 @@ class GoogleScriptService {
         const regex = new RegExp(`^${escapedPattern}$`);
         return regex.test(urlString);
     }
-    shouldUrlBeBlocked(urlString, blockedUrls) {
+    shouldUrlBeBlocked(googleSearchUrl, blockedUrlsDict) {
         try {
-            const url = new URL(urlString);
-            for (const pattern of Object.keys(blockedUrls.blockedUrlData)) {
+            const url = new URL(googleSearchUrl);
+            for (const pattern of Object.keys(blockedUrlsDict.blockedUrlData)) {
                 // Here we check if the pattern is an URL and if it matches the current checked URL
-                if (this.isPatternUrl(url, urlString, pattern)) {
-                    console.log(`Blocked URL: ${urlString} matched pattern: ${pattern}`);
-                    blockedUrls.blockedUrlData[pattern].s++;
+                if (this.isPatternUrl(url, googleSearchUrl, pattern)) {
+                    console.log(`Blocked URL: ${googleSearchUrl} matched pattern: ${pattern}`);
+                    blockedUrlsDict.blockedUrlData[pattern].s++;
                     return true;
                 }
                 // Here we check if the pattern is a matched Pattern and if it matches the current checked URL
-                if (this.isPatternWildcard(urlString, pattern)) {
+                if (this.isPatternWildcard(googleSearchUrl, pattern)) {
                     console.log(`Blocked URL: ${url} matched pattern: ${pattern}`);
-                    blockedUrls.blockedUrlData[pattern].s++;
+                    blockedUrlsDict.blockedUrlData[pattern].s++;
                     return true;
                 }
             }
             return false;
         }
         catch (error) {
-            console.error(`Error processing ${urlString}:`, error);
+            console.log(googleSearchUrl);
+            console.error(`Error processing:`, error);
             return false;
         }
     }
@@ -290,7 +291,7 @@ class GoogleScriptService {
             element.offsetHeight ||
             element.getClientRects().length);
     }
-    filterResults(queryString) {
+    processSearchResultsForBlocking(queryString) {
         const searchResults = this.searchElement.querySelectorAll(queryString);
         searchResults.forEach((result) => {
             if (this.processedResults.has(result)) {
@@ -298,29 +299,40 @@ class GoogleScriptService {
             }
             this.processedResults.add(result);
             result.setAttribute("data-processed", "true");
-            const links = result.querySelectorAll("a");
-            const cites = result.querySelectorAll("cite");
-            const span = result.querySelectorAll("span");
-            for (const link of links) {
-                if (link.href &&
-                    this.shouldUrlBeBlocked(link.href, this.blockedUrlsDict) &&
-                    this.isElementVisible(link)) {
-                    console.log("yes");
-                    this.markElementAsBlocked(result);
-                    return;
-                }
-            }
-            for (const cite of cites) {
-                console.log(cite);
-                if (cite.textContent &&
-                    this.shouldUrlBeBlocked(cite.textContent, this.blockedUrlsDict) &&
-                    this.isElementVisible(cite)) {
-                    console.log("yes");
-                    this.markElementAsBlocked(result);
-                    return;
-                }
+            if (this.checkLinksForBlockedUrls(result) ||
+                this.checkCitesForBlockedUrls(result)) {
+                this.markElementAsBlocked(result);
             }
         });
+    }
+    checkLinksForBlockedUrls(result) {
+        const links = result.querySelectorAll("a");
+        for (const link of links) {
+            if (link.href &&
+                this.shouldUrlBeBlocked(link.href, this.blockedUrlsDict) &&
+                this.isElementVisible(link)) {
+                console.log("yes");
+                return true;
+            }
+        }
+        return false;
+    }
+    checkCitesForBlockedUrls(result) {
+        const cites = result.querySelectorAll("cite");
+        for (const cite of cites) {
+            let url = cite.textContent.split(" ")[0]; // Get first text in cite (it concatenates all descendants)
+            if (url) {
+                // Add 'https://' if the URL doesn't start with 'http://' or 'https://'
+                if (!/^https?:\/\//i.test(url)) {
+                    url = "https://" + url;
+                }
+                if (this.shouldUrlBeBlocked(url, this.blockedUrlsDict) &&
+                    this.isElementVisible(cite)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
 
@@ -349,13 +361,13 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 };
 
 function googleSearchImages(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ extensionOn, urlsDict, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionOn);
+    return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, }) {
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn);
         yield ContentScript.getSearchElement();
         const queryString = ".ivg-i:not([data-processed])";
-        ContentScript.filterResults(queryString);
+        ContentScript.processSearchResultsForBlocking(queryString);
         new MutationObserver(() => {
-            ContentScript.filterResults(queryString);
+            ContentScript.processSearchResultsForBlocking(queryString);
         }).observe(ContentScript.searchElement, {
             childList: true,
             subtree: true,
@@ -388,13 +400,13 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 };
 
 function googleSearchNews(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ extensionOn, urlsDict, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionOn);
+    return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, }) {
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn);
         yield ContentScript.getSearchElement();
         const queryString = ".SoaBEf:not([data-processed])";
-        ContentScript.filterResults(queryString);
+        ContentScript.processSearchResultsForBlocking(queryString);
         new MutationObserver(() => {
-            ContentScript.filterResults(queryString);
+            ContentScript.processSearchResultsForBlocking(queryString);
         }).observe(ContentScript.searchElement, {
             childList: true,
             subtree: true,
@@ -427,20 +439,20 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 };
 
 function googleSearchRegular(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ extensionOn, urlsDict, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionOn);
+    return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, }) {
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn);
         yield ContentScript.getSearchElement();
         const queryString = ".g:not([data-processed]):not([data-initq] *)";
-        ContentScript.filterResults(queryString);
+        ContentScript.processSearchResultsForBlocking(queryString);
         new MutationObserver(() => {
-            ContentScript.filterResults(queryString);
-            setTimeout(() => filterRelatedQuestions(ContentScript.searchElement), 500); //TODO fix need for 500 timeout
+            ContentScript.processSearchResultsForBlocking(queryString);
+            setTimeout(() => processRelatedQuestionsForBlocking(ContentScript.searchElement), 500); //TODO fix need for 500 timeout
         }).observe(ContentScript.searchElement, {
             childList: true,
             subtree: true,
         });
-        function filterRelatedQuestions(search) {
-            const moreToAskSections = search.querySelectorAll("[data-initq]");
+        function processRelatedQuestionsForBlocking(searchElement) {
+            const moreToAskSections = searchElement.querySelectorAll("[data-initq]");
             moreToAskSections.forEach((askSection) => {
                 askSection.setAttribute("data-processed", "true");
                 const relatedQuestions = askSection.querySelectorAll(".related-question-pair:not([data-processed])");
@@ -452,18 +464,9 @@ function googleSearchRegular(_a) {
                     relatedQuestion.setAttribute("data-processed", "true");
                     const links = relatedQuestion.querySelectorAll("a");
                     const cites = relatedQuestion.querySelectorAll("cite");
-                    for (const link of links) {
-                        if (ContentScript.shouldUrlBeBlocked(link.href, ContentScript.blockedUrlsDict)) {
-                            ContentScript.markElementAsBlocked(relatedQuestion);
-                            return;
-                        }
-                    }
-                    for (const cite of cites) {
-                        if (cite.textContent &&
-                            ContentScript.shouldUrlBeBlocked(cite.textContent, ContentScript.blockedUrlsDict)) {
-                            ContentScript.markElementAsBlocked(relatedQuestion);
-                            return;
-                        }
+                    if (this.checkLinksForBlockedUrls(relatedQuestion) ||
+                        this.checkCitesForBlockedUrls(relatedQuestion)) {
+                        this.markElementAsBlocked(relatedQuestion);
                     }
                 });
             });
@@ -496,13 +499,13 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 };
 
 function googleSearchVideos(_a) {
-    return __awaiter(this, arguments, void 0, function* ({ extensionOn, urlsDict, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionOn);
+    return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, }) {
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn);
         yield ContentScript.getSearchElement();
         const queryString = ".g:not([data-processed])";
-        ContentScript.filterResults(queryString);
+        ContentScript.processSearchResultsForBlocking(queryString);
         new MutationObserver(() => {
-            ContentScript.filterResults(queryString);
+            ContentScript.processSearchResultsForBlocking(queryString);
         }).observe(ContentScript.searchElement, {
             childList: true,
             subtree: true,
@@ -593,13 +596,13 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 function initializeContentScript() {
     return __awaiter(this, void 0, void 0, function* () {
-        const extensionOn = yield isExtensionOn();
+        const extensionIsOn = yield isExtensionOn();
         const urlsDict = yield getBlockedUrl();
-        if (!extensionOn || !urlsDict.blockedUrlData) {
+        if (!extensionIsOn || !urlsDict.blockedUrlData) {
             console.info("Search Sanitizer Extension is off");
             return;
         }
-        callContentScript({ extensionOn, urlsDict });
+        callContentScript({ extensionIsOn, urlsDict });
     });
 }
 function callContentScript(googleContentScriptProps) {
