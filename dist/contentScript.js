@@ -148,7 +148,7 @@ class GoogleScriptService {
         this._resultsAreHidden = value;
         this.updateBlockedElementsVisibility();
     }
-    constructor(blockedUrlsDict, isExtensionOn) {
+    constructor(blockedUrlsDict, isExtensionOn, searchType) {
         this.processedResults = new Set();
         this._blockedCount = 0;
         this._resultsAreHidden = false;
@@ -157,6 +157,16 @@ class GoogleScriptService {
         this.isExtensionOn = isExtensionOn;
         this.addDocumentHead();
         this.addEventListeners();
+        this.searchtype = searchType;
+        this.blockedUrlsWithCounts = {}; // Initialize as an empty object
+        for (const url in this.blockedUrlsDict.blockedUrlData) {
+            this.blockedUrlsWithCounts[url] = {
+                w: 0,
+                i: 0,
+                v: 0,
+                n: 0,
+            };
+        }
     }
     // Return a promise that resolves when the search element is found
     getSearchElement() {
@@ -164,7 +174,7 @@ class GoogleScriptService {
             new MutationObserver((_, obs) => {
                 const searchElement = document.querySelector("#search");
                 if (searchElement) {
-                    this.searchElement = searchElement;
+                    this.searchElementDiv = searchElement;
                     obs.disconnect();
                     resolve();
                 }
@@ -178,6 +188,7 @@ class GoogleScriptService {
         document.addEventListener("DOMContentLoaded", () => {
             (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.addTopOfPage)(() => this.resultsAreHidden, (value) => this.setBlockedElementsVisibility(value), this.blockedCount, this.isExtensionOn);
         });
+        window.addEventListener("beforeunload", () => this.updateBlockedUrlData());
     }
     // Adds extra styles to the head of the document
     addDocumentHead() {
@@ -193,12 +204,18 @@ class GoogleScriptService {
       `;
         document.head.appendChild(style);
     }
-    incrementBlockedCount() {
+    incrementBlockCount(pattern) {
         this._blockedCount++;
+        console.log(this.blockedUrlsWithCounts);
+        if (this.blockedUrlsWithCounts[pattern]) {
+            this.blockedUrlsWithCounts[pattern][this.searchtype]++;
+        }
+        else {
+            console.error(`Pattern not found in blockedUrlsWithCounts: ${pattern}`);
+        }
     }
     // Mark element as blocked and also increment the block count
     markElementAsBlocked(element) {
-        this.incrementBlockedCount();
         (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.updateBlockedCount)(this.blockedCount);
         element.setAttribute("card-show", this.resultsAreHidden.toString());
         element.setAttribute("card-relevant", "true");
@@ -255,9 +272,7 @@ class GoogleScriptService {
     isPatternWildcard(urlString, pattern) {
         urlString = urlString.toLowerCase();
         pattern = pattern.toLowerCase();
-        const escapedPattern = pattern
-            .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-            .replace(/\\\*/g, ".*");
+        const escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\\\*/g, ".*");
         const regex = new RegExp(`^${escapedPattern}$`);
         return regex.test(urlString);
     }
@@ -268,13 +283,13 @@ class GoogleScriptService {
                 // Here we check if the pattern is an URL and if it matches the current checked URL
                 if (this.isPatternUrl(url, googleSearchUrl, pattern)) {
                     console.log(`Blocked URL: ${googleSearchUrl} matched pattern: ${pattern}`);
-                    blockedUrlsDict.blockedUrlData[pattern].s++;
+                    this.incrementBlockCount(pattern);
                     return true;
                 }
                 // Here we check if the pattern is a matched Pattern and if it matches the current checked URL
                 if (this.isPatternWildcard(googleSearchUrl, pattern)) {
+                    this.incrementBlockCount(pattern);
                     console.log(`Blocked URL: ${url} matched pattern: ${pattern}`);
-                    blockedUrlsDict.blockedUrlData[pattern].s++;
                     return true;
                 }
             }
@@ -287,38 +302,45 @@ class GoogleScriptService {
         }
     }
     isElementVisible(element) {
-        return !!(element.offsetWidth ||
-            element.offsetHeight ||
-            element.getClientRects().length);
+        return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
     }
     processSearchResultsForBlocking(queryString) {
-        const searchResults = this.searchElement.querySelectorAll(queryString);
-        searchResults.forEach((result) => {
-            if (this.processedResults.has(result)) {
+        const searchResults = this.searchElementDiv.querySelectorAll(queryString);
+        searchResults.forEach((searchElement) => {
+            if (this.processedResults.has(searchElement)) {
                 return;
             }
-            this.processedResults.add(result);
-            result.setAttribute("data-processed", "true");
-            if (this.checkLinksForBlockedUrls(result) ||
-                this.checkCitesForBlockedUrls(result)) {
-                this.markElementAsBlocked(result);
+            this.processedResults.add(searchElement);
+            searchElement.setAttribute("data-processed", "true");
+            if (this.checkLinksForBlockedUrls(searchElement) ||
+                this.checkCitesForBlockedUrls(searchElement)) {
+                this.markElementAsBlocked(searchElement);
             }
         });
+        // Update the BlockedUrlData in storage with the new counts
+        // this.updateBlockedUrlData()
     }
-    checkLinksForBlockedUrls(result) {
-        const links = result.querySelectorAll("a");
+    updateBlockedUrlData() {
+        chrome.storage.sync.set({ BlockedUrlData: this.blockedUrlsWithCounts }, () => {
+            debugger;
+            console.log("BlockedUrlData updated");
+        });
+        // For now, we'll just log the updated data
+        console.log("Updated BlockedUrlData:", this.blockedUrlsWithCounts);
+    }
+    checkLinksForBlockedUrls(searchElement) {
+        const links = searchElement.querySelectorAll("a");
         for (const link of links) {
             if (link.href &&
                 this.shouldUrlBeBlocked(link.href, this.blockedUrlsDict) &&
                 this.isElementVisible(link)) {
-                console.log("yes");
                 return true;
             }
         }
         return false;
     }
-    checkCitesForBlockedUrls(result) {
-        const cites = result.querySelectorAll("cite");
+    checkCitesForBlockedUrls(searchElement) {
+        const cites = searchElement.querySelectorAll("cite");
         for (const cite of cites) {
             let url = cite.textContent.split(" ")[0]; // Get first text in cite (it concatenates all descendants)
             if (url) {
@@ -326,8 +348,8 @@ class GoogleScriptService {
                 if (!/^https?:\/\//i.test(url)) {
                     url = "https://" + url;
                 }
-                if (this.shouldUrlBeBlocked(url, this.blockedUrlsDict) &&
-                    this.isElementVisible(cite)) {
+                if (this.shouldUrlBeBlocked(url, this.blockedUrlsDict) && this.isElementVisible(cite)) {
+                    this.incrementBlockCount(url);
                     return true;
                 }
             }
@@ -362,13 +384,13 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 function googleSearchImages(_a) {
     return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn);
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, "i");
         yield ContentScript.getSearchElement();
         const queryString = ".ivg-i:not([data-processed])";
         ContentScript.processSearchResultsForBlocking(queryString);
         new MutationObserver(() => {
             ContentScript.processSearchResultsForBlocking(queryString);
-        }).observe(ContentScript.searchElement, {
+        }).observe(ContentScript.searchElementDiv, {
             childList: true,
             subtree: true,
         });
@@ -401,13 +423,13 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 function googleSearchNews(_a) {
     return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn);
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, "n");
         yield ContentScript.getSearchElement();
         const queryString = ".SoaBEf:not([data-processed])";
         ContentScript.processSearchResultsForBlocking(queryString);
         new MutationObserver(() => {
             ContentScript.processSearchResultsForBlocking(queryString);
-        }).observe(ContentScript.searchElement, {
+        }).observe(ContentScript.searchElementDiv, {
             childList: true,
             subtree: true,
         });
@@ -440,14 +462,14 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 function googleSearchRegular(_a) {
     return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn);
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, "w");
         yield ContentScript.getSearchElement();
         const queryString = ".g:not([data-processed]):not([data-initq] *)";
         ContentScript.processSearchResultsForBlocking(queryString);
         new MutationObserver(() => {
             ContentScript.processSearchResultsForBlocking(queryString);
-            setTimeout(() => processRelatedQuestionsForBlocking(ContentScript.searchElement), 500); //TODO fix need for 500 timeout
-        }).observe(ContentScript.searchElement, {
+            setTimeout(() => processRelatedQuestionsForBlocking(ContentScript.searchElementDiv), 500); //TODO fix need for 500 timeout
+        }).observe(ContentScript.searchElementDiv, {
             childList: true,
             subtree: true,
         });
@@ -464,8 +486,7 @@ function googleSearchRegular(_a) {
                     relatedQuestion.setAttribute("data-processed", "true");
                     const links = relatedQuestion.querySelectorAll("a");
                     const cites = relatedQuestion.querySelectorAll("cite");
-                    if (this.checkLinksForBlockedUrls(relatedQuestion) ||
-                        this.checkCitesForBlockedUrls(relatedQuestion)) {
+                    if (this.checkLinksForBlockedUrls(links) || this.checkCitesForBlockedUrls(cites)) {
                         this.markElementAsBlocked(relatedQuestion);
                     }
                 });
@@ -500,13 +521,13 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 function googleSearchVideos(_a) {
     return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn);
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, "v");
         yield ContentScript.getSearchElement();
         const queryString = ".g:not([data-processed])";
         ContentScript.processSearchResultsForBlocking(queryString);
         new MutationObserver(() => {
             ContentScript.processSearchResultsForBlocking(queryString);
-        }).observe(ContentScript.searchElement, {
+        }).observe(ContentScript.searchElementDiv, {
             childList: true,
             subtree: true,
         });

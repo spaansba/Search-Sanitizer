@@ -5,15 +5,15 @@ export default async function googleSearchRegular({
   extensionIsOn,
   urlsDict,
 }: googleContentScriptProps) {
-  const ContentScript = new GoogleScriptService(urlsDict, extensionIsOn)
+  const ContentScript = new GoogleScriptService(urlsDict, extensionIsOn, "w")
   await ContentScript.getSearchElement()
 
   const queryString: string = ".g:not([data-processed]):not([data-initq] *)"
   ContentScript.processSearchResultsForBlocking(queryString)
   new MutationObserver(() => {
     ContentScript.processSearchResultsForBlocking(queryString)
-    setTimeout(() => processRelatedQuestionsForBlocking(ContentScript.searchElement), 500) //TODO fix need for 500 timeout
-  }).observe(ContentScript.searchElement, {
+    setTimeout(() => processRelatedQuestionsForBlocking(ContentScript.searchElementDiv), 500) //TODO fix need for 500 timeout
+  }).observe(ContentScript.searchElementDiv, {
     childList: true,
     subtree: true,
   })
@@ -34,10 +34,7 @@ export default async function googleSearchRegular({
         const links = relatedQuestion.querySelectorAll("a")
         const cites = relatedQuestion.querySelectorAll("cite")
 
-        if (
-          this.checkLinksForBlockedUrls(relatedQuestion) ||
-          this.checkCitesForBlockedUrls(relatedQuestion)
-        ) {
+        if (this.checkLinksForBlockedUrls(links) || this.checkCitesForBlockedUrls(cites)) {
           this.markElementAsBlocked(relatedQuestion as HTMLElement)
         }
       })
