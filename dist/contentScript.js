@@ -151,7 +151,7 @@ class BlockedCountUpdateManager {
         this.updateCallback = updateCallback;
         // Stores the count updates before they're committed to storage
         this.countUpdates = {};
-        this.lifetimeTotalBlocks = 0;
+        this.lifetimeTotalBlocks = { i: 0, n: 0, v: 0, w: 0 };
         // Initialize the debounced update function
         this.debouncedBatchUpdate = this.debounce(() => this.batchUpdateCounts(), 1000); // 1 second
         // Ensure updates are saved when the page is closed
@@ -164,7 +164,7 @@ class BlockedCountUpdateManager {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const result = yield chrome.storage.local.get("lifetimeTotalBlocks");
-                this.lifetimeTotalBlocks = result.lifetimeTotalBlocks || 0;
+                this.lifetimeTotalBlocks = result.lifetimeTotalBlocks || { i: 0, n: 0, v: 0, w: 0 };
             }
             catch (error) {
                 console.error("Failed to load lifetime total blocks:", error);
@@ -177,7 +177,7 @@ class BlockedCountUpdateManager {
             this.countUpdates[pattern] = { w: 0, i: 0, v: 0, n: 0 };
         }
         this.countUpdates[pattern][searchType]++;
-        this.lifetimeTotalBlocks++;
+        this.lifetimeTotalBlocks[searchType]++;
         this.debouncedBatchUpdate();
     }
     // Update the blocked URL data in storage and notify the parent component
@@ -574,10 +574,9 @@ function googleSearchRegular(_a) {
                     }
                     ContentScript.processedResults.add(relatedQuestion);
                     relatedQuestion.setAttribute("data-processed", "true");
-                    const links = relatedQuestion.querySelectorAll("a");
-                    const cites = relatedQuestion.querySelectorAll("cite");
-                    if (this.checkLinksForBlockedUrls(links) || this.checkCitesForBlockedUrls(cites)) {
-                        this.markElementAsBlocked(relatedQuestion);
+                    if (ContentScript.checkLinksForBlockedUrls(searchElement) ||
+                        this.checkCitesForBlockedUrls(searchElement)) {
+                        ContentScript.markElementAsBlocked(relatedQuestion);
                     }
                 });
             });

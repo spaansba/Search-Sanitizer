@@ -1,16 +1,21 @@
 import { BlockedUrlDataLocal } from "../types"
 
+type LifetimeTotalBlocks = { i: number; n: number; v: number; w: number }
+
 export class BlockedCountUpdateManager {
   // Stores the count updates before they're committed to storage
   private countUpdates: BlockedUrlDataLocal = {}
-  private lifetimeTotalBlocks: number = 0
+  private lifetimeTotalBlocks: LifetimeTotalBlocks = { i: 0, n: 0, v: 0, w: 0 }
   private debouncedBatchUpdate: () => void
 
   constructor(
     // The current blocked URL data
     private blockedUrlsDict: { blockedUrlData: BlockedUrlDataLocal },
     // Callback to update the parent component's state
-    private updateCallback: (updatedData: BlockedUrlDataLocal, lifetimeTotal: number) => void
+    private updateCallback: (
+      updatedData: BlockedUrlDataLocal,
+      lifetimeTotal: LifetimeTotalBlocks
+    ) => void
   ) {
     // Initialize the debounced update function
     this.debouncedBatchUpdate = this.debounce(() => this.batchUpdateCounts(), 1000) // 1 second
@@ -24,7 +29,7 @@ export class BlockedCountUpdateManager {
   private async loadLifetimeTotalBlocks() {
     try {
       const result = await chrome.storage.local.get("lifetimeTotalBlocks")
-      this.lifetimeTotalBlocks = result.lifetimeTotalBlocks || 0
+      this.lifetimeTotalBlocks = result.lifetimeTotalBlocks || { i: 0, n: 0, v: 0, w: 0 }
     } catch (error) {
       console.error("Failed to load lifetime total blocks:", error)
     }
@@ -36,7 +41,7 @@ export class BlockedCountUpdateManager {
       this.countUpdates[pattern] = { w: 0, i: 0, v: 0, n: 0 }
     }
     this.countUpdates[pattern][searchType]++
-    this.lifetimeTotalBlocks++
+    this.lifetimeTotalBlocks[searchType]++
     this.debouncedBatchUpdate()
   }
 

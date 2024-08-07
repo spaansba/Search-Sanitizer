@@ -31,11 +31,11 @@ export default async function googleSearchRegular({
         }
         ContentScript.processedResults.add(relatedQuestion)
         relatedQuestion.setAttribute("data-processed", "true")
-        const links = relatedQuestion.querySelectorAll("a")
-        const cites = relatedQuestion.querySelectorAll("cite")
-
-        if (this.checkLinksForBlockedUrls(links) || this.checkCitesForBlockedUrls(cites)) {
-          this.markElementAsBlocked(relatedQuestion as HTMLElement)
+        if (
+          ContentScript.checkLinksForBlockedUrls(searchElement) ||
+          this.checkCitesForBlockedUrls(searchElement)
+        ) {
+          ContentScript.markElementAsBlocked(relatedQuestion as HTMLElement)
         }
       })
     })
