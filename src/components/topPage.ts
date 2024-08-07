@@ -1,5 +1,3 @@
-import type { BlockedCountManager } from "../contentScript"
-
 const styles = `
   .extension-button:hover { opacity: 0.4 !important; }
   .extension-button:active { transform: scale(0.99) !important; }
@@ -29,13 +27,15 @@ const styles = `
 }
 .logo-image{
   width: 22px;
-  heigth: 22px;
+  height: 22px;
 }
 `
-let resultsHidden = false
+
 export function addTopOfPage(
-  ExtensionIsOn: boolean,
-  blockedCountManager: BlockedCountManager
+  getResultsAreHidden: () => boolean,
+  setResultsAreHidden: (value: boolean) => void,
+  blockedCount: number,
+  isExtensionOn: boolean
 ) {
   let searchFormContainer = document.querySelector(".fM33ce")
   let container = document.createElement("div")
@@ -50,7 +50,7 @@ export function addTopOfPage(
   }
 
   container.id = "extension-button-search-bar"
-  container.title = getTitle(blockedCountManager.getBlockedCount()) //TODO make the title look the same as google titles
+  container.title = getTitle(blockedCount, getResultsAreHidden())
   container.className = "XDyW0e"
 
   const img = document.createElement("img")
@@ -59,9 +59,9 @@ export function addTopOfPage(
 
   const blockedOverlay = document.createElement("div")
   blockedOverlay.className = "blocked-count-overlay"
-  blockedOverlay.textContent = blockedCountManager.getBlockedCount().toString()
+  blockedOverlay.textContent = blockedCount.toString()
 
-  container = ExtensionIsOn
+  container = isExtensionOn
     ? getExtensionOnElement(container)
     : getExtensionOffElement(container)
 
@@ -78,9 +78,8 @@ export function addTopOfPage(
 
   function getExtensionOnElement(container: HTMLDivElement): HTMLDivElement {
     container.addEventListener("click", () => {
-      resultsHidden = !resultsHidden
-      container.title = getTitle(blockedCountManager.getBlockedCount())
-      toggleHiddenResults()
+      setResultsAreHidden(!getResultsAreHidden())
+      container.title = getTitle(blockedCount, getResultsAreHidden())
     })
     return container
   }
@@ -103,18 +102,9 @@ export function addTopOfPage(
     })
     return container
   }
-
-  function toggleHiddenResults() {
-    const hiddenElements = document.querySelectorAll("[card-show]")
-    hiddenElements.forEach((element) => {
-      if (element instanceof HTMLElement) {
-        element.setAttribute("card-show", resultsHidden.toString())
-      }
-    })
-  }
 }
 
-function getTitle(blockedCount: number): string {
+function getTitle(blockedCount: number, resultsHidden: boolean): string {
   if (blockedCount < 1) {
     return `${blockedCount} blocked search results`
   } else {
@@ -124,16 +114,12 @@ function getTitle(blockedCount: number): string {
   }
 }
 
-export function getResultsHidden(): boolean {
-  return resultsHidden
-}
-
 export function updateBlockedCount(blockedCount: number) {
   const container = document.querySelector(
-    ".extension-button-search-bar"
+    "#extension-button-search-bar"
   ) as HTMLDivElement
   if (container) {
-    container.title = getTitle(blockedCount)
+    container.title = getTitle(blockedCount, false) // Assuming results are not hidden by default
   }
 
   const overlayContainer = document.querySelector(

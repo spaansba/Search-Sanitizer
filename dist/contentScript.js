@@ -11,7 +11,6 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   addTopOfPage: () => (/* binding */ addTopOfPage),
-/* harmony export */   getResultsHidden: () => (/* binding */ getResultsHidden),
 /* harmony export */   updateBlockedCount: () => (/* binding */ updateBlockedCount)
 /* harmony export */ });
 const styles = `
@@ -43,11 +42,10 @@ const styles = `
 }
 .logo-image{
   width: 22px;
-  heigth: 22px;
+  height: 22px;
 }
 `;
-let resultsHidden = false;
-function addTopOfPage(ExtensionIsOn, blockedCountManager) {
+function addTopOfPage(getResultsAreHidden, setResultsAreHidden, blockedCount, isExtensionOn) {
     let searchFormContainer = document.querySelector(".fM33ce");
     let container = document.createElement("div");
     // if for whatever reason the searchFormContainer can not be found use the more secure appbar (this is under the search bar)
@@ -59,15 +57,15 @@ function addTopOfPage(ExtensionIsOn, blockedCountManager) {
         }
     }
     container.id = "extension-button-search-bar";
-    container.title = getTitle(blockedCountManager.getBlockedCount()); //TODO make the title look the same as google titles
+    container.title = getTitle(blockedCount, getResultsAreHidden());
     container.className = "XDyW0e";
     const img = document.createElement("img");
     img.src = chrome.runtime.getURL("logoApp.png");
     img.className = "logo-image";
     const blockedOverlay = document.createElement("div");
     blockedOverlay.className = "blocked-count-overlay";
-    blockedOverlay.textContent = blockedCountManager.getBlockedCount().toString();
-    container = ExtensionIsOn
+    blockedOverlay.textContent = blockedCount.toString();
+    container = isExtensionOn
         ? getExtensionOnElement(container)
         : getExtensionOffElement(container);
     container.appendChild(img);
@@ -82,9 +80,8 @@ function addTopOfPage(ExtensionIsOn, blockedCountManager) {
     }
     function getExtensionOnElement(container) {
         container.addEventListener("click", () => {
-            resultsHidden = !resultsHidden;
-            container.title = getTitle(blockedCountManager.getBlockedCount());
-            toggleHiddenResults();
+            setResultsAreHidden(!getResultsAreHidden());
+            container.title = getTitle(blockedCount, getResultsAreHidden());
         });
         return container;
     }
@@ -105,16 +102,8 @@ function addTopOfPage(ExtensionIsOn, blockedCountManager) {
         });
         return container;
     }
-    function toggleHiddenResults() {
-        const hiddenElements = document.querySelectorAll("[card-show]");
-        hiddenElements.forEach((element) => {
-            if (element instanceof HTMLElement) {
-                element.setAttribute("card-show", resultsHidden.toString());
-            }
-        });
-    }
 }
-function getTitle(blockedCount) {
+function getTitle(blockedCount, resultsHidden) {
     if (blockedCount < 1) {
         return `${blockedCount} blocked search results`;
     }
@@ -122,13 +111,10 @@ function getTitle(blockedCount) {
         return `${blockedCount} blocked search results. Click to ${!resultsHidden ? "show" : "hide"} them again`;
     }
 }
-function getResultsHidden() {
-    return resultsHidden;
-}
 function updateBlockedCount(blockedCount) {
-    const container = document.querySelector(".extension-button-search-bar");
+    const container = document.querySelector("#extension-button-search-bar");
     if (container) {
-        container.title = getTitle(blockedCount);
+        container.title = getTitle(blockedCount, false); // Assuming results are not hidden by default
     }
     const overlayContainer = document.querySelector(".blocked-count-overlay");
     if (overlayContainer) {
@@ -139,250 +125,389 @@ function updateBlockedCount(blockedCount) {
 
 /***/ }),
 
-/***/ "./src/contentScript/googleHelper.ts":
-/*!*******************************************!*\
-  !*** ./src/contentScript/googleHelper.ts ***!
-  \*******************************************/
+/***/ "./src/contentScript/contentScript.tsx":
+/*!*********************************************!*\
+  !*** ./src/contentScript/contentScript.tsx ***!
+  \*********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   isElementVisible: () => (/* binding */ isElementVisible)
+/* harmony export */   GoogleScriptService: () => (/* binding */ GoogleScriptService)
 /* harmony export */ });
-function isElementVisible(element) {
-    return !!(element.offsetWidth ||
-        element.offsetHeight ||
-        element.getClientRects().length);
-}
+/* harmony import */ var _components_topPage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/topPage */ "./src/components/topPage.ts");
 
-
-/***/ }),
-
-/***/ "./src/contentScript/googleImages.tsx":
-/*!********************************************!*\
-  !*** ./src/contentScript/googleImages.tsx ***!
-  \********************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ googleSearchImages)
-/* harmony export */ });
-/* harmony import */ var _googleHelper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./googleHelper */ "./src/contentScript/googleHelper.ts");
-/* harmony import */ var _googleRegular__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./googleRegular */ "./src/contentScript/googleRegular.tsx");
-
-
-function googleSearchImages(blockedUrlsDict, blockedCountManager, searchElement) {
-    const processedResults = new Set();
-    new MutationObserver(() => {
-        filterImageResults(searchElement);
-    }).observe(searchElement, {
-        childList: true,
-        subtree: true,
-    });
-    function filterImageResults(search) {
-        const searchResults = search.querySelectorAll(".ivg-i:not([data-processed]):not([data-initq] *)");
+class GoogleScriptService {
+    constructor(blockedUrlsDict, isExtensionOn) {
+        this.processedResults = new Set();
+        this._blockedCount = 0;
+        this._resultsAreHidden = false;
+        this.isExtensionOn = true;
+        this.blockedUrlsDict = blockedUrlsDict;
+        this.isExtensionOn = isExtensionOn;
+        this.addDocumentHead();
+        this.addEventListeners(this.isExtensionOn);
+    }
+    // Return a promise that resolves when the search element is found
+    getSearchElement() {
+        return new Promise((resolve) => {
+            new MutationObserver((_, obs) => {
+                const searchElement = document.querySelector("#search");
+                if (searchElement) {
+                    this.searchElement = searchElement;
+                    obs.disconnect();
+                    resolve();
+                }
+            }).observe(document.body, {
+                childList: true,
+                subtree: true,
+            });
+        });
+    }
+    addEventListeners(extensionOn) {
+        document.addEventListener("DOMContentLoaded", () => {
+            (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.addTopOfPage)(() => this.getBlockedElementsVisibility(), (value) => this.setBlockedElementsVisibility(value), this.blockedCount, this.isExtensionOn);
+        });
+    }
+    // Adds extra styles to the head of the document
+    addDocumentHead() {
+        const style = document.createElement("style");
+        style.id = "Site Blocker Custom Styles";
+        style.textContent = `
+        /* Display Styles */
+        [card-show="true"] { display: block !important; }
+        [card-show="false"] { display: none !important; }
+    
+        /* Card Color Styles */
+        [card-relevant="true"] {opacity: 0.7 !important}
+      `;
+        document.head.appendChild(style);
+    }
+    get blockedCount() {
+        return this._blockedCount;
+    }
+    incrementBlockedCount() {
+        this._blockedCount++;
+    }
+    // Mark element as blocked and also increment the block count
+    markElementAsBlocked(element) {
+        this.incrementBlockedCount();
+        (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.updateBlockedCount)(this.blockedCount);
+        element.setAttribute("card-show", this.getBlockedElementsVisibility().toString());
+        element.setAttribute("card-relevant", "true");
+    }
+    getBlockedElementsVisibility() {
+        return this._resultsAreHidden;
+    }
+    setBlockedElementsVisibility(value) {
+        this._resultsAreHidden = value;
+        this.updateBlockedElementsVisibility();
+    }
+    // Users can toggle if blocked content is hidden or visible
+    updateBlockedElementsVisibility() {
+        const hiddenElements = document.querySelectorAll("[card-show]");
+        hiddenElements.forEach((element) => {
+            if (element instanceof HTMLElement) {
+                element.setAttribute("card-show", this._resultsAreHidden.toString());
+            }
+        });
+    }
+    isPatternUrl(url, urlString, pattern) {
+        try {
+            if (!pattern) {
+                debugger;
+                console.log("not");
+                return false;
+            }
+            pattern = this.removeTrailingSlash(pattern.toLowerCase());
+            const patternVariations = [
+                pattern,
+                `www.${pattern}`,
+                `https://${pattern}`,
+                `https://www.${pattern}`,
+                `http://${pattern}`,
+                `http://www.${pattern}`,
+            ];
+            const comparisons = [
+                urlString,
+                url.origin.toLowerCase(),
+                url.host.toLowerCase(),
+                url.hostname.toLowerCase(),
+                this.removeTrailingSlash(url.href.toLowerCase()),
+            ];
+            for (const comp of comparisons) {
+                for (const variation of patternVariations) {
+                    if (comp === variation) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        catch (error) {
+            console.error(`Invalid URL`);
+            return false;
+        }
+    }
+    removeTrailingSlash(s) {
+        return s.endsWith("/") ? s.slice(0, -1) : s;
+    }
+    isPatternWildcard(urlString, pattern) {
+        urlString = urlString.toLowerCase();
+        pattern = pattern.toLowerCase();
+        const escapedPattern = pattern
+            .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+            .replace(/\\\*/g, ".*");
+        const regex = new RegExp(`^${escapedPattern}$`);
+        return regex.test(urlString);
+    }
+    shouldUrlBeBlocked(urlString, blockedUrls) {
+        try {
+            const url = new URL(urlString);
+            for (const pattern of Object.keys(blockedUrls.blockedUrlData)) {
+                // Here we check if the pattern is an URL and if it matches the current checked URL
+                if (this.isPatternUrl(url, urlString, pattern)) {
+                    console.log(`Blocked URL: ${urlString} matched pattern: ${pattern}`);
+                    blockedUrls.blockedUrlData[pattern].s++;
+                    return true;
+                }
+                // Here we check if the pattern is a matched Pattern and if it matches the current checked URL
+                if (this.isPatternWildcard(urlString, pattern)) {
+                    console.log(`Blocked URL: ${url} matched pattern: ${pattern}`);
+                    blockedUrls.blockedUrlData[pattern].s++;
+                    return true;
+                }
+            }
+            return false;
+        }
+        catch (error) {
+            console.error(`Error processing ${urlString}:`, error);
+            return false;
+        }
+    }
+    isElementVisible(element) {
+        return !!(element.offsetWidth ||
+            element.offsetHeight ||
+            element.getClientRects().length);
+    }
+    filterResults(queryString) {
+        const searchResults = this.searchElement.querySelectorAll(queryString);
         searchResults.forEach((result) => {
-            if (processedResults.has(result)) {
+            if (this.processedResults.has(result)) {
                 return;
             }
-            processedResults.add(result);
+            this.processedResults.add(result);
             result.setAttribute("data-processed", "true");
             const links = result.querySelectorAll("a");
             const cites = result.querySelectorAll("cite");
+            const span = result.querySelectorAll("span");
             for (const link of links) {
                 if (link.href &&
-                    (0,_googleRegular__WEBPACK_IMPORTED_MODULE_1__.shouldFilterLink)(link.href, blockedUrlsDict) &&
-                    (0,_googleHelper__WEBPACK_IMPORTED_MODULE_0__.isElementVisible)(link)) {
+                    this.shouldUrlBeBlocked(link.href, this.blockedUrlsDict) &&
+                    this.isElementVisible(link)) {
                     console.log("yes");
-                    addCardShow(result);
+                    this.markElementAsBlocked(result);
                     return;
                 }
             }
             for (const cite of cites) {
                 console.log(cite);
                 if (cite.textContent &&
-                    (0,_googleRegular__WEBPACK_IMPORTED_MODULE_1__.shouldFilterLink)(cite.textContent, blockedUrlsDict) &&
-                    (0,_googleHelper__WEBPACK_IMPORTED_MODULE_0__.isElementVisible)(cite)) {
+                    this.shouldUrlBeBlocked(cite.textContent, this.blockedUrlsDict) &&
+                    this.isElementVisible(cite)) {
                     console.log("yes");
-                    addCardShow(result);
+                    this.markElementAsBlocked(result);
                     return;
                 }
             }
         });
-    }
-    function addCardShow(element) {
-        blockedCountManager.incrementBlockedCount();
-        // updateBlockedCount(blockedCountManager.getBlockedCount())
-        element.setAttribute("card-show", "true");
-        element.setAttribute("card-relevant", "true");
     }
 }
 
 
 /***/ }),
 
-/***/ "./src/contentScript/googleRegular.tsx":
-/*!*********************************************!*\
-  !*** ./src/contentScript/googleRegular.tsx ***!
-  \*********************************************/
+/***/ "./src/contentScript/googleImages.ts":
+/*!*******************************************!*\
+  !*** ./src/contentScript/googleImages.ts ***!
+  \*******************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ googleSearchRegular),
-/* harmony export */   shouldFilterLink: () => (/* binding */ shouldFilterLink)
+/* harmony export */   "default": () => (/* binding */ googleSearchImages)
 /* harmony export */ });
-/* harmony import */ var _components_topPage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/topPage */ "./src/components/topPage.ts");
-/* harmony import */ var _googleHelper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./googleHelper */ "./src/contentScript/googleHelper.ts");
-
-
-function googleSearchRegular(blockedUrlsDict, blockedCountManager, searchElement) {
-    const processedResults = new Set();
-    new MutationObserver(() => {
-        filterNormalSearch(searchElement);
-        setTimeout(() => filterRelatedQuestions(searchElement), 500); //TODO fix need for 500 timeout
-    }).observe(searchElement, {
-        childList: true,
-        subtree: true,
+/* harmony import */ var _contentScript__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./contentScript */ "./src/contentScript/contentScript.tsx");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
-    function filterNormalSearch(search) {
-        const searchResults = search.querySelectorAll(".g:not([data-processed]):not([data-initq] *)");
-        searchResults.forEach((result) => {
-            if (processedResults.has(result)) {
-                return;
-            }
-            processedResults.add(result);
-            result.setAttribute("data-processed", "true");
-            const links = result.querySelectorAll("a");
-            const cites = result.querySelectorAll("cite");
-            for (const link of links) {
-                if (link.href &&
-                    shouldFilterLink(link.href, blockedUrlsDict) &&
-                    (0,_googleHelper__WEBPACK_IMPORTED_MODULE_1__.isElementVisible)(link)) {
-                    addCardShow(result);
-                    return;
-                }
-            }
-            for (const cite of cites) {
-                if (cite.textContent &&
-                    shouldFilterLink(cite.textContent, blockedUrlsDict) &&
-                    (0,_googleHelper__WEBPACK_IMPORTED_MODULE_1__.isElementVisible)(cite)) {
-                    addCardShow(result);
-                    return;
-                }
-            }
+};
+
+function googleSearchImages(_a) {
+    return __awaiter(this, arguments, void 0, function* ({ extensionOn, urlsDict, }) {
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionOn);
+        yield ContentScript.getSearchElement();
+        const queryString = ".ivg-i:not([data-processed])";
+        ContentScript.filterResults(queryString);
+        new MutationObserver(() => {
+            ContentScript.filterResults(queryString);
+        }).observe(ContentScript.searchElement, {
+            childList: true,
+            subtree: true,
         });
-    }
-    function filterRelatedQuestions(search) {
-        const moreToAskSections = search.querySelectorAll("[data-initq]");
-        moreToAskSections.forEach((askSection) => {
-            askSection.setAttribute("data-processed", "true");
-            const relatedQuestions = askSection.querySelectorAll(".related-question-pair:not([data-processed])");
-            relatedQuestions.forEach((relatedQuestion) => {
-                if (processedResults.has(relatedQuestion)) {
-                    return;
-                }
-                processedResults.add(relatedQuestion);
-                relatedQuestion.setAttribute("data-processed", "true");
-                const links = relatedQuestion.querySelectorAll("a");
-                const cites = relatedQuestion.querySelectorAll("cite");
-                for (const link of links) {
-                    if (shouldFilterLink(link.href, blockedUrlsDict)) {
-                        addCardShow(relatedQuestion);
+    });
+}
+
+
+/***/ }),
+
+/***/ "./src/contentScript/googleNews.ts":
+/*!*****************************************!*\
+  !*** ./src/contentScript/googleNews.ts ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ googleSearchNews)
+/* harmony export */ });
+/* harmony import */ var _contentScript__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./contentScript */ "./src/contentScript/contentScript.tsx");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+function googleSearchNews(_a) {
+    return __awaiter(this, arguments, void 0, function* ({ extensionOn, urlsDict, }) {
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionOn);
+        yield ContentScript.getSearchElement();
+        const queryString = ".SoaBEf:not([data-processed])";
+        ContentScript.filterResults(queryString);
+        new MutationObserver(() => {
+            ContentScript.filterResults(queryString);
+        }).observe(ContentScript.searchElement, {
+            childList: true,
+            subtree: true,
+        });
+    });
+}
+
+
+/***/ }),
+
+/***/ "./src/contentScript/googleRegular.ts":
+/*!********************************************!*\
+  !*** ./src/contentScript/googleRegular.ts ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ googleSearchRegular)
+/* harmony export */ });
+/* harmony import */ var _contentScript__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./contentScript */ "./src/contentScript/contentScript.tsx");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+function googleSearchRegular(_a) {
+    return __awaiter(this, arguments, void 0, function* ({ extensionOn, urlsDict, }) {
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionOn);
+        yield ContentScript.getSearchElement();
+        const queryString = ".g:not([data-processed]):not([data-initq] *)";
+        ContentScript.filterResults(queryString);
+        new MutationObserver(() => {
+            ContentScript.filterResults(queryString);
+            setTimeout(() => filterRelatedQuestions(ContentScript.searchElement), 500); //TODO fix need for 500 timeout
+        }).observe(ContentScript.searchElement, {
+            childList: true,
+            subtree: true,
+        });
+        function filterRelatedQuestions(search) {
+            const moreToAskSections = search.querySelectorAll("[data-initq]");
+            moreToAskSections.forEach((askSection) => {
+                askSection.setAttribute("data-processed", "true");
+                const relatedQuestions = askSection.querySelectorAll(".related-question-pair:not([data-processed])");
+                relatedQuestions.forEach((relatedQuestion) => {
+                    if (ContentScript.processedResults.has(relatedQuestion)) {
                         return;
                     }
-                }
-                for (const cite of cites) {
-                    if (cite.textContent &&
-                        shouldFilterLink(cite.textContent, blockedUrlsDict)) {
-                        addCardShow(relatedQuestion);
-                        return;
+                    ContentScript.processedResults.add(relatedQuestion);
+                    relatedQuestion.setAttribute("data-processed", "true");
+                    const links = relatedQuestion.querySelectorAll("a");
+                    const cites = relatedQuestion.querySelectorAll("cite");
+                    for (const link of links) {
+                        if (ContentScript.shouldUrlBeBlocked(link.href, ContentScript.blockedUrlsDict)) {
+                            ContentScript.markElementAsBlocked(relatedQuestion);
+                            return;
+                        }
                     }
-                }
+                    for (const cite of cites) {
+                        if (cite.textContent &&
+                            ContentScript.shouldUrlBeBlocked(cite.textContent, ContentScript.blockedUrlsDict)) {
+                            ContentScript.markElementAsBlocked(relatedQuestion);
+                            return;
+                        }
+                    }
+                });
             });
+        }
+    });
+}
+
+
+/***/ }),
+
+/***/ "./src/contentScript/googleVideos.ts":
+/*!*******************************************!*\
+  !*** ./src/contentScript/googleVideos.ts ***!
+  \*******************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ googleSearchVideos)
+/* harmony export */ });
+/* harmony import */ var _contentScript__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./contentScript */ "./src/contentScript/contentScript.tsx");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
+function googleSearchVideos(_a) {
+    return __awaiter(this, arguments, void 0, function* ({ extensionOn, urlsDict, }) {
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionOn);
+        yield ContentScript.getSearchElement();
+        const queryString = ".g:not([data-processed])";
+        ContentScript.filterResults(queryString);
+        new MutationObserver(() => {
+            ContentScript.filterResults(queryString);
+        }).observe(ContentScript.searchElement, {
+            childList: true,
+            subtree: true,
         });
-    }
-    function addCardShow(element) {
-        blockedCountManager.incrementBlockedCount();
-        (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.updateBlockedCount)(blockedCountManager.getBlockedCount());
-        element.setAttribute("card-show", (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.getResultsHidden)().toString());
-        element.setAttribute("card-relevant", "true");
-    }
-}
-// url filter functions ///////////////
-function shouldFilterLink(urlString, blockedUrls) {
-    try {
-        const url = new URL(urlString);
-        for (const pattern of Object.keys(blockedUrls.blockedUrlData)) {
-            // Here we check if the pattern is an URL and if it matches the current checked URL
-            if (checkIfMatchedUrl(url, urlString, pattern)) {
-                console.log(`Blocked URL: ${urlString} matched pattern: ${pattern}`);
-                blockedUrls.blockedUrlData[pattern].s++;
-                return true;
-            }
-            // Here we check if the pattern is a matched Pattern and if it matches the current checked URL
-            if (matchesPattern(urlString, pattern)) {
-                console.log(`Blocked URL: ${url} matched pattern: ${pattern}`);
-                blockedUrls.blockedUrlData[pattern].s++;
-                return true;
-            }
-        }
-        return false;
-    }
-    catch (error) {
-        console.error(`Error processing ${urlString}:`, error);
-        return false;
-    }
-}
-function checkIfMatchedUrl(url, urlString, pattern) {
-    try {
-        if (!pattern) {
-            debugger;
-            console.log("not");
-            return;
-        }
-        pattern = removeTrailingSlash(pattern.toLowerCase());
-        const patternVariations = [
-            pattern,
-            `www.${pattern}`,
-            `https://${pattern}`,
-            `https://www.${pattern}`,
-            `http://${pattern}`,
-            `http://www.${pattern}`,
-        ];
-        const comparisons = [
-            urlString,
-            url.origin.toLowerCase(),
-            url.host.toLowerCase(),
-            url.hostname.toLowerCase(),
-            removeTrailingSlash(url.href.toLowerCase()),
-        ];
-        for (const comp of comparisons) {
-            for (const variation of patternVariations) {
-                if (comp === variation) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    catch (error) {
-        console.error(`Invalid URL`);
-        return false;
-    }
-}
-function removeTrailingSlash(s) {
-    return s.endsWith("/") ? s.slice(0, -1) : s;
-}
-function matchesPattern(urlString, pattern) {
-    urlString = urlString.toLowerCase();
-    pattern = pattern.toLowerCase();
-    const escapedPattern = pattern
-        .replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
-        .replace(/\\\*/g, ".*");
-    const regex = new RegExp(`^${escapedPattern}$`);
-    return regex.test(urlString);
+    });
 }
 
 
@@ -449,9 +574,10 @@ var __webpack_exports__ = {};
   !*** ./src/contentScript/index.tsx ***!
   \*************************************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _googleRegular__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./googleRegular */ "./src/contentScript/googleRegular.tsx");
-/* harmony import */ var _components_topPage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../components/topPage */ "./src/components/topPage.ts");
-/* harmony import */ var _googleImages__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./googleImages */ "./src/contentScript/googleImages.tsx");
+/* harmony import */ var _googleRegular__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./googleRegular */ "./src/contentScript/googleRegular.ts");
+/* harmony import */ var _googleImages__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./googleImages */ "./src/contentScript/googleImages.ts");
+/* harmony import */ var _googleVideos__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./googleVideos */ "./src/contentScript/googleVideos.ts");
+/* harmony import */ var _googleNews__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./googleNews */ "./src/contentScript/googleNews.ts");
 var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -464,44 +590,39 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 
 
+
 function initializeContentScript() {
     return __awaiter(this, void 0, void 0, function* () {
         const extensionOn = yield isExtensionOn();
         const urlsDict = yield getBlockedUrl();
-        const searchElement = yield findSearchElementOnGoogle();
-        if (!searchElement) {
-            console.info("Search element not found");
-            return;
-        }
         if (!extensionOn || !urlsDict.blockedUrlData) {
             console.info("Search Sanitizer Extension is off");
             return;
         }
-        addDocumentHead();
-        addEventListeners(extensionOn);
-        callContentScript(urlsDict, searchElement);
+        callContentScript({ extensionOn, urlsDict });
     });
 }
-function callContentScript(urlsDict, searchElement) {
+function callContentScript(googleContentScriptProps) {
     var _a, _b;
     const url = new URL(window.location.href);
     const urlParameters = url.searchParams;
     const tbm = (_a = urlParameters.get("tbm")) !== null && _a !== void 0 ? _a : "";
     const udm = (_b = urlParameters.get("udm")) !== null && _b !== void 0 ? _b : "";
     if (tbm.includes("bks")) {
-        console.log("books");
+        // Not implemented
     }
     else if (tbm.includes("vid")) {
-        console.log("videos");
+        (0,_googleVideos__WEBPACK_IMPORTED_MODULE_2__["default"])(googleContentScriptProps);
     }
     else if (tbm.includes("nws")) {
-        console.log("news");
+        console.log("d");
+        (0,_googleNews__WEBPACK_IMPORTED_MODULE_3__["default"])(googleContentScriptProps);
     }
     else if (udm.includes("2")) {
-        (0,_googleImages__WEBPACK_IMPORTED_MODULE_2__["default"])(urlsDict, BlockedCountManager, searchElement);
+        (0,_googleImages__WEBPACK_IMPORTED_MODULE_1__["default"])(googleContentScriptProps);
     }
     else {
-        (0,_googleRegular__WEBPACK_IMPORTED_MODULE_0__["default"])(urlsDict, BlockedCountManager, searchElement);
+        (0,_googleRegular__WEBPACK_IMPORTED_MODULE_0__["default"])(googleContentScriptProps);
     }
 }
 function isExtensionOn() {
@@ -516,55 +637,6 @@ function getBlockedUrl() {
         return result;
     });
 }
-function findSearchElementOnGoogle() {
-    return __awaiter(this, void 0, void 0, function* () {
-        return new Promise((resolve) => {
-            const existingSearch = document.querySelector("#search");
-            if (existingSearch) {
-                resolve(existingSearch);
-                return;
-            }
-            new MutationObserver((_, obs) => {
-                const search = document.querySelector("#search");
-                if (search) {
-                    obs.disconnect();
-                    resolve(search);
-                }
-            }).observe(document.body, {
-                childList: true,
-                subtree: true,
-            });
-        });
-    });
-}
-function addEventListeners(extensionOn) {
-    document.addEventListener("DOMContentLoaded", () => {
-        (0,_components_topPage__WEBPACK_IMPORTED_MODULE_1__.addTopOfPage)(extensionOn, BlockedCountManager);
-    });
-}
-function addDocumentHead() {
-    const style = document.createElement("style");
-    style.id = "Site Blocker Custom Styles";
-    style.textContent = `
-      /* Display Styles */
-      [card-show="true"] { display: block !important; }
-      [card-show="false"] { display: none !important; }
-  
-      /* Card Color Styles */
-      [card-relevant="true"] {opacity: 0.7 !important}
-    `;
-    document.head.appendChild(style);
-}
-const BlockedCountManager = (() => {
-    let blockedCount = 0;
-    return {
-        incrementBlockedCount: () => {
-            blockedCount++;
-            return blockedCount;
-        },
-        getBlockedCount: () => blockedCount,
-    };
-})();
 initializeContentScript();
 
 /******/ })()
