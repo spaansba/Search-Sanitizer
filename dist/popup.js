@@ -200,7 +200,7 @@ const App = () => {
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
         const messageListener = (message) => {
             if (message.type === "SLIDER_CHANGED") {
-                chrome.storage.sync.get([message.key], (result) => {
+                chrome.storage.local.get([message.key], (result) => {
                     console.log(`Slider ${message.key} changed to ${result[message.key]}`);
                 });
             }
@@ -223,7 +223,7 @@ const App = () => {
     };
     function addBlockedUrl(urlToAdd) {
         if (urlToAdd) {
-            chrome.storage.sync.get(["blockedUrlData"], (result) => {
+            chrome.storage.local.get(["blockedUrlData"], (result) => {
                 if (result.blockedUrlData) {
                     const updatedBlockedUrls = Object.assign({}, result.blockedUrlData);
                     updatedBlockedUrls[urlToAdd] = {
@@ -231,7 +231,7 @@ const App = () => {
                         s: 0,
                         v: 0,
                     };
-                    chrome.storage.sync.set({ blockedUrlData: updatedBlockedUrls });
+                    chrome.storage.local.set({ blockedUrlData: updatedBlockedUrls });
                 }
             });
         }

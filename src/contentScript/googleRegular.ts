@@ -20,12 +20,12 @@ export default async function googleSearchRegular({
 
   function processRelatedQuestionsForBlocking(searchElement: Element) {
     const moreToAskSections = searchElement.querySelectorAll("[data-initq]")
-    moreToAskSections.forEach((askSection) => {
+    moreToAskSections?.forEach((askSection) => {
       askSection.setAttribute("data-processed", "true")
       const relatedQuestions = askSection.querySelectorAll(
         ".related-question-pair:not([data-processed])"
       )
-      relatedQuestions.forEach((relatedQuestion) => {
+      relatedQuestions?.forEach((relatedQuestion) => {
         if (ContentScript.processedResults.has(relatedQuestion)) {
           return
         }

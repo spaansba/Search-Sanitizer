@@ -65,9 +65,7 @@ function addTopOfPage(getResultsAreHidden, setResultsAreHidden, blockedCount, is
     const blockedOverlay = document.createElement("div");
     blockedOverlay.className = "blocked-count-overlay";
     blockedOverlay.textContent = blockedCount.toString();
-    container = isExtensionOn
-        ? getExtensionOnElement(container)
-        : getExtensionOffElement(container);
+    container = isExtensionOn ? getExtensionOnElement(container) : getExtensionOffElement(container);
     container.appendChild(img);
     container.appendChild(blockedOverlay);
     // Insert the container after the form
@@ -92,11 +90,10 @@ function addTopOfPage(getResultsAreHidden, setResultsAreHidden, blockedCount, is
         document.head.appendChild(styleElement);
     }
     function getExtensionOffElement(container) {
-        container.title =
-            "Search Sanitizer is currently turned off. Click to turn back on";
+        container.title = "Search Sanitizer is currently turned off. Click to turn back on";
         container.style.opacity = "0.4";
         container.addEventListener("click", () => {
-            chrome.storage.sync.set({ extensionOnOff: true }, () => {
+            chrome.storage.local.set({ extensionOnOff: true }, () => {
                 window.location.reload();
             });
         });
@@ -125,6 +122,108 @@ function updateBlockedCount(blockedCount) {
 
 /***/ }),
 
+/***/ "./src/contentScript/blockedCountUpdateManager.ts":
+/*!********************************************************!*\
+  !*** ./src/contentScript/blockedCountUpdateManager.ts ***!
+  \********************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   BlockedCountUpdateManager: () => (/* binding */ BlockedCountUpdateManager)
+/* harmony export */ });
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+class BlockedCountUpdateManager {
+    constructor(
+    // The current blocked URL data
+    blockedUrlsDict, 
+    // Callback to update the parent component's state
+    updateCallback) {
+        this.blockedUrlsDict = blockedUrlsDict;
+        this.updateCallback = updateCallback;
+        // Stores the count updates before they're committed to storage
+        this.countUpdates = {};
+        this.lifetimeTotalBlocks = 0;
+        // Initialize the debounced update function
+        this.debouncedBatchUpdate = this.debounce(() => this.batchUpdateCounts(), 1000); // 1 second
+        // Ensure updates are saved when the page is closed
+        window.addEventListener("beforeunload", () => this.batchUpdateCounts());
+        // Load the lifetime total blocks count
+        this.loadLifetimeTotalBlocks();
+    }
+    // Load the lifetime total blocks count from storage
+    loadLifetimeTotalBlocks() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const result = yield chrome.storage.local.get("lifetimeTotalBlocks");
+                this.lifetimeTotalBlocks = result.lifetimeTotalBlocks || 0;
+            }
+            catch (error) {
+                console.error("Failed to load lifetime total blocks:", error);
+            }
+        });
+    }
+    // Increment the count for a specific URL and search type
+    incrementCount(pattern, searchType) {
+        if (!this.countUpdates[pattern]) {
+            this.countUpdates[pattern] = { w: 0, i: 0, v: 0, n: 0 };
+        }
+        this.countUpdates[pattern][searchType]++;
+        this.lifetimeTotalBlocks++;
+        this.debouncedBatchUpdate();
+    }
+    // Update the blocked URL data in storage and notify the parent component
+    batchUpdateCounts() {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (Object.keys(this.countUpdates).length === 0)
+                return;
+            const updatedBlockedUrlData = Object.assign({}, this.blockedUrlsDict.blockedUrlData);
+            // Merge the count updates into the current data
+            for (const [url, counts] of Object.entries(this.countUpdates)) {
+                if (!updatedBlockedUrlData[url]) {
+                    updatedBlockedUrlData[url] = { w: 0, i: 0, v: 0, n: 0 };
+                }
+                for (const type of ["w", "i", "v", "n"]) {
+                    updatedBlockedUrlData[url][type] += counts[type];
+                }
+            }
+            try {
+                // Update the storage with both blockedUrlData and lifetimeTotalBlocks
+                yield chrome.storage.local.set({
+                    blockedUrlData: updatedBlockedUrlData,
+                    lifetimeTotalBlocks: this.lifetimeTotalBlocks,
+                });
+                // Notify the parent component
+                this.updateCallback(updatedBlockedUrlData, this.lifetimeTotalBlocks);
+                // Clear the accumulated updates
+                this.countUpdates = {};
+            }
+            catch (error) {
+                console.error("Failed to update blocked URL data:", error);
+            }
+        });
+    }
+    // Debounce function to limit the frequency of updates
+    debounce(func, wait) {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func(...args), wait);
+        };
+    }
+}
+
+
+/***/ }),
+
 /***/ "./src/contentScript/contentScript.tsx":
 /*!*********************************************!*\
   !*** ./src/contentScript/contentScript.tsx ***!
@@ -136,6 +235,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   GoogleScriptService: () => (/* binding */ GoogleScriptService)
 /* harmony export */ });
 /* harmony import */ var _components_topPage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/topPage */ "./src/components/topPage.ts");
+/* harmony import */ var _blockedCountUpdateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./blockedCountUpdateManager */ "./src/contentScript/blockedCountUpdateManager.ts");
+var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+
 
 class GoogleScriptService {
     get blockedCount() {
@@ -158,15 +268,7 @@ class GoogleScriptService {
         this.addDocumentHead();
         this.addEventListeners();
         this.searchtype = searchType;
-        this.blockedUrlsWithCounts = {}; // Initialize as an empty object
-        for (const url in this.blockedUrlsDict.blockedUrlData) {
-            this.blockedUrlsWithCounts[url] = {
-                w: 0,
-                i: 0,
-                v: 0,
-                n: 0,
-            };
-        }
+        this.updateManager = new _blockedCountUpdateManager__WEBPACK_IMPORTED_MODULE_1__.BlockedCountUpdateManager(blockedUrlsDict, this.updateBlockedUrlsDict.bind(this));
     }
     // Return a promise that resolves when the search element is found
     getSearchElement() {
@@ -188,7 +290,6 @@ class GoogleScriptService {
         document.addEventListener("DOMContentLoaded", () => {
             (0,_components_topPage__WEBPACK_IMPORTED_MODULE_0__.addTopOfPage)(() => this.resultsAreHidden, (value) => this.setBlockedElementsVisibility(value), this.blockedCount, this.isExtensionOn);
         });
-        window.addEventListener("beforeunload", () => this.updateBlockedUrlData());
     }
     // Adds extra styles to the head of the document
     addDocumentHead() {
@@ -206,13 +307,15 @@ class GoogleScriptService {
     }
     incrementBlockCount(pattern) {
         this._blockedCount++;
-        console.log(this.blockedUrlsWithCounts);
-        if (this.blockedUrlsWithCounts[pattern]) {
-            this.blockedUrlsWithCounts[pattern][this.searchtype]++;
-        }
-        else {
-            console.error(`Pattern not found in blockedUrlsWithCounts: ${pattern}`);
-        }
+        this.updateManager.incrementCount(pattern, this.searchtype);
+    }
+    updateBlockedUrlsDict(updatedData) {
+        this.blockedUrlsDict.blockedUrlData = updatedData;
+    }
+    getBlockedURL() {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield chrome.storage.local.get("blockedUrlData");
+        });
     }
     // Mark element as blocked and also increment the block count
     markElementAsBlocked(element) {
@@ -232,7 +335,6 @@ class GoogleScriptService {
     isPatternUrl(url, urlString, pattern) {
         try {
             if (!pattern) {
-                debugger;
                 console.log("not");
                 return false;
             }
@@ -276,10 +378,10 @@ class GoogleScriptService {
         const regex = new RegExp(`^${escapedPattern}$`);
         return regex.test(urlString);
     }
-    shouldUrlBeBlocked(googleSearchUrl, blockedUrlsDict) {
+    shouldUrlBeBlocked(googleSearchUrl) {
         try {
             const url = new URL(googleSearchUrl);
-            for (const pattern of Object.keys(blockedUrlsDict.blockedUrlData)) {
+            for (const pattern of Object.keys(this.blockedUrlsDict.blockedUrlData)) {
                 // Here we check if the pattern is an URL and if it matches the current checked URL
                 if (this.isPatternUrl(url, googleSearchUrl, pattern)) {
                     console.log(`Blocked URL: ${googleSearchUrl} matched pattern: ${pattern}`);
@@ -297,7 +399,7 @@ class GoogleScriptService {
         }
         catch (error) {
             console.log(googleSearchUrl);
-            console.error(`Error processing:`, error);
+            console.error(`Error processing:`, googleSearchUrl);
             return false;
         }
     }
@@ -306,7 +408,7 @@ class GoogleScriptService {
     }
     processSearchResultsForBlocking(queryString) {
         const searchResults = this.searchElementDiv.querySelectorAll(queryString);
-        searchResults.forEach((searchElement) => {
+        searchResults === null || searchResults === void 0 ? void 0 : searchResults.forEach((searchElement) => {
             if (this.processedResults.has(searchElement)) {
                 return;
             }
@@ -317,23 +419,11 @@ class GoogleScriptService {
                 this.markElementAsBlocked(searchElement);
             }
         });
-        // Update the BlockedUrlData in storage with the new counts
-        // this.updateBlockedUrlData()
-    }
-    updateBlockedUrlData() {
-        chrome.storage.sync.set({ BlockedUrlData: this.blockedUrlsWithCounts }, () => {
-            debugger;
-            console.log("BlockedUrlData updated");
-        });
-        // For now, we'll just log the updated data
-        console.log("Updated BlockedUrlData:", this.blockedUrlsWithCounts);
     }
     checkLinksForBlockedUrls(searchElement) {
         const links = searchElement.querySelectorAll("a");
         for (const link of links) {
-            if (link.href &&
-                this.shouldUrlBeBlocked(link.href, this.blockedUrlsDict) &&
-                this.isElementVisible(link)) {
+            if (link.href && this.shouldUrlBeBlocked(link.href) && this.isElementVisible(link)) {
                 return true;
             }
         }
@@ -348,7 +438,7 @@ class GoogleScriptService {
                 if (!/^https?:\/\//i.test(url)) {
                     url = "https://" + url;
                 }
-                if (this.shouldUrlBeBlocked(url, this.blockedUrlsDict) && this.isElementVisible(cite)) {
+                if (this.shouldUrlBeBlocked(url) && this.isElementVisible(cite)) {
                     this.incrementBlockCount(url);
                     return true;
                 }
@@ -475,10 +565,10 @@ function googleSearchRegular(_a) {
         });
         function processRelatedQuestionsForBlocking(searchElement) {
             const moreToAskSections = searchElement.querySelectorAll("[data-initq]");
-            moreToAskSections.forEach((askSection) => {
+            moreToAskSections === null || moreToAskSections === void 0 ? void 0 : moreToAskSections.forEach((askSection) => {
                 askSection.setAttribute("data-processed", "true");
                 const relatedQuestions = askSection.querySelectorAll(".related-question-pair:not([data-processed])");
-                relatedQuestions.forEach((relatedQuestion) => {
+                relatedQuestions === null || relatedQuestions === void 0 ? void 0 : relatedQuestions.forEach((relatedQuestion) => {
                     if (ContentScript.processedResults.has(relatedQuestion)) {
                         return;
                     }
@@ -651,14 +741,14 @@ function callContentScript(googleContentScriptProps) {
 }
 function isExtensionOn() {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield chrome.storage.sync.get("extensionOnOff");
+        const result = yield chrome.storage.local.get("extensionOnOff");
         return result.extensionOnOff;
     });
 }
 function getBlockedUrl() {
     return __awaiter(this, void 0, void 0, function* () {
-        const result = yield chrome.storage.sync.get("blockedUrlData");
-        return result;
+        const result = yield chrome.storage.local.get("blockedUrlData");
+        return { blockedUrlData: result.blockedUrlData || {} };
     });
 }
 initializeContentScript();

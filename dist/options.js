@@ -914,7 +914,7 @@ const CodeMirrorEditor = () => {
                     };
                 }
             });
-            chrome.storage.sync.set({ blockedUrlData: newBlockedUrlData }, () => {
+            chrome.storage.local.set({ blockedUrlData: newBlockedUrlData }, () => {
                 console.log("URL data saved");
                 setBlockedUrls(newBlockedUrlData);
             });
@@ -1108,11 +1108,11 @@ function OptionBlockedCards() {
         return "0";
     };
     function onClickDeleteButton(urlToDelete) {
-        chrome.storage.sync.get(["blockedUrlData"], (result) => {
+        chrome.storage.local.get(["blockedUrlData"], (result) => {
             if (result.blockedUrlData) {
                 const updatedBlockedUrls = Object.assign({}, result.blockedUrlData);
                 delete updatedBlockedUrls[urlToDelete];
-                chrome.storage.sync.set({ blockedUrlData: updatedBlockedUrls }, () => {
+                chrome.storage.local.set({ blockedUrlData: updatedBlockedUrls }, () => {
                     setBlockedUrls(updatedBlockedUrls);
                 });
             }
@@ -1257,7 +1257,7 @@ function ModalAddUrl({ isOpen, onClose }) {
     };
     function addBlockedUrl(urlToAdd) {
         if (urlToAdd) {
-            chrome.storage.sync.get(["blockedUrlData"], (result) => {
+            chrome.storage.local.get(["blockedUrlData"], (result) => {
                 if (result.blockedUrlData) {
                     const updatedBlockedUrls = Object.assign({}, result.blockedUrlData);
                     updatedBlockedUrls[urlToAdd] = {
@@ -1265,7 +1265,7 @@ function ModalAddUrl({ isOpen, onClose }) {
                         s: 0,
                         v: 0,
                     };
-                    chrome.storage.sync.set({ blockedUrlData: updatedBlockedUrls }, () => {
+                    chrome.storage.local.set({ blockedUrlData: updatedBlockedUrls }, () => {
                         setBlockedUrls(updatedBlockedUrls);
                         handleClose();
                     });
@@ -1313,7 +1313,7 @@ const App = () => {
     const [activeSection, setActiveSection] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("blockedSites");
     const [blockedUrls, setBlockedUrls] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({});
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-        chrome.storage.sync.get(["blockedUrlData"], (result) => {
+        chrome.storage.local.get(["blockedUrlData"], (result) => {
             console.log("Retrieved from storage:", result.blockedUrlData);
             if (result.blockedUrlData) {
                 setBlockedUrls(result.blockedUrlData);
@@ -1337,7 +1337,7 @@ const App = () => {
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
         const messageListener = (message) => {
             if (message.type === "SLIDER_CHANGED") {
-                chrome.storage.sync.get([message.key], (result) => {
+                chrome.storage.local.get([message.key], (result) => {
                     console.log(`Slider ${message.key} changed to ${result[message.key]}`);
                 });
             }

@@ -17,17 +17,11 @@ export const allSettings: UserSettings[] = [
   },
 ]
 
-export function updateOption(
-  googleStorageKey: string,
-  newValue: boolean
-): Promise<void> {
+export function updateOption(googleStorageKey: string, newValue: boolean): Promise<void> {
   return new Promise((resolve, reject) => {
-    chrome.storage.sync.set({ [googleStorageKey]: newValue }, () => {
+    chrome.storage.local.set({ [googleStorageKey]: newValue }, () => {
       if (chrome.runtime.lastError) {
-        console.error(
-          `Error setting ${googleStorageKey}:`,
-          chrome.runtime.lastError
-        )
+        console.error(`Error setting ${googleStorageKey}:`, chrome.runtime.lastError)
         reject(chrome.runtime.lastError)
       } else {
         resolve()
@@ -38,7 +32,7 @@ export function updateOption(
 
 export function getStorageItem<T>(key: string): Promise<T | undefined> {
   return new Promise((resolve) => {
-    chrome.storage.sync.get([key], (result) => {
+    chrome.storage.local.get([key], (result) => {
       console.log(`Value for ${key}:`, result[key])
       resolve(result[key] as T | undefined)
     })
@@ -57,7 +51,7 @@ export async function initializeOptionsState(): Promise<OptionsState> {
 
 export function getEntireSyncStorage(): Promise<{ [key: string]: any }> {
   return new Promise((resolve, reject) => {
-    chrome.storage.sync.get(null, (items) => {
+    chrome.storage.local.get(null, (items) => {
       if (chrome.runtime.lastError) {
         console.error("Error fetching sync storage:", chrome.runtime.lastError)
         reject(chrome.runtime.lastError)

@@ -1,5 +1,6 @@
 import { addTopOfPage, updateBlockedCount } from "../components/topPage"
-import { BlockedUrlData } from "../types"
+import { BlockedUrlDataLocal } from "../types"
+import { BlockedCountUpdateManager } from "./blockedCountUpdateManager"
 
 export class GoogleScriptService {
   searchElementDiv: Element
@@ -17,13 +18,12 @@ export class GoogleScriptService {
     this.updateBlockedElementsVisibility()
   }
   private isExtensionOn: boolean = true
-  blockedUrlsDict: BlockedUrlData
+  blockedUrlsDict: { blockedUrlData: BlockedUrlDataLocal }
   searchtype: "w" | "i" | "v" | "n"
-
-  private blockedUrlsWithCounts: BlockedUrlData
+  private updateManager: BlockedCountUpdateManager
 
   constructor(
-    blockedUrlsDict: BlockedUrlData,
+    blockedUrlsDict: { blockedUrlData: BlockedUrlDataLocal },
     isExtensionOn: boolean,
     searchType: "w" | "i" | "v" | "n"
   ) {
@@ -32,16 +32,10 @@ export class GoogleScriptService {
     this.addDocumentHead()
     this.addEventListeners()
     this.searchtype = searchType
-
-    this.blockedUrlsWithCounts = {} // Initialize as an empty object
-    for (const url in this.blockedUrlsDict.blockedUrlData) {
-      this.blockedUrlsWithCounts[url] = {
-        w: 0,
-        i: 0,
-        v: 0,
-        n: 0,
-      }
-    }
+    this.updateManager = new BlockedCountUpdateManager(
+      blockedUrlsDict,
+      this.updateBlockedUrlsDict.bind(this)
+    )
   }
 
   // Return a promise that resolves when the search element is found
@@ -70,7 +64,6 @@ export class GoogleScriptService {
         this.isExtensionOn
       )
     })
-    window.addEventListener("beforeunload", () => this.updateBlockedUrlData())
   }
 
   // Adds extra styles to the head of the document
@@ -88,14 +81,17 @@ export class GoogleScriptService {
     document.head.appendChild(style)
   }
 
-  private incrementBlockCount(pattern: string): void {
+  private incrementBlockCount(pattern: string) {
     this._blockedCount++
-    console.log(this.blockedUrlsWithCounts)
-    if (this.blockedUrlsWithCounts[pattern]) {
-      this.blockedUrlsWithCounts[pattern][this.searchtype]++
-    } else {
-      console.error(`Pattern not found in blockedUrlsWithCounts: ${pattern}`)
-    }
+    this.updateManager.incrementCount(pattern, this.searchtype)
+  }
+
+  private updateBlockedUrlsDict(updatedData: BlockedUrlDataLocal) {
+    this.blockedUrlsDict.blockedUrlData = updatedData
+  }
+
+  async getBlockedURL() {
+    return await chrome.storage.local.get("blockedUrlData")
   }
 
   // Mark element as blocked and also increment the block count
@@ -118,7 +114,6 @@ export class GoogleScriptService {
   private isPatternUrl(url: URL, urlString: string, pattern: string): boolean {
     try {
       if (!pattern) {
-        debugger
         console.log("not")
         return false
       }
@@ -170,10 +165,10 @@ export class GoogleScriptService {
     return regex.test(urlString)
   }
 
-  shouldUrlBeBlocked(googleSearchUrl: string, blockedUrlsDict: BlockedUrlData): boolean {
+  shouldUrlBeBlocked(googleSearchUrl: string): boolean {
     try {
       const url = new URL(googleSearchUrl)
-      for (const pattern of Object.keys(blockedUrlsDict.blockedUrlData)) {
+      for (const pattern of Object.keys(this.blockedUrlsDict.blockedUrlData)) {
         // Here we check if the pattern is an URL and if it matches the current checked URL
         if (this.isPatternUrl(url, googleSearchUrl, pattern)) {
           console.log(`Blocked URL: ${googleSearchUrl} matched pattern: ${pattern}`)
@@ -191,17 +186,18 @@ export class GoogleScriptService {
       return false
     } catch (error) {
       console.log(googleSearchUrl)
-      console.error(`Error processing:`, error)
+      console.error(`Error processing:`, googleSearchUrl)
       return false
     }
   }
+
   private isElementVisible(element: HTMLElement): boolean {
     return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length)
   }
 
   processSearchResultsForBlocking(queryString: string) {
     const searchResults = this.searchElementDiv.querySelectorAll(queryString)
-    searchResults.forEach((searchElement) => {
+    searchResults?.forEach((searchElement) => {
       if (this.processedResults.has(searchElement)) {
         return
       }
@@ -215,29 +211,12 @@ export class GoogleScriptService {
         this.markElementAsBlocked(searchElement as HTMLElement)
       }
     })
-
-    // Update the BlockedUrlData in storage with the new counts
-    // this.updateBlockedUrlData()
-  }
-
-  private updateBlockedUrlData(): void {
-    chrome.storage.sync.set({ BlockedUrlData: this.blockedUrlsWithCounts }, () => {
-      debugger
-      console.log("BlockedUrlData updated")
-    })
-
-    // For now, we'll just log the updated data
-    console.log("Updated BlockedUrlData:", this.blockedUrlsWithCounts)
   }
 
   checkLinksForBlockedUrls(searchElement: Element): boolean {
     const links = searchElement.querySelectorAll("a")
     for (const link of links) {
-      if (
-        link.href &&
-        this.shouldUrlBeBlocked(link.href, this.blockedUrlsDict) &&
-        this.isElementVisible(link)
-      ) {
+      if (link.href && this.shouldUrlBeBlocked(link.href) && this.isElementVisible(link)) {
         return true
       }
     }
@@ -255,7 +234,7 @@ export class GoogleScriptService {
           url = "https://" + url
         }
 
-        if (this.shouldUrlBeBlocked(url, this.blockedUrlsDict) && this.isElementVisible(cite)) {
+        if (this.shouldUrlBeBlocked(url) && this.isElementVisible(cite)) {
           this.incrementBlockCount(url)
           return true
         }

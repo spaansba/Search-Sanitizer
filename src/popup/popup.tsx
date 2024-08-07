@@ -11,7 +11,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const messageListener = (message) => {
       if (message.type === "SLIDER_CHANGED") {
-        chrome.storage.sync.get([message.key], (result) => {
+        chrome.storage.local.get([message.key], (result) => {
           console.log(`Slider ${message.key} changed to ${result[message.key]}`)
         })
       }
@@ -36,7 +36,7 @@ const App: React.FC = () => {
 
   function addBlockedUrl(urlToAdd: string) {
     if (urlToAdd) {
-      chrome.storage.sync.get(["blockedUrlData"], (result) => {
+      chrome.storage.local.get(["blockedUrlData"], (result) => {
         if (result.blockedUrlData) {
           const updatedBlockedUrls = { ...result.blockedUrlData }
           updatedBlockedUrls[urlToAdd] = {
@@ -45,7 +45,7 @@ const App: React.FC = () => {
             v: 0,
           }
 
-          chrome.storage.sync.set({ blockedUrlData: updatedBlockedUrls })
+          chrome.storage.local.set({ blockedUrlData: updatedBlockedUrls })
         }
       })
     }
@@ -60,11 +60,7 @@ const App: React.FC = () => {
         </div>
         <div id="right-top-bar" className="top-bar-section">
           <OnOffSlider id="OnOff" googleStorageKey={"extensionOnOff"} />
-          <div
-            onClick={openOptionsPage}
-            id="settings-icon"
-            className="button-hover-effect"
-          >
+          <div onClick={openOptionsPage} id="settings-icon" className="button-hover-effect">
             <img src="setting.png" alt="Settings icon" />
           </div>
         </div>
@@ -72,11 +68,7 @@ const App: React.FC = () => {
 
       <div id="middle-section">
         <h1>Add new URL to block</h1>
-        <UrlInput
-          handleClose={handleClose}
-          addBlockedUrl={addBlockedUrl}
-          addCurrentUrl={true}
-        />
+        <UrlInput handleClose={handleClose} addBlockedUrl={addBlockedUrl} addCurrentUrl={true} />
       </div>
     </div>
   )

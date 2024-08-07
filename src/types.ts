@@ -14,13 +14,7 @@ export type BlockedSites = {
 // i = image
 // v = video
 // n = news
-export type BlockedUrlData = {
-  [url: string]: {
-    w: number
-    i: number
-    v: number
-    n: number
-  }
+export type BlockedUrlDataLocal = {
+  [url: string]: { w: number; i: number; v: number; n: number }
 }
-
 export type ScriptSettings = {}

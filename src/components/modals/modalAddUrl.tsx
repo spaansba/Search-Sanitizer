@@ -26,7 +26,7 @@ export default function ModalAddUrl({ isOpen, onClose }: ModalAddUrlProps) {
 
   function addBlockedUrl(urlToAdd: string) {
     if (urlToAdd) {
-      chrome.storage.sync.get(["blockedUrlData"], (result) => {
+      chrome.storage.local.get(["blockedUrlData"], (result) => {
         if (result.blockedUrlData) {
           const updatedBlockedUrls = { ...result.blockedUrlData }
           updatedBlockedUrls[urlToAdd] = {
@@ -35,13 +35,10 @@ export default function ModalAddUrl({ isOpen, onClose }: ModalAddUrlProps) {
             v: 0,
           }
 
-          chrome.storage.sync.set(
-            { blockedUrlData: updatedBlockedUrls },
-            () => {
-              setBlockedUrls(updatedBlockedUrls)
-              handleClose()
-            }
-          )
+          chrome.storage.local.set({ blockedUrlData: updatedBlockedUrls }, () => {
+            setBlockedUrls(updatedBlockedUrls)
+            handleClose()
+          })
         }
       })
     }

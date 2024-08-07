@@ -7,7 +7,7 @@ import { lineNumbers, highlightActiveLineGutter, dropCursor, keymap } from "@cod
 import { javascript } from "@codemirror/lang-javascript"
 import { history, historyKeymap, standardKeymap } from "@codemirror/commands"
 import { urlLinter } from "./codeMirrorLinter"
-import type { BlockedUrlData } from "../../types"
+import type { BlockedUrlDataLocal } from "../../types"
 import { BlockedUrlsContext } from "../../options/options"
 import "./codeMirrorEditor.css"
 
@@ -27,7 +27,7 @@ const CodeMirrorEditor: React.FC = () => {
   function onSave() {
     if (editorViewRef.current) {
       const docValues = editorViewRef.current.state.doc.toString().split("\n")
-      const newBlockedUrlData: BlockedUrlData = {}
+      const newBlockedUrlData: BlockedUrlDataLocal = {}
 
       docValues.forEach((url) => {
         url = url.trim()
@@ -41,7 +41,7 @@ const CodeMirrorEditor: React.FC = () => {
         }
       })
 
-      chrome.storage.sync.set({ blockedUrlData: newBlockedUrlData }, () => {
+      chrome.storage.local.set({ blockedUrlData: newBlockedUrlData }, () => {
         console.log("URL data saved")
         setBlockedUrls(newBlockedUrlData)
       })

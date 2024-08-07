@@ -1,17 +1,17 @@
 import googleSearchRegular from "./googleRegular"
-import type { BlockedUrlData } from "../types"
+import type { BlockedUrlDataLocal } from "../types"
 import googleSearchImages from "./googleImages"
 import googleSearchVideos from "./googleVideos"
 import googleSearchNews from "./googleNews"
 
 export interface googleContentScriptProps {
   extensionIsOn: boolean
-  urlsDict: BlockedUrlData
+  urlsDict: { blockedUrlData: BlockedUrlDataLocal }
 }
 
 async function initializeContentScript() {
   const extensionIsOn: boolean = await isExtensionOn()
-  const urlsDict: BlockedUrlData = await getBlockedUrl()
+  const urlsDict = await getBlockedUrl()
 
   if (!extensionIsOn || !urlsDict.blockedUrlData) {
     console.info("Search Sanitizer Extension is off")
@@ -40,13 +40,13 @@ function callContentScript(googleContentScriptProps: googleContentScriptProps) {
 }
 
 async function isExtensionOn(): Promise<boolean> {
-  const result = await chrome.storage.sync.get("extensionOnOff")
+  const result = await chrome.storage.local.get("extensionOnOff")
   return result.extensionOnOff as boolean
 }
 
-async function getBlockedUrl(): Promise<BlockedUrlData> {
-  const result = await chrome.storage.sync.get("blockedUrlData")
-  return result as BlockedUrlData
+async function getBlockedUrl(): Promise<{ blockedUrlData: BlockedUrlDataLocal }> {
+  const result = await chrome.storage.local.get("blockedUrlData")
+  return { blockedUrlData: result.blockedUrlData || {} }
 }
 
 initializeContentScript()

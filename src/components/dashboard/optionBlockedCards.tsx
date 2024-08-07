@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react"
+import React, { useContext, useState } from "react"
 import "./optionBlockedCards.css"
 import { BlockedUrlsContext } from "../../options/options"
 import ModalAddUrl from "../modals/modalAddUrl"
@@ -22,12 +22,12 @@ function OptionBlockedCards() {
   }
 
   function onClickDeleteButton(urlToDelete: string) {
-    chrome.storage.sync.get(["blockedUrlData"], (result) => {
+    chrome.storage.local.get(["blockedUrlData"], (result) => {
       if (result.blockedUrlData) {
         const updatedBlockedUrls = { ...result.blockedUrlData }
         delete updatedBlockedUrls[urlToDelete]
 
-        chrome.storage.sync.set({ blockedUrlData: updatedBlockedUrls }, () => {
+        chrome.storage.local.set({ blockedUrlData: updatedBlockedUrls }, () => {
           setBlockedUrls(updatedBlockedUrls)
         })
       }

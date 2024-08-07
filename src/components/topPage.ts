@@ -61,9 +61,7 @@ export function addTopOfPage(
   blockedOverlay.className = "blocked-count-overlay"
   blockedOverlay.textContent = blockedCount.toString()
 
-  container = isExtensionOn
-    ? getExtensionOnElement(container)
-    : getExtensionOffElement(container)
+  container = isExtensionOn ? getExtensionOnElement(container) : getExtensionOffElement(container)
 
   container.appendChild(img)
   container.appendChild(blockedOverlay)
@@ -92,11 +90,10 @@ export function addTopOfPage(
   }
 
   function getExtensionOffElement(container: HTMLDivElement): HTMLDivElement {
-    container.title =
-      "Search Sanitizer is currently turned off. Click to turn back on"
+    container.title = "Search Sanitizer is currently turned off. Click to turn back on"
     container.style.opacity = "0.4"
     container.addEventListener("click", () => {
-      chrome.storage.sync.set({ extensionOnOff: true }, () => {
+      chrome.storage.local.set({ extensionOnOff: true }, () => {
         window.location.reload()
       })
     })
@@ -115,16 +112,12 @@ function getTitle(blockedCount: number, resultsHidden: boolean): string {
 }
 
 export function updateBlockedCount(blockedCount: number) {
-  const container = document.querySelector(
-    "#extension-button-search-bar"
-  ) as HTMLDivElement
+  const container = document.querySelector("#extension-button-search-bar") as HTMLDivElement
   if (container) {
     container.title = getTitle(blockedCount, false) // Assuming results are not hidden by default
   }
 
-  const overlayContainer = document.querySelector(
-    ".blocked-count-overlay"
-  ) as HTMLDivElement
+  const overlayContainer = document.querySelector(".blocked-count-overlay") as HTMLDivElement
   if (overlayContainer) {
     overlayContainer.textContent = blockedCount.toString()
   }

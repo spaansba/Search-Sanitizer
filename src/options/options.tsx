@@ -4,7 +4,7 @@ import { useEffect, useState, createContext } from "react"
 import { createRoot } from "react-dom/client"
 import "./options.css"
 import OnOffSlider from "../components/onOffSlider"
-import type { BlockedUrlData, UserSettings } from "../types"
+import type { BlockedUrlDataLocal, UserSettings } from "../types"
 import CodeMirrorEditor from "../components/codeMirror/codeMirrorEditor"
 import OptionBlockedCards from "../components/dashboard/optionBlockedCards"
 import HelpButton from "../components/helpButton/helpButton"
@@ -14,17 +14,15 @@ interface SettingsProps {
 }
 
 export const BlockedUrlsContext = createContext<
-  [BlockedUrlData, React.Dispatch<React.SetStateAction<BlockedUrlData>>]
+  [BlockedUrlDataLocal, React.Dispatch<React.SetStateAction<BlockedUrlDataLocal>>]
 >([{}, () => {}])
 
 const App: React.FC = () => {
-  const [activeSection, setActiveSection] = useState<
-    "settings" | "blockedSites"
-  >("blockedSites")
-  const [blockedUrls, setBlockedUrls] = useState<BlockedUrlData>({})
+  const [activeSection, setActiveSection] = useState<"settings" | "blockedSites">("blockedSites")
+  const [blockedUrls, setBlockedUrls] = useState<BlockedUrlDataLocal>({})
 
   useEffect(() => {
-    chrome.storage.sync.get(["blockedUrlData"], (result) => {
+    chrome.storage.local.get(["blockedUrlData"], (result) => {
       console.log("Retrieved from storage:", result.blockedUrlData)
       if (result.blockedUrlData) {
         setBlockedUrls(result.blockedUrlData)
@@ -50,7 +48,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const messageListener = (message) => {
       if (message.type === "SLIDER_CHANGED") {
-        chrome.storage.sync.get([message.key], (result) => {
+        chrome.storage.local.get([message.key], (result) => {
           console.log(`Slider ${message.key} changed to ${result[message.key]}`)
         })
       }
@@ -74,8 +72,7 @@ const App: React.FC = () => {
             <OptionBlockedCards />
             <h2>Block in bulk</h2>
             <div className="question-text">
-              Easy access to remove and add sites to block in bulk via URL or by
-              Match Pattern
+              Easy access to remove and add sites to block in bulk via URL or by Match Pattern
               <HelpButton helpElement={helpMatchedPattern()} />
             </div>
             <CodeMirrorEditor />
@@ -90,10 +87,7 @@ const App: React.FC = () => {
               <div key={index} className="settings-item-container">
                 <p>{setting.settingName}</p>
                 <div className="slider">
-                  <OnOffSlider
-                    id={index.toString()}
-                    googleStorageKey={setting.googleStorageKey}
-                  />
+                  <OnOffSlider id={index.toString()} googleStorageKey={setting.googleStorageKey} />
                 </div>
               </div>
             ))}
@@ -146,19 +140,13 @@ const helpMatchedPattern: () => React.JSX.Element = () => {
       <table style={{ borderCollapse: "collapse", width: "100%" }}>
         <thead>
           <tr>
-            <th style={{ border: "1px solid black", padding: "8px" }}>
-              Match Pattern
-            </th>
-            <th style={{ border: "1px solid black", padding: "8px" }}>
-              Example of URLs Matched
-            </th>
+            <th style={{ border: "1px solid black", padding: "8px" }}>Match Pattern</th>
+            <th style={{ border: "1px solid black", padding: "8px" }}>Example of URLs Matched</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td style={{ border: "1px solid black", padding: "8px" }}>
-              *://*.temu.com/*
-            </td>
+            <td style={{ border: "1px solid black", padding: "8px" }}>*://*.temu.com/*</td>
             <td style={{ border: "1px solid black", padding: "8px" }}>
               <ul>
                 <li>https://www.temu.com/</li>
@@ -168,9 +156,7 @@ const helpMatchedPattern: () => React.JSX.Element = () => {
             </td>
           </tr>
           <tr>
-            <td style={{ border: "1px solid black", padding: "8px" }}>
-              https://google.*
-            </td>
+            <td style={{ border: "1px solid black", padding: "8px" }}>https://google.*</td>
             <td style={{ border: "1px solid black", padding: "8px" }}>
               <ul>
                 <li>https://google.com/</li>
@@ -179,9 +165,7 @@ const helpMatchedPattern: () => React.JSX.Element = () => {
             </td>
           </tr>
           <tr>
-            <td style={{ border: "1px solid black", padding: "8px" }}>
-              https://*.quora.com/*
-            </td>
+            <td style={{ border: "1px solid black", padding: "8px" }}>https://*.quora.com/*</td>
             <td style={{ border: "1px solid black", padding: "8px" }}>
               <ul>
                 <li>https://quora.com/</li>
