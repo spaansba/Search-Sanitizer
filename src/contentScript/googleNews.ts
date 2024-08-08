@@ -16,11 +16,14 @@ export default async function googleSearchNews({
   await ContentScript.getSearchElement()
 
   const queryString: string = ".SoaBEf:not([data-processed])"
-  ContentScript.processSearchResultsForBlocking(queryString)
-  new MutationObserver(() => {
-    ContentScript.processSearchResultsForBlocking(queryString)
-  }).observe(ContentScript.searchElementDiv, {
-    childList: true,
-    subtree: true,
-  })
+  ContentScript.processSearchResultsForBlocking(queryString, false)
+
+  if (ContentScript.searchResultsContainer) {
+    new MutationObserver(() => {
+      ContentScript.processSearchResultsForBlocking(queryString, false)
+    }).observe(ContentScript.searchResultsContainer, {
+      childList: true,
+      subtree: true,
+    })
+  }
 }

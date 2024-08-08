@@ -15,23 +15,28 @@ export default async function googleSearchRegular({
 
   await ContentScript.getSearchElement()
 
-  const queryString: string = ".g:not([data-processed]):not([data-initq] *)"
-  ContentScript.processSearchResultsForBlocking(queryString)
-  new MutationObserver(() => {
-    ContentScript.processSearchResultsForBlocking(queryString)
-    setTimeout(() => processRelatedQuestionsForBlocking(ContentScript.searchElementDiv), 500) //TODO fix need for 500 timeout
-  }).observe(ContentScript.searchElementDiv, {
-    childList: true,
-    subtree: true,
-  })
+  const queryString: string = ".g:not([data-processed]):not([data-initq]:not(.ivg-i)"
+  ContentScript.processSearchResultsForBlocking(queryString, false)
 
-  function processRelatedQuestionsForBlocking(searchElement: Element) {
-    const moreToAskSections = searchElement.querySelectorAll(":not([data-processed])[data-initq]")
+  processImagesForBlocking()
+
+  if (ContentScript.searchResultsContainer) {
+    new MutationObserver(() => {
+      ContentScript.processSearchResultsForBlocking(queryString, false)
+      setTimeout(() => processRelatedQuestionsForBlocking(), 500) //TODO fix need for 500 timeout
+    }).observe(ContentScript.searchResultsContainer, {
+      childList: true,
+      subtree: true,
+    })
+  }
+
+  function processRelatedQuestionsForBlocking() {
+    const moreToAskSections = ContentScript.searchResultsContainer?.querySelectorAll("[data-initq]")
     moreToAskSections?.forEach((askSection) => {
-      askSection.setAttribute("data-processed", "true")
       const relatedQuestions = askSection.querySelectorAll(
         ".related-question-pair:not([data-processed])"
       )
+
       relatedQuestions?.forEach((relatedQuestion) => {
         if (ContentScript.processedResults.has(relatedQuestion)) {
           return
@@ -39,12 +44,21 @@ export default async function googleSearchRegular({
         ContentScript.processedResults.add(relatedQuestion)
         relatedQuestion.setAttribute("data-processed", "true")
         if (
-          ContentScript.checkLinksForBlockedUrls(searchElement) ||
-          ContentScript.checkCitesForBlockedUrls(searchElement)
+          ContentScript.checkLinksForBlockedUrls(relatedQuestion, false, "related Q") ||
+          ContentScript.checkCitesForBlockedUrls(relatedQuestion, false, "related Q")
         ) {
+          console.log("blocking related " + relatedQuestion)
+
           ContentScript.markElementAsBlocked(relatedQuestion as HTMLElement)
         }
       })
     })
+  }
+
+  //The image section on the main webpage is already loaded so we dont need to run it through the MutationObserver
+  //For this reason we need to block invisible elements as well
+  function processImagesForBlocking() {
+    const queryString: string = ".ivg-i:not([data-processed])"
+    ContentScript.processSearchResultsForBlocking(queryString, true)
   }
 }

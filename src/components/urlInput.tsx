@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import {
   isValidMatchPattern,
   isValidUrl,
@@ -21,19 +21,27 @@ export default function UrlInput({ handleClose, addBlockedUrl, addCurrentUrl }: 
   const [inputIsValid, setInputIsValid] = useState<boolean>()
   const addButton = useRef<HTMLButtonElement>(null)
 
+  // If we use urlInput.current everywhere we would get "'urlInput.current' is possibly 'null'." everywhere
+  const getInputElement = useCallback(() => {
+    if (!urlInput.current) {
+      throw new Error("urlInput is not available")
+    }
+    return urlInput.current
+  }, [])
+
   function onHandleAlternative(Alternative: string) {
     setInputValue(Alternative.trim())
-    urlInput.current.value = Alternative
-    urlInput.current.focus()
+    getInputElement().value = Alternative
+    getInputElement().focus()
   }
 
   useEffect(() => {
     if (tabUrl) {
-      urlInput.current.value = tabUrl.hostname
+      getInputElement().value = tabUrl.hostname
       setInputAlternatives(getUrlAlternatives())
-      urlInput.current.focus()
+      getInputElement().focus()
     }
-  }, [tabUrl])
+  }, [tabUrl, getInputElement])
 
   useEffect(() => {
     setInputAlternatives(getUrlAlternatives)
@@ -64,10 +72,10 @@ export default function UrlInput({ handleClose, addBlockedUrl, addCurrentUrl }: 
   }
 
   const handleInputChange = () => {
-    if (inputValue === urlInput.current.value) {
+    if (inputValue === getInputElement().value) {
       return
     }
-    setInputValue(urlInput.current.value.trim())
+    setInputValue(getInputElement().value.trim())
   }
 
   function getUrlAlternatives(): string[] {

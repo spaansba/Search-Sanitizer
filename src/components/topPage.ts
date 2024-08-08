@@ -114,7 +114,7 @@ function getTitle(blockedCount: number, resultsHidden: boolean): string {
 export function updateBlockedCount(blockedCount: number) {
   const container = document.querySelector("#extension-button-search-bar") as HTMLDivElement
   if (container) {
-    container.title = getTitle(blockedCount, false) // Assuming results are not hidden by default
+    container.title = getTitle(blockedCount, false)
   }
 
   const overlayContainer = document.querySelector(".blocked-count-overlay") as HTMLDivElement
