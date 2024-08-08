@@ -220,31 +220,6 @@ ___CSS_LOADER_EXPORT___.push([module.id, `:root {
   }
 }
 
-.card-container > .card-bottom {
-  padding-right: 1.2rem;
-  padding-left: 1.2rem;
-  align-items: center;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  background-color: #fff;
-  height: 45%;
-  border-bottom-left-radius: 4px;
-  border-bottom-right-radius: 4px;
-}
-
-.card-container > .card-bottom .blocked-results {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-  position: relative;
-}
-
-.card-container > .card-bottom svg {
-  fill: rgb(36, 22, 22);
-  transition: fill 0.3s ease;
-}
-
 .card-container:hover {
   transform: translateY(-5px);
 
@@ -282,24 +257,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `:root {
 #card-top-lifetime {
   background: linear-gradient(rgb(168 222 240), rgb(212 234 247));
 }
-
-.badge {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background-color: #efefef;
-  color: #000;
-  border-radius: 50%;
-  width: 23px;
-  height: 16px;
-  font-size: 8px;
-  font-weight: bold;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-}
-`, "",{"version":3,"sources":["webpack://./src/components/dashboard/optionBlockedCards.css"],"names":[],"mappings":"AAAA;EACE,mBAAmB;EACnB,gCAAgC;EAChC,kCAAkC;EAClC,wBAAwB;EACxB,+BAA+B;EAC/B,gCAAgC;EAChC,sBAAsB;EACtB,gDAAgD;EAChD,+BAA+B;AACjC;;AAIA;EACE,SAAS;EACT,aAAa;EACb,eAAe;AACjB;;AAEA;EACE,mEAAmE;EACnE,kBAAkB;EAClB,aAAa;EACb,YAAY;EACZ,+BAA+B;EAC/B,aAAa;EACb,sBAAsB;EACtB,uBAAuB;EACvB,aAAa;EACb,qBAAqB;EACrB;uCACqC;EACrC,kBAAkB;AACpB;;AAEA;EACE,aAAa;EACb,uBAAuB;AACzB;;AAEA;EACE,eAAe;AACjB;;AAEA;EACE,mEAAmE;EACnE,WAAW;EACX,iBAAiB;EACjB,kBAAkB;EAClB,aAAa;EACb,mBAAmB;EACnB,uBAAuB;;EAEvB;IACE,eAAe;IACf,gBAAgB;IAChB,uBAAuB;IACvB,kBAAkB;EACpB;AACF;;AAEA;EACE,qBAAqB;EACrB,oBAAoB;EACpB,mBAAmB;EACnB,aAAa;EACb,mBAAmB;EACnB,8BAA8B;EAC9B,sBAAsB;EACtB,WAAW;EACX,8BAA8B;EAC9B,+BAA+B;AACjC;;AAEA;EACE,aAAa;EACb,QAAQ;EACR,mBAAmB;EACnB,kBAAkB;AACpB;;AAEA;EACE,qBAAqB;EACrB,0BAA0B;AAC5B;;AAEA;EACE,2BAA2B;;EAE3B;IACE,YAAY;EACd;EACA;IACE,WAAW;EACb;AACF;;AAEA;EACE,YAAY;EACZ,kBAAkB;EAClB,QAAQ;EACR,UAAU;EACV,UAAU;EACV,eAAe;EACf,6BAA6B;AAC/B;;AAEA;EACE,qBAAqB;EACrB,0BAA0B;AAC5B;;AAEA;EACE,aAAa;AACf;;AAEA;EACE,+DAA+D;AACjE;;AAEA;EACE,+DAA+D;AACjE;;AAEA;EACE,kBAAkB;EAClB,SAAS;EACT,WAAW;EACX,yBAAyB;EACzB,WAAW;EACX,kBAAkB;EAClB,WAAW;EACX,YAAY;EACZ,cAAc;EACd,iBAAiB;EACjB,aAAa;EACb,uBAAuB;EACvB,mBAAmB;EACnB,gBAAgB;AAClB","sourcesContent":[":root {\r\n  color-scheme: light;\r\n  --light-main-background: #d1d1cf;\r\n  --light-secondary-background: #fff;\r\n  --light-main-text: black;\r\n  --light-secondary-text: #3a3a35;\r\n  --light-main-background: #d1d1cf;\r\n  --light-hover: #d1d1cf;\r\n  --border: 1px solid var(--light-main-background);\r\n  font-family: \"Lato\", sans-serif;\r\n}\r\n\r\n@import url(\"https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap\");\r\n\r\n.cards-container {\r\n  gap: 12px;\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n}\r\n\r\n.card-container {\r\n  background: linear-gradient(rgb(234, 240, 168), rgb(244, 247, 212));\r\n  position: relative;\r\n  height: 100px;\r\n  width: 210px;\r\n  transition: transform 0.3s ease;\r\n  display: flex;\r\n  flex-direction: column;\r\n  justify-content: center;\r\n  padding: 10px;\r\n  font-family: \"Roboto\";\r\n  box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.2), 0px 5px 7px 1px rgba(0, 0, 0, 0.14),\r\n    0px 2px 9px 3px rgba(0, 0, 0, 0.12);\r\n  border-radius: 8px;\r\n}\r\n\r\n.card-container > .add-card-container {\r\n  display: flex;\r\n  justify-content: center;\r\n}\r\n\r\n.add-card-container {\r\n  cursor: pointer;\r\n}\r\n\r\n.card-container > .card-top {\r\n  background: linear-gradient(rgb(234, 240, 168), rgb(244, 247, 212));\r\n  height: 55%;\r\n  padding-left: 3px;\r\n  padding-right: 3px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n\r\n  p {\r\n    font-size: 14px;\r\n    font-weight: 700;\r\n    text-overflow: ellipsis;\r\n    overflow-x: hidden;\r\n  }\r\n}\r\n\r\n.card-container > .card-bottom {\r\n  padding-right: 1.2rem;\r\n  padding-left: 1.2rem;\r\n  align-items: center;\r\n  display: flex;\r\n  flex-direction: row;\r\n  justify-content: space-between;\r\n  background-color: #fff;\r\n  height: 45%;\r\n  border-bottom-left-radius: 4px;\r\n  border-bottom-right-radius: 4px;\r\n}\r\n\r\n.card-container > .card-bottom .blocked-results {\r\n  display: flex;\r\n  gap: 8px;\r\n  align-items: center;\r\n  position: relative;\r\n}\r\n\r\n.card-container > .card-bottom svg {\r\n  fill: rgb(36, 22, 22);\r\n  transition: fill 0.3s ease;\r\n}\r\n\r\n.card-container:hover {\r\n  transform: translateY(-5px);\r\n\r\n  .delete-button {\r\n    opacity: 0.9;\r\n  }\r\n  .card-bottom svg {\r\n    fill: black;\r\n  }\r\n}\r\n\r\n.delete-button {\r\n  opacity: 0.3;\r\n  position: absolute;\r\n  top: 5px;\r\n  right: 5px;\r\n  z-index: 1;\r\n  cursor: pointer;\r\n  transition: opacity 0.3s ease;\r\n}\r\n\r\n.delete-button svg {\r\n  fill: rgb(36, 22, 22);\r\n  transition: fill 0.3s ease;\r\n}\r\n\r\n.delete-button:hover svg {\r\n  fill: #ff4444;\r\n}\r\n\r\n.secondary {\r\n  background: linear-gradient(rgb(168 222 240), rgb(212 234 247));\r\n}\r\n\r\n#card-top-lifetime {\r\n  background: linear-gradient(rgb(168 222 240), rgb(212 234 247));\r\n}\r\n\r\n.badge {\r\n  position: absolute;\r\n  top: -8px;\r\n  right: -8px;\r\n  background-color: #efefef;\r\n  color: #000;\r\n  border-radius: 50%;\r\n  width: 23px;\r\n  height: 16px;\r\n  font-size: 8px;\r\n  font-weight: bold;\r\n  display: flex;\r\n  justify-content: center;\r\n  align-items: center;\r\n  overflow: hidden;\r\n}\r\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/components/dashboard/optionBlockedCards.css"],"names":[],"mappings":"AAAA;EACE,mBAAmB;EACnB,gCAAgC;EAChC,kCAAkC;EAClC,wBAAwB;EACxB,+BAA+B;EAC/B,gCAAgC;EAChC,sBAAsB;EACtB,gDAAgD;EAChD,+BAA+B;AACjC;;AAIA;EACE,SAAS;EACT,aAAa;EACb,eAAe;AACjB;;AAEA;EACE,mEAAmE;EACnE,kBAAkB;EAClB,aAAa;EACb,YAAY;EACZ,+BAA+B;EAC/B,aAAa;EACb,sBAAsB;EACtB,uBAAuB;EACvB,aAAa;EACb,qBAAqB;EACrB;uCACqC;EACrC,kBAAkB;AACpB;;AAEA;EACE,aAAa;EACb,uBAAuB;AACzB;;AAEA;EACE,eAAe;AACjB;;AAEA;EACE,mEAAmE;EACnE,WAAW;EACX,iBAAiB;EACjB,kBAAkB;EAClB,aAAa;EACb,mBAAmB;EACnB,uBAAuB;;EAEvB;IACE,eAAe;IACf,gBAAgB;IAChB,uBAAuB;IACvB,kBAAkB;EACpB;AACF;;AAEA;EACE,2BAA2B;;EAE3B;IACE,YAAY;EACd;EACA;IACE,WAAW;EACb;AACF;;AAEA;EACE,YAAY;EACZ,kBAAkB;EAClB,QAAQ;EACR,UAAU;EACV,UAAU;EACV,eAAe;EACf,6BAA6B;AAC/B;;AAEA;EACE,qBAAqB;EACrB,0BAA0B;AAC5B;;AAEA;EACE,aAAa;AACf;;AAEA;EACE,+DAA+D;AACjE;;AAEA;EACE,+DAA+D;AACjE","sourcesContent":[":root {\r\n  color-scheme: light;\r\n  --light-main-background: #d1d1cf;\r\n  --light-secondary-background: #fff;\r\n  --light-main-text: black;\r\n  --light-secondary-text: #3a3a35;\r\n  --light-main-background: #d1d1cf;\r\n  --light-hover: #d1d1cf;\r\n  --border: 1px solid var(--light-main-background);\r\n  font-family: \"Lato\", sans-serif;\r\n}\r\n\r\n@import url(\"https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap\");\r\n\r\n.cards-container {\r\n  gap: 12px;\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n}\r\n\r\n.card-container {\r\n  background: linear-gradient(rgb(234, 240, 168), rgb(244, 247, 212));\r\n  position: relative;\r\n  height: 100px;\r\n  width: 210px;\r\n  transition: transform 0.3s ease;\r\n  display: flex;\r\n  flex-direction: column;\r\n  justify-content: center;\r\n  padding: 10px;\r\n  font-family: \"Roboto\";\r\n  box-shadow: 0px 3px 3px -3px rgba(0, 0, 0, 0.2), 0px 5px 7px 1px rgba(0, 0, 0, 0.14),\r\n    0px 2px 9px 3px rgba(0, 0, 0, 0.12);\r\n  border-radius: 8px;\r\n}\r\n\r\n.card-container > .add-card-container {\r\n  display: flex;\r\n  justify-content: center;\r\n}\r\n\r\n.add-card-container {\r\n  cursor: pointer;\r\n}\r\n\r\n.card-container > .card-top {\r\n  background: linear-gradient(rgb(234, 240, 168), rgb(244, 247, 212));\r\n  height: 55%;\r\n  padding-left: 3px;\r\n  padding-right: 3px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n\r\n  p {\r\n    font-size: 14px;\r\n    font-weight: 700;\r\n    text-overflow: ellipsis;\r\n    overflow-x: hidden;\r\n  }\r\n}\r\n\r\n.card-container:hover {\r\n  transform: translateY(-5px);\r\n\r\n  .delete-button {\r\n    opacity: 0.9;\r\n  }\r\n  .card-bottom svg {\r\n    fill: black;\r\n  }\r\n}\r\n\r\n.delete-button {\r\n  opacity: 0.3;\r\n  position: absolute;\r\n  top: 5px;\r\n  right: 5px;\r\n  z-index: 1;\r\n  cursor: pointer;\r\n  transition: opacity 0.3s ease;\r\n}\r\n\r\n.delete-button svg {\r\n  fill: rgb(36, 22, 22);\r\n  transition: fill 0.3s ease;\r\n}\r\n\r\n.delete-button:hover svg {\r\n  fill: #ff4444;\r\n}\r\n\r\n.secondary {\r\n  background: linear-gradient(rgb(168 222 240), rgb(212 234 247));\r\n}\r\n\r\n#card-top-lifetime {\r\n  background: linear-gradient(rgb(168 222 240), rgb(212 234 247));\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -449,6 +407,8 @@ ___CSS_LOADER_EXPORT___.push([module.id, `:root {
 
 body {
   background-color: var(--light-main-background);
+  margin: 0;
+  padding: 0;
 }
 
 h2 {
@@ -468,16 +428,14 @@ h3 {
 .card {
   display: flex;
   flex-direction: column;
-  padding: 28px !important;
   width: 730px !important;
-  overflow-y: auto;
-  position: fixed;
-  top: 32px;
-  bottom: 32px;
-  left: calc(50% - 375px);
+  height: calc(100vh - 64px);
+  position: relative;
+  margin: 32px auto;
   background: var(--light-secondary-background);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.24);
   border-radius: 8px;
+  overflow: hidden;
 }
 
 #options-page-container {
@@ -487,7 +445,11 @@ h3 {
 }
 
 header {
-  padding-bottom: 0.8rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--light-secondary-background);
+  padding: 28px 28px 0.8rem;
   border-bottom: var(--border);
 }
 
@@ -498,6 +460,7 @@ header {
   font-weight: 400;
   font-size: 22px;
   line-height: 100%;
+  gap: 20px;
 }
 
 .image-offset {
@@ -515,6 +478,12 @@ header {
   gap: 2rem;
   font-size: 28px;
   font-weight: 600;
+}
+
+#middle {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px;
 }
 
 .settings-item-container {
@@ -599,7 +568,16 @@ p {
   gap: 0.3rem;
   margin-bottom: 10px;
 }
-`, "",{"version":3,"sources":["webpack://./src/options/options.css"],"names":[],"mappings":"AAAA;EACE,mBAAmB;EACnB,gCAAgC;EAChC,kCAAkC;EAClC,wBAAwB;EACxB,+BAA+B;EAC/B,gCAAgC;EAChC,sBAAsB;EACtB,gDAAgD;EAChD,+BAA+B;EAC/B,iBAAiB;AACnB;;AAEA;EACE,8CAA8C;AAChD;;AAEA;EACE,gBAAgB;EAChB,kBAAkB;EAClB,eAAe;EACf,gBAAgB;EAChB,kBAAkB;AACpB;;AAEA;EACE,eAAe;EACf,gBAAgB;EAChB,kBAAkB;AACpB;;AAEA;EACE,aAAa;EACb,sBAAsB;EACtB,wBAAwB;EACxB,uBAAuB;EACvB,gBAAgB;EAChB,eAAe;EACf,SAAS;EACT,YAAY;EACZ,uBAAuB;EACvB,6CAA6C;EAC7C,2CAA2C;EAC3C,kBAAkB;AACpB;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,sBAAsB;AACxB;;AAEA;EACE,sBAAsB;EACtB,4BAA4B;AAC9B;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,6BAA6B;EAC7B,gBAAgB;EAChB,eAAe;EACf,iBAAiB;AACnB;;AAEA;EACE,WAAW;AACb;;AAEA;EACE,kBAAkB;AACpB;;AAEA;EACE,YAAY;EACZ,aAAa;EACb,6BAA6B;EAC7B,SAAS;EACT,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,mBAAmB;EACnB,gBAAgB;EAChB,aAAa;EACb,mBAAmB;EACnB,mBAAmB;EACnB,4BAA4B;AAC9B;;AAEA;EACE,eAAe;AACjB;;AAEA;EACE,eAAe;EACf,kCAAkC;EAClC,iBAAiB;AACnB;;AAEA;EACE,iBAAiB;AACnB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,SAAS;EACT,YAAY;EACZ,cAAc;EACd,cAAc;EACd,gBAAgB;EAChB,iBAAiB;EACjB,sBAAsB;EACtB,gBAAgB;EAChB,cAAc;EACd,aAAa;AACf;;AAEA;EACE,yBAAyB;EACzB,kCAAkC;EAClC,cAAc;EACd,aAAa;EACb,gBAAgB;EAChB,gBAAgB;AAClB;;AAEA;EACE,wBAAwB;EACxB,kCAAkC;EAClC,sBAAsB;EACtB,gBAAgB;EAChB,YAAY;EACZ,gBAAgB;EAChB,kBAAkB;EAClB,UAAU;AACZ;;AAEA;EACE,WAAW;EACX,gBAAgB;AAClB;;AAEA;EACE,sBAAsB;EACtB,WAAW;EACX,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,WAAW;EACX,mBAAmB;AACrB","sourcesContent":[":root {\r\n  color-scheme: light;\r\n  --light-main-background: #d1d1cf;\r\n  --light-secondary-background: #fff;\r\n  --light-main-text: black;\r\n  --light-secondary-text: #3a3a35;\r\n  --light-main-background: #d1d1cf;\r\n  --light-hover: #d1d1cf;\r\n  --border: 1px solid var(--light-main-background);\r\n  font-family: \"Lato\", sans-serif;\r\n  user-select: none;\r\n}\r\n\r\nbody {\r\n  background-color: var(--light-main-background);\r\n}\r\n\r\nh2 {\r\n  margin-top: 14px;\r\n  margin-bottom: 8px;\r\n  font-size: 24px;\r\n  font-weight: 600;\r\n  font-style: normal;\r\n}\r\n\r\nh3 {\r\n  font-size: 20px;\r\n  font-weight: 500;\r\n  font-style: normal;\r\n}\r\n\r\n.card {\r\n  display: flex;\r\n  flex-direction: column;\r\n  padding: 28px !important;\r\n  width: 730px !important;\r\n  overflow-y: auto;\r\n  position: fixed;\r\n  top: 32px;\r\n  bottom: 32px;\r\n  left: calc(50% - 375px);\r\n  background: var(--light-secondary-background);\r\n  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.24);\r\n  border-radius: 8px;\r\n}\r\n\r\n#options-page-container {\r\n  display: flex;\r\n  align-items: center;\r\n  flex-direction: column;\r\n}\r\n\r\nheader {\r\n  padding-bottom: 0.8rem;\r\n  border-bottom: var(--border);\r\n}\r\n\r\n.container {\r\n  display: flex;\r\n  align-items: center;\r\n  color: var(--light-main-text);\r\n  font-weight: 400;\r\n  font-size: 22px;\r\n  line-height: 100%;\r\n}\r\n\r\n.image-offset {\r\n  gap: 0.8rem;\r\n}\r\n\r\n.container img {\r\n  margin-right: auto;\r\n}\r\n\r\n.header-wrapper {\r\n  flex-grow: 1;\r\n  display: flex;\r\n  justify-content: space-evenly;\r\n  gap: 2rem;\r\n  font-size: 28px;\r\n  font-weight: 600;\r\n}\r\n\r\n.settings-item-container {\r\n  margin-bottom: 10px;\r\n  margin-top: 10px;\r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: center;\r\n  border-bottom: var(--border);\r\n}\r\n\r\n.button {\r\n  cursor: pointer;\r\n}\r\n\r\np {\r\n  font-size: 15px;\r\n  color: var(--light-secondary-text);\r\n  user-select: text;\r\n}\r\n\r\n.slider {\r\n  margin-left: auto;\r\n}\r\n\r\n.active {\r\n  color: green;\r\n}\r\n\r\n.custom-textarea {\r\n  margin: 0;\r\n  flex-grow: 2;\r\n  flex-shrink: 0;\r\n  display: block;\r\n  white-space: pre;\r\n  word-wrap: normal;\r\n  box-sizing: border-box;\r\n  min-height: 100%;\r\n  padding: 4px 0;\r\n  outline: none;\r\n}\r\n\r\n.blocked-site-container {\r\n  background-color: #202124;\r\n  border: 1px solid rgb(95, 99, 104);\r\n  color: #e8e8d3;\r\n  height: 300px;\r\n  overflow: hidden;\r\n  resize: vertical;\r\n}\r\n\r\n.scroll-container {\r\n  display: flex !important;\r\n  align-items: flex-start !important;\r\n  font-family: monospace;\r\n  line-height: 1.4;\r\n  height: 100%;\r\n  overflow-x: auto;\r\n  position: relative;\r\n  z-index: 0;\r\n}\r\n\r\n.line-number-container {\r\n  width: 30px;\r\n  overflow: hidden;\r\n}\r\n\r\n.buttons {\r\n  background-color: aqua;\r\n  width: 30px;\r\n  height: 40px;\r\n}\r\n\r\n.logo {\r\n  width: 40px;\r\n  height: 40px;\r\n}\r\n\r\n.question-text {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 0.3rem;\r\n  margin-bottom: 10px;\r\n}\r\n"],"sourceRoot":""}]);
+
+.discord-button {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.discord-button svg {
+  margin-right: 4px;
+}
+`, "",{"version":3,"sources":["webpack://./src/options/options.css"],"names":[],"mappings":"AAAA;EACE,mBAAmB;EACnB,gCAAgC;EAChC,kCAAkC;EAClC,wBAAwB;EACxB,+BAA+B;EAC/B,gCAAgC;EAChC,sBAAsB;EACtB,gDAAgD;EAChD,+BAA+B;EAC/B,iBAAiB;AACnB;;AAEA;EACE,8CAA8C;EAC9C,SAAS;EACT,UAAU;AACZ;;AAEA;EACE,gBAAgB;EAChB,kBAAkB;EAClB,eAAe;EACf,gBAAgB;EAChB,kBAAkB;AACpB;;AAEA;EACE,eAAe;EACf,gBAAgB;EAChB,kBAAkB;AACpB;;AAEA;EACE,aAAa;EACb,sBAAsB;EACtB,uBAAuB;EACvB,0BAA0B;EAC1B,kBAAkB;EAClB,iBAAiB;EACjB,6CAA6C;EAC7C,2CAA2C;EAC3C,kBAAkB;EAClB,gBAAgB;AAClB;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,sBAAsB;AACxB;;AAEA;EACE,gBAAgB;EAChB,MAAM;EACN,aAAa;EACb,mDAAmD;EACnD,yBAAyB;EACzB,4BAA4B;AAC9B;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,6BAA6B;EAC7B,gBAAgB;EAChB,eAAe;EACf,iBAAiB;EACjB,SAAS;AACX;;AAEA;EACE,WAAW;AACb;;AAEA;EACE,kBAAkB;AACpB;;AAEA;EACE,YAAY;EACZ,aAAa;EACb,6BAA6B;EAC7B,SAAS;EACT,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,OAAO;EACP,gBAAgB;EAChB,aAAa;AACf;;AAEA;EACE,mBAAmB;EACnB,gBAAgB;EAChB,aAAa;EACb,mBAAmB;EACnB,mBAAmB;EACnB,4BAA4B;AAC9B;;AAEA;EACE,eAAe;AACjB;;AAEA;EACE,eAAe;EACf,kCAAkC;EAClC,iBAAiB;AACnB;;AAEA;EACE,iBAAiB;AACnB;;AAEA;EACE,YAAY;AACd;;AAEA;EACE,SAAS;EACT,YAAY;EACZ,cAAc;EACd,cAAc;EACd,gBAAgB;EAChB,iBAAiB;EACjB,sBAAsB;EACtB,gBAAgB;EAChB,cAAc;EACd,aAAa;AACf;;AAEA;EACE,yBAAyB;EACzB,kCAAkC;EAClC,cAAc;EACd,aAAa;EACb,gBAAgB;EAChB,gBAAgB;AAClB;;AAEA;EACE,wBAAwB;EACxB,kCAAkC;EAClC,sBAAsB;EACtB,gBAAgB;EAChB,YAAY;EACZ,gBAAgB;EAChB,kBAAkB;EAClB,UAAU;AACZ;;AAEA;EACE,WAAW;EACX,gBAAgB;AAClB;;AAEA;EACE,sBAAsB;EACtB,WAAW;EACX,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,WAAW;EACX,mBAAmB;AACrB;;AAEA;EACE,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,iBAAiB;AACnB","sourcesContent":[":root {\r\n  color-scheme: light;\r\n  --light-main-background: #d1d1cf;\r\n  --light-secondary-background: #fff;\r\n  --light-main-text: black;\r\n  --light-secondary-text: #3a3a35;\r\n  --light-main-background: #d1d1cf;\r\n  --light-hover: #d1d1cf;\r\n  --border: 1px solid var(--light-main-background);\r\n  font-family: \"Lato\", sans-serif;\r\n  user-select: none;\r\n}\r\n\r\nbody {\r\n  background-color: var(--light-main-background);\r\n  margin: 0;\r\n  padding: 0;\r\n}\r\n\r\nh2 {\r\n  margin-top: 14px;\r\n  margin-bottom: 8px;\r\n  font-size: 24px;\r\n  font-weight: 600;\r\n  font-style: normal;\r\n}\r\n\r\nh3 {\r\n  font-size: 20px;\r\n  font-weight: 500;\r\n  font-style: normal;\r\n}\r\n\r\n.card {\r\n  display: flex;\r\n  flex-direction: column;\r\n  width: 730px !important;\r\n  height: calc(100vh - 64px);\r\n  position: relative;\r\n  margin: 32px auto;\r\n  background: var(--light-secondary-background);\r\n  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.24);\r\n  border-radius: 8px;\r\n  overflow: hidden;\r\n}\r\n\r\n#options-page-container {\r\n  display: flex;\r\n  align-items: center;\r\n  flex-direction: column;\r\n}\r\n\r\nheader {\r\n  position: sticky;\r\n  top: 0;\r\n  z-index: 1000;\r\n  background-color: var(--light-secondary-background);\r\n  padding: 28px 28px 0.8rem;\r\n  border-bottom: var(--border);\r\n}\r\n\r\n.container {\r\n  display: flex;\r\n  align-items: center;\r\n  color: var(--light-main-text);\r\n  font-weight: 400;\r\n  font-size: 22px;\r\n  line-height: 100%;\r\n  gap: 20px;\r\n}\r\n\r\n.image-offset {\r\n  gap: 0.8rem;\r\n}\r\n\r\n.container img {\r\n  margin-right: auto;\r\n}\r\n\r\n.header-wrapper {\r\n  flex-grow: 1;\r\n  display: flex;\r\n  justify-content: space-evenly;\r\n  gap: 2rem;\r\n  font-size: 28px;\r\n  font-weight: 600;\r\n}\r\n\r\n#middle {\r\n  flex: 1;\r\n  overflow-y: auto;\r\n  padding: 28px;\r\n}\r\n\r\n.settings-item-container {\r\n  margin-bottom: 10px;\r\n  margin-top: 10px;\r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: center;\r\n  border-bottom: var(--border);\r\n}\r\n\r\n.button {\r\n  cursor: pointer;\r\n}\r\n\r\np {\r\n  font-size: 15px;\r\n  color: var(--light-secondary-text);\r\n  user-select: text;\r\n}\r\n\r\n.slider {\r\n  margin-left: auto;\r\n}\r\n\r\n.active {\r\n  color: green;\r\n}\r\n\r\n.custom-textarea {\r\n  margin: 0;\r\n  flex-grow: 2;\r\n  flex-shrink: 0;\r\n  display: block;\r\n  white-space: pre;\r\n  word-wrap: normal;\r\n  box-sizing: border-box;\r\n  min-height: 100%;\r\n  padding: 4px 0;\r\n  outline: none;\r\n}\r\n\r\n.blocked-site-container {\r\n  background-color: #202124;\r\n  border: 1px solid rgb(95, 99, 104);\r\n  color: #e8e8d3;\r\n  height: 300px;\r\n  overflow: hidden;\r\n  resize: vertical;\r\n}\r\n\r\n.scroll-container {\r\n  display: flex !important;\r\n  align-items: flex-start !important;\r\n  font-family: monospace;\r\n  line-height: 1.4;\r\n  height: 100%;\r\n  overflow-x: auto;\r\n  position: relative;\r\n  z-index: 0;\r\n}\r\n\r\n.line-number-container {\r\n  width: 30px;\r\n  overflow: hidden;\r\n}\r\n\r\n.buttons {\r\n  background-color: aqua;\r\n  width: 30px;\r\n  height: 40px;\r\n}\r\n\r\n.logo {\r\n  width: 40px;\r\n  height: 40px;\r\n}\r\n\r\n.question-text {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 0.3rem;\r\n  margin-bottom: 10px;\r\n}\r\n\r\n.discord-button {\r\n  cursor: pointer;\r\n  font-weight: 600;\r\n}\r\n\r\n.discord-button svg {\r\n  margin-right: 4px;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1129,6 +1107,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _optionBlockedCards_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./optionBlockedCards.css */ "./src/components/dashboard/optionBlockedCards.css");
 /* harmony import */ var _options_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../options/options */ "./src/options/options.tsx");
 /* harmony import */ var _modals_modalAddUrl__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../modals/modalAddUrl */ "./src/components/modals/modalAddUrl.tsx");
+/* harmony import */ var _blockedSvgContainer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./blockedSvgContainer */ "./src/components/dashboard/blockedSvgContainer.tsx");
+
 
 
 
@@ -1137,18 +1117,6 @@ function OptionBlockedCards() {
     const [blockedUrls, setBlockedUrls] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(_options_options__WEBPACK_IMPORTED_MODULE_2__.BlockedUrlsContext);
     const [isAddModalOpen, setIsAddModalOpen] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
     const [lifeTimeBlocks, setLifeTimeBlocks] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({ w: 0, i: 0, v: 0, n: 0 });
-    const formatCount = (count) => {
-        if (count >= 1000000) {
-            return (count / 1000000).toFixed(1) + "M";
-        }
-        else if (count >= 1000) {
-            return (count / 1000).toFixed(1) + "K";
-        }
-        if (count) {
-            return count.toString();
-        }
-        return "0";
-    };
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
         chrome.storage.local.get(["lifetimeTotalBlocks"], (result) => {
             setLifeTimeBlocks(result.lifetimeTotalBlocks);
@@ -1175,32 +1143,13 @@ function OptionBlockedCards() {
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "card-container secondary" },
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "card-top-lifetime", className: "card-top", title: "Total lifetime blocked sites" },
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Lifetime Blocks")),
-                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "card-bottom" },
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(lifeTimeBlocks.w)} Lifetime blocked regular search results` },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22px", height: "22px" },
-                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zm-2-5h4v2h-4V9z" })),
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" },
-                            " ",
-                            formatCount(lifeTimeBlocks.w))),
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(lifeTimeBlocks.i)} Lifetime blocked image search results` },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22px", height: "22px" },
-                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" })),
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" },
-                            " ",
-                            formatCount(lifeTimeBlocks.i))),
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(lifeTimeBlocks.v)} Lifetime blocked video search results` },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22px", height: "22px" },
-                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z" })),
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" },
-                            " ",
-                            formatCount(lifeTimeBlocks.v))),
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(lifeTimeBlocks.n)} Lifetime blocked news search results` },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { height: "22px", viewBox: "0 -960 960 960", width: "22px" },
-                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M165.5-110.91q-37.54 0-64.27-26.73-26.73-26.74-26.73-64.27v-649.57l68.67 67.72 66.96-67.72 67.72 67.72 67.72-67.72 66.95 67.72L480-851.48l67.48 67.72 66.95-67.72 67.72 67.72 67.72-67.72 66.96 67.72 68.67-67.72v649.57q0 37.53-26.73 64.27-26.73 26.73-64.27 26.73h-629Zm0-91h270.91v-240H165.5v240Zm358.09 0H794.5v-76.18H523.59v76.18Zm0-163.59H794.5v-76.41H523.59v76.41ZM165.5-529.09h629v-112.82h-629v112.82Z" })),
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" },
-                            " ",
-                            formatCount(lifeTimeBlocks.n))))),
-            Object.entries(blockedUrls).map(([blockedUrl, count], index) => (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { key: index, className: "card-container" },
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_blockedSvgContainer__WEBPACK_IMPORTED_MODULE_4__["default"], { lifeTimeBlocks: {
+                        i: lifeTimeBlocks.i,
+                        n: lifeTimeBlocks.n,
+                        v: lifeTimeBlocks.v,
+                        w: lifeTimeBlocks.w,
+                    }, addLifeTimeText: true })),
+            Object.entries(blockedUrls).map(([blockedUrl, blockedCount], index) => (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { key: index, className: "card-container" },
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "delete-button", onClick: () => onClickDeleteButton(blockedUrl) },
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "20px", height: "20px" },
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" }))),
@@ -1208,23 +1157,12 @@ function OptionBlockedCards() {
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", { title: blockedUrl },
                         " ",
                         blockedUrl)),
-                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "card-bottom" },
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(count.w)} Blocked regular search results` },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22px", height: "22px" },
-                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14zm-2-5h4v2h-4V9z" })),
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" }, formatCount(count.w))),
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(count.i)} Blocked image search results` },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22px", height: "22px" },
-                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" })),
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" }, formatCount(count.i))),
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(count.v)} Blocked video search results` },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { viewBox: "0 0 24 24", width: "22px", height: "22px" },
-                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-8 12.5v-9l6 4.5-6 4.5z" })),
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" }, formatCount(count.v))),
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "blocked-results", title: `${formatCount(count.n)} Blocked news search results` },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { height: "22px", viewBox: "0 -960 960 960", width: "22px" },
-                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M165.5-110.91q-37.54 0-64.27-26.73-26.73-26.74-26.73-64.27v-649.57l68.67 67.72 66.96-67.72 67.72 67.72 67.72-67.72 66.95 67.72L480-851.48l67.48 67.72 66.95-67.72 67.72 67.72 67.72-67.72 66.96 67.72 68.67-67.72v649.57q0 37.53-26.73 64.27-26.73 26.73-64.27 26.73h-629Zm0-91h270.91v-240H165.5v240Zm358.09 0H794.5v-76.18H523.59v76.18Zm0-163.59H794.5v-76.41H523.59v76.41ZM165.5-529.09h629v-112.82h-629v112.82Z" })),
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("span", { className: "badge" }, formatCount(count.n))))))))));
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_blockedSvgContainer__WEBPACK_IMPORTED_MODULE_4__["default"], { lifeTimeBlocks: {
+                        i: blockedCount.i,
+                        n: blockedCount.n,
+                        v: blockedCount.v,
+                        w: blockedCount.w,
+                    }, addLifeTimeText: false })))))));
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OptionBlockedCards);
 
@@ -1411,14 +1349,21 @@ const App = () => {
             case "settings":
                 return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null,
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", { className: "top-h2" }, "General Settings"),
-                    allSettings.settings.map((setting, index) => (
-                    // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { key: index, className: "settings-item-container" },
+                    allSettings.settings.map((setting, index) => (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { key: index, className: "settings-item-container" },
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, setting.settingName),
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "slider" },
-                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__["default"], { id: index.toString(), googleStorageKey: setting.googleStorageKey })))))));
+                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__["default"], { id: index.toString(), googleStorageKey: setting.googleStorageKey }))))),
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { title: "Join the Discord for help", className: "settings-item-container discord-button", onClick: onClickDiscord },
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, "Questions? Requests? Bugs? Join the Discord."),
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "slider" },
+                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { width: "33px", height: "33px", viewBox: "0 -28.5 256 256", version: "1.1", preserveAspectRatio: "xMidYMid" },
+                                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", null,
+                                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M216.856339,16.5966031 C200.285002,8.84328665 182.566144,3.2084988 164.041564,0 C161.766523,4.11318106 159.108624,9.64549908 157.276099,14.0464379 C137.583995,11.0849896 118.072967,11.0849896 98.7430163,14.0464379 C96.9108417,9.64549908 94.1925838,4.11318106 91.8971895,0 C73.3526068,3.2084988 55.6133949,8.86399117 39.0420583,16.6376612 C5.61752293,67.146514 -3.4433191,116.400813 1.08711069,164.955721 C23.2560196,181.510915 44.7403634,191.567697 65.8621325,198.148576 C71.0772151,190.971126 75.7283628,183.341335 79.7352139,175.300261 C72.104019,172.400575 64.7949724,168.822202 57.8887866,164.667963 C59.7209612,163.310589 61.5131304,161.891452 63.2445898,160.431257 C105.36741,180.133187 151.134928,180.133187 192.754523,160.431257 C194.506336,161.891452 196.298154,163.310589 198.110326,164.667963 C191.183787,168.842556 183.854737,172.420929 176.223542,175.320965 C180.230393,183.341335 184.861538,190.991831 190.096624,198.16893 C211.238746,191.588051 232.743023,181.531619 254.911949,164.955721 C260.227747,108.668201 245.831087,59.8662432 216.856339,16.5966031 Z M85.4738752,135.09489 C72.8290281,135.09489 62.4592217,123.290155 62.4592217,108.914901 C62.4592217,94.5396472 72.607595,82.7145587 85.4738752,82.7145587 C98.3405064,82.7145587 108.709962,94.5189427 108.488529,108.914901 C108.508531,123.290155 98.3405064,135.09489 85.4738752,135.09489 Z M170.525237,135.09489 C157.88039,135.09489 147.510584,123.290155 147.510584,108.914901 C147.510584,94.5396472 157.658606,82.7145587 170.525237,82.7145587 C183.391518,82.7145587 193.761324,94.5189427 193.539891,108.914901 C193.539891,123.290155 183.391518,135.09489 170.525237,135.09489 Z", fill: "#5865F2", "fill-rule": "nonzero" })))))));
         }
     };
+    function onClickDiscord() {
+        window.open("https://discord.gg/smt753Fwt3", "_blank");
+    }
     return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement(BlockedUrlsContext.Provider, { value: [blockedUrls, setBlockedUrls] },
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "card" },
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("header", null,
@@ -1649,7 +1594,7 @@ root.render(react__WEBPACK_IMPORTED_MODULE_0___default().createElement(App, null
 /******/ 	// startup
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
-/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_css-loader_dist_runtime_sour-b53f7e","vendors-node_modules_codemirror_commands_dist_index_js-node_modules_codemirror_lang-javascrip-e9cd47","src_components_onOffSlider_tsx-src_components_urlInput_tsx"], () => (__webpack_require__("./src/options/options.tsx")))
+/******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["vendors-node_modules_css-loader_dist_runtime_api_js-node_modules_css-loader_dist_runtime_sour-b53f7e","vendors-node_modules_codemirror_commands_dist_index_js-node_modules_codemirror_lang-javascrip-e9cd47","src_components_dashboard_blockedSvgContainer_tsx-src_components_onOffSlider_tsx-src_component-b96748"], () => (__webpack_require__("./src/options/options.tsx")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
 /******/ })()

@@ -6,7 +6,7 @@ export default async function googleSearchRegular({
   urlsDict,
   lifeTimeBlocks,
 }: googleContentScriptProps) {
-  const ContentScript = new GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks, "w")
+  const ContentScript = new GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks)
 
   // We check extension is on here so GoogleScriptService still loads custom top of page element that shows the extension is turned off
   if (!extensionIsOn) {
@@ -16,14 +16,15 @@ export default async function googleSearchRegular({
   await ContentScript.getSearchElement()
 
   const queryString: string = ".g:not([data-processed]):not([data-initq]:not(.ivg-i)"
-  ContentScript.processSearchResultsForBlocking(queryString, false)
+  ContentScript.processSearchResultsForBlocking(queryString, false, "w")
 
   processImagesForBlocking()
 
   if (ContentScript.searchResultsContainer) {
     new MutationObserver(() => {
-      ContentScript.processSearchResultsForBlocking(queryString, false)
+      ContentScript.processSearchResultsForBlocking(queryString, false, "w")
       setTimeout(() => processRelatedQuestionsForBlocking(), 500) //TODO fix need for 500 timeout
+      setTimeout(() => processImagesForBlocking(), 500)
     }).observe(ContentScript.searchResultsContainer, {
       childList: true,
       subtree: true,
@@ -44,21 +45,19 @@ export default async function googleSearchRegular({
         ContentScript.processedResults.add(relatedQuestion)
         relatedQuestion.setAttribute("data-processed", "true")
         if (
-          ContentScript.checkLinksForBlockedUrls(relatedQuestion, false, "related Q") ||
-          ContentScript.checkCitesForBlockedUrls(relatedQuestion, false, "related Q")
+          ContentScript.checkLinksForBlockedUrls(relatedQuestion, false, "w", "related Q") ||
+          ContentScript.checkCitesForBlockedUrls(relatedQuestion, false, "w", "related Q")
         ) {
-          console.log("blocking related " + relatedQuestion)
-
           ContentScript.markElementAsBlocked(relatedQuestion as HTMLElement)
         }
       })
     })
   }
 
-  //The image section on the main webpage is already loaded so we dont need to run it through the MutationObserver
-  //For this reason we need to block invisible elements as well
+  // Block invis elements as well as sometimes they load in the "all image" section before the user sees them
+  // Also this counts for i in block count instead of regular w
   function processImagesForBlocking() {
     const queryString: string = ".ivg-i:not([data-processed])"
-    ContentScript.processSearchResultsForBlocking(queryString, true)
+    ContentScript.processSearchResultsForBlocking(queryString, true, "i")
   }
 }

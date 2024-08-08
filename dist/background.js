@@ -17,7 +17,7 @@ chrome.runtime.onInstalled.addListener(() => {
 //     // }
 //   }
 // })
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message) => {
     switch (message.type) {
         case "SLIDER_CHANGED":
             chrome.runtime.sendMessage(message);

@@ -225,7 +225,7 @@ class GoogleScriptService {
         this._resultsAreHidden = value;
         this.updateBlockedElementsVisibility();
     }
-    constructor(blockedUrlsDict, isExtensionOn, lifeTimeBlocks, searchType) {
+    constructor(blockedUrlsDict, isExtensionOn, lifeTimeBlocks) {
         this.processedResults = new Set();
         this._blockedCount = 0;
         this._resultsAreHidden = false;
@@ -234,7 +234,6 @@ class GoogleScriptService {
         this.isExtensionOn = isExtensionOn;
         this.addDocumentHead();
         this.addEventListeners();
-        this.searchtype = searchType;
         this.updateManager = new _blockedCountUpdateManager__WEBPACK_IMPORTED_MODULE_1__.BlockedCountUpdateManager(blockedUrlsDict, lifeTimeBlocks, this.updatedBlockedCallback.bind(this));
     }
     // Return a promise that resolves when the search element is found
@@ -270,9 +269,9 @@ class GoogleScriptService {
       `;
         document.head.appendChild(style);
     } //  [card-show="true"] { display: block !important; }
-    incrementBlockCount(userPattern) {
+    incrementBlockCount(userPattern, searchCategory) {
         this._blockedCount++;
-        this.updateManager.incrementCount(userPattern, this.searchtype);
+        this.updateManager.incrementCount(userPattern, searchCategory);
     }
     updatedBlockedCallback(updatedDataUrlBlocked) {
         this.blockedUrlsDict.blockedUrlData = updatedDataUrlBlocked;
@@ -342,18 +341,18 @@ class GoogleScriptService {
         const regex = new RegExp(`^${escapedPattern}$`);
         return regex.test(urlString);
     }
-    shouldUrlBeBlocked(googleSearchUrl, origin) {
+    shouldUrlBeBlocked(googleSearchUrl, searchCategory, origin) {
         const url = new URL(googleSearchUrl);
         for (const pattern of Object.keys(this.blockedUrlsDict.blockedUrlData)) {
             // Here we check if the pattern is an URL and if it matches the current checked URL
             if (this.isPatternUrl(url, googleSearchUrl, pattern)) {
                 console.log(`Blocked URL: ${googleSearchUrl} url pattern: ${pattern} from ${origin}`);
-                this.incrementBlockCount(pattern);
+                this.incrementBlockCount(pattern, searchCategory);
                 return true;
             }
             // Here we check if the pattern is a matched Pattern and if it matches the current checked URL
             if (this.isPatternWildcard(googleSearchUrl, pattern)) {
-                this.incrementBlockCount(pattern);
+                this.incrementBlockCount(pattern, searchCategory);
                 console.log(`Blocked URL: ${url} matched pattern: ${pattern} from ${origin}`);
                 return true;
             }
@@ -363,7 +362,7 @@ class GoogleScriptService {
     isElementVisible(element) {
         return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
     }
-    processSearchResultsForBlocking(queryString, blockInvisibleElements) {
+    processSearchResultsForBlocking(queryString, blockInvisibleElements, searchCategory) {
         var _a;
         const searchResults = (_a = this.searchResultsContainer) === null || _a === void 0 ? void 0 : _a.querySelectorAll(queryString);
         searchResults === null || searchResults === void 0 ? void 0 : searchResults.forEach((searchElement) => {
@@ -372,17 +371,16 @@ class GoogleScriptService {
             }
             this.processedResults.add(searchElement);
             searchElement.setAttribute("data-processed", "true");
-            if (this.checkLinksForBlockedUrls(searchElement, blockInvisibleElements, `regular`) ||
-                this.checkCitesForBlockedUrls(searchElement, blockInvisibleElements, `regular`)) {
-                console.log("blocking element " + searchElement);
+            if (this.checkLinksForBlockedUrls(searchElement, blockInvisibleElements, searchCategory, `regular`) ||
+                this.checkCitesForBlockedUrls(searchElement, blockInvisibleElements, searchCategory, `regular`)) {
                 this.markElementAsBlocked(searchElement);
             }
         });
     }
-    checkLinksForBlockedUrls(searchElement, blockInvisibleElements, origin) {
+    checkLinksForBlockedUrls(searchElement, blockInvisibleElements, searchCategory, origin) {
         const links = searchElement.querySelectorAll("a");
         for (const link of links) {
-            if (link.href && this.shouldUrlBeBlocked(link.href, origin)) {
+            if (link.href && this.shouldUrlBeBlocked(link.href, searchCategory, origin)) {
                 if (blockInvisibleElements || this.isElementVisible(link)) {
                     return true;
                 }
@@ -390,7 +388,7 @@ class GoogleScriptService {
         }
         return false;
     }
-    checkCitesForBlockedUrls(searchElement, blockInvisibleElements, origin) {
+    checkCitesForBlockedUrls(searchElement, blockInvisibleElements, searchCategory, origin) {
         var _a;
         const cites = searchElement.querySelectorAll("cite");
         for (const cite of cites) {
@@ -400,9 +398,8 @@ class GoogleScriptService {
                 if (!/^https?:\/\//i.test(url)) {
                     url = "https://" + url;
                 }
-                if (this.shouldUrlBeBlocked(url, origin)) {
+                if (this.shouldUrlBeBlocked(url, searchCategory, origin)) {
                     if (blockInvisibleElements || this.isElementVisible(cite)) {
-                        this.incrementBlockCount(url);
                         return true;
                     }
                 }
@@ -438,17 +435,17 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 function googleSearchImages(_a) {
     return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, lifeTimeBlocks, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks, "i");
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks);
         // We check extension is on here so GoogleScriptService still loads custom top of page element that shows the extension is turned off
         if (!extensionIsOn) {
             return;
         }
         yield ContentScript.getSearchElement();
         const queryString = ".ivg-i:not([data-processed])";
-        ContentScript.processSearchResultsForBlocking(queryString, false);
+        ContentScript.processSearchResultsForBlocking(queryString, false, "i");
         if (ContentScript.searchResultsContainer) {
             new MutationObserver(() => {
-                ContentScript.processSearchResultsForBlocking(queryString, false);
+                ContentScript.processSearchResultsForBlocking(queryString, false, "i");
             }).observe(ContentScript.searchResultsContainer, {
                 childList: true,
                 subtree: true,
@@ -483,17 +480,17 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 function googleSearchNews(_a) {
     return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, lifeTimeBlocks, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks, "n");
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks);
         // We check extension is on here so GoogleScriptService still loads custom top of page element that shows the extension is turned off
         if (!extensionIsOn) {
             return;
         }
         yield ContentScript.getSearchElement();
         const queryString = ".SoaBEf:not([data-processed])";
-        ContentScript.processSearchResultsForBlocking(queryString, false);
+        ContentScript.processSearchResultsForBlocking(queryString, false, "n");
         if (ContentScript.searchResultsContainer) {
             new MutationObserver(() => {
-                ContentScript.processSearchResultsForBlocking(queryString, false);
+                ContentScript.processSearchResultsForBlocking(queryString, false, "n");
             }).observe(ContentScript.searchResultsContainer, {
                 childList: true,
                 subtree: true,
@@ -528,19 +525,20 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 function googleSearchRegular(_a) {
     return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, lifeTimeBlocks, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks, "w");
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks);
         // We check extension is on here so GoogleScriptService still loads custom top of page element that shows the extension is turned off
         if (!extensionIsOn) {
             return;
         }
         yield ContentScript.getSearchElement();
         const queryString = ".g:not([data-processed]):not([data-initq]:not(.ivg-i)";
-        ContentScript.processSearchResultsForBlocking(queryString, false);
+        ContentScript.processSearchResultsForBlocking(queryString, false, "w");
         processImagesForBlocking();
         if (ContentScript.searchResultsContainer) {
             new MutationObserver(() => {
-                ContentScript.processSearchResultsForBlocking(queryString, false);
+                ContentScript.processSearchResultsForBlocking(queryString, false, "w");
                 setTimeout(() => processRelatedQuestionsForBlocking(), 500); //TODO fix need for 500 timeout
+                setTimeout(() => processImagesForBlocking(), 500);
             }).observe(ContentScript.searchResultsContainer, {
                 childList: true,
                 subtree: true,
@@ -557,19 +555,18 @@ function googleSearchRegular(_a) {
                     }
                     ContentScript.processedResults.add(relatedQuestion);
                     relatedQuestion.setAttribute("data-processed", "true");
-                    if (ContentScript.checkLinksForBlockedUrls(relatedQuestion, false, "related Q") ||
-                        ContentScript.checkCitesForBlockedUrls(relatedQuestion, false, "related Q")) {
-                        console.log("blocking related " + relatedQuestion);
+                    if (ContentScript.checkLinksForBlockedUrls(relatedQuestion, false, "w", "related Q") ||
+                        ContentScript.checkCitesForBlockedUrls(relatedQuestion, false, "w", "related Q")) {
                         ContentScript.markElementAsBlocked(relatedQuestion);
                     }
                 });
             });
         }
-        //The image section on the main webpage is already loaded so we dont need to run it through the MutationObserver
-        //For this reason we need to block invisible elements as well
+        // Block invis elements as well as sometimes they load in the "all image" section before the user sees them
+        // Also this counts for i in block count instead of regular w
         function processImagesForBlocking() {
             const queryString = ".ivg-i:not([data-processed])";
-            ContentScript.processSearchResultsForBlocking(queryString, true);
+            ContentScript.processSearchResultsForBlocking(queryString, true, "i");
         }
     });
 }
@@ -600,7 +597,7 @@ var __awaiter = (undefined && undefined.__awaiter) || function (thisArg, _argume
 
 function googleSearchVideos(_a) {
     return __awaiter(this, arguments, void 0, function* ({ extensionIsOn, urlsDict, lifeTimeBlocks, }) {
-        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks, "v");
+        const ContentScript = new _contentScript__WEBPACK_IMPORTED_MODULE_0__.GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks);
         // We check extension is on here so GoogleScriptService still loads custom top of page element that shows the extension is turned off
         if (!extensionIsOn) {
             return;
@@ -608,9 +605,9 @@ function googleSearchVideos(_a) {
         yield ContentScript.getSearchElement();
         const queryString = ".g:not([data-processed])";
         if (ContentScript.searchResultsContainer) {
-            ContentScript.processSearchResultsForBlocking(queryString, false);
+            ContentScript.processSearchResultsForBlocking(queryString, false, "v");
             new MutationObserver(() => {
-                ContentScript.processSearchResultsForBlocking(queryString, false);
+                ContentScript.processSearchResultsForBlocking(queryString, false, "v");
             }).observe(ContentScript.searchResultsContainer, {
                 childList: true,
                 subtree: true,

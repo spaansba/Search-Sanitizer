@@ -19,20 +19,17 @@ export class GoogleScriptService {
   }
   private isExtensionOn: boolean = true
   blockedUrlsDict: { blockedUrlData: BlockedUrlDataLocal }
-  searchtype: searchCategories
   private updateManager: BlockedCountUpdateManager
 
   constructor(
     blockedUrlsDict: { blockedUrlData: BlockedUrlDataLocal },
     isExtensionOn: boolean,
-    lifeTimeBlocks: blockCategories,
-    searchType: searchCategories
+    lifeTimeBlocks: blockCategories
   ) {
     this.blockedUrlsDict = blockedUrlsDict
     this.isExtensionOn = isExtensionOn
     this.addDocumentHead()
     this.addEventListeners()
-    this.searchtype = searchType
     this.updateManager = new BlockedCountUpdateManager(
       blockedUrlsDict,
       lifeTimeBlocks,
@@ -81,9 +78,9 @@ export class GoogleScriptService {
     document.head.appendChild(style)
   } //  [card-show="true"] { display: block !important; }
 
-  private incrementBlockCount(userPattern: string) {
+  private incrementBlockCount(userPattern: string, searchCategory: searchCategories) {
     this._blockedCount++
-    this.updateManager.incrementCount(userPattern, this.searchtype)
+    this.updateManager.incrementCount(userPattern, searchCategory)
   }
 
   private updatedBlockedCallback(updatedDataUrlBlocked: BlockedUrlDataLocal) {
@@ -165,19 +162,23 @@ export class GoogleScriptService {
     return regex.test(urlString)
   }
 
-  shouldUrlBeBlocked(googleSearchUrl: string, origin: string): boolean {
+  shouldUrlBeBlocked(
+    googleSearchUrl: string,
+    searchCategory: searchCategories,
+    origin: string
+  ): boolean {
     const url = new URL(googleSearchUrl)
     for (const pattern of Object.keys(this.blockedUrlsDict.blockedUrlData)) {
       // Here we check if the pattern is an URL and if it matches the current checked URL
       if (this.isPatternUrl(url, googleSearchUrl, pattern)) {
         console.log(`Blocked URL: ${googleSearchUrl} url pattern: ${pattern} from ${origin}`)
-        this.incrementBlockCount(pattern)
+        this.incrementBlockCount(pattern, searchCategory)
         return true
       }
 
       // Here we check if the pattern is a matched Pattern and if it matches the current checked URL
       if (this.isPatternWildcard(googleSearchUrl, pattern)) {
-        this.incrementBlockCount(pattern)
+        this.incrementBlockCount(pattern, searchCategory)
         console.log(`Blocked URL: ${url} matched pattern: ${pattern} from ${origin}`)
         return true
       }
@@ -189,7 +190,11 @@ export class GoogleScriptService {
     return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length)
   }
 
-  processSearchResultsForBlocking(queryString: string, blockInvisibleElements: boolean) {
+  processSearchResultsForBlocking(
+    queryString: string,
+    blockInvisibleElements: boolean,
+    searchCategory: searchCategories
+  ) {
     const searchResults = this.searchResultsContainer?.querySelectorAll(queryString)
     searchResults?.forEach((searchElement) => {
       if (this.processedResults.has(searchElement)) {
@@ -200,10 +205,19 @@ export class GoogleScriptService {
       searchElement.setAttribute("data-processed", "true")
 
       if (
-        this.checkLinksForBlockedUrls(searchElement, blockInvisibleElements, `regular`) ||
-        this.checkCitesForBlockedUrls(searchElement, blockInvisibleElements, `regular`)
+        this.checkLinksForBlockedUrls(
+          searchElement,
+          blockInvisibleElements,
+          searchCategory,
+          `regular`
+        ) ||
+        this.checkCitesForBlockedUrls(
+          searchElement,
+          blockInvisibleElements,
+          searchCategory,
+          `regular`
+        )
       ) {
-        console.log("blocking element " + searchElement)
         this.markElementAsBlocked(searchElement as HTMLElement)
       }
     })
@@ -212,11 +226,12 @@ export class GoogleScriptService {
   checkLinksForBlockedUrls(
     searchElement: Element,
     blockInvisibleElements: boolean,
+    searchCategory: searchCategories,
     origin: string
   ): boolean {
     const links = searchElement.querySelectorAll("a")
     for (const link of links) {
-      if (link.href && this.shouldUrlBeBlocked(link.href, origin)) {
+      if (link.href && this.shouldUrlBeBlocked(link.href, searchCategory, origin)) {
         if (blockInvisibleElements || this.isElementVisible(link)) {
           return true
         }
@@ -228,6 +243,7 @@ export class GoogleScriptService {
   checkCitesForBlockedUrls(
     searchElement: Element,
     blockInvisibleElements: boolean,
+    searchCategory: searchCategories,
     origin: string
   ): boolean {
     const cites = searchElement.querySelectorAll("cite")
@@ -240,9 +256,8 @@ export class GoogleScriptService {
           url = "https://" + url
         }
 
-        if (this.shouldUrlBeBlocked(url, origin)) {
+        if (this.shouldUrlBeBlocked(url, searchCategory, origin)) {
           if (blockInvisibleElements || this.isElementVisible(cite)) {
-            this.incrementBlockCount(url)
             return true
           }
         }

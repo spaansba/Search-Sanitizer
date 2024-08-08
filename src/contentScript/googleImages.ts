@@ -6,7 +6,7 @@ export default async function googleSearchImages({
   urlsDict,
   lifeTimeBlocks,
 }: googleContentScriptProps) {
-  const ContentScript = new GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks, "i")
+  const ContentScript = new GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks)
 
   // We check extension is on here so GoogleScriptService still loads custom top of page element that shows the extension is turned off
   if (!extensionIsOn) {
@@ -15,11 +15,11 @@ export default async function googleSearchImages({
 
   await ContentScript.getSearchElement()
   const queryString: string = ".ivg-i:not([data-processed])"
-  ContentScript.processSearchResultsForBlocking(queryString, false)
+  ContentScript.processSearchResultsForBlocking(queryString, false, "i")
 
   if (ContentScript.searchResultsContainer) {
     new MutationObserver(() => {
-      ContentScript.processSearchResultsForBlocking(queryString, false)
+      ContentScript.processSearchResultsForBlocking(queryString, false, "i")
     }).observe(ContentScript.searchResultsContainer, {
       childList: true,
       subtree: true,

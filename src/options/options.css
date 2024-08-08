@@ -13,6 +13,8 @@
 
 body {
   background-color: var(--light-main-background);
+  margin: 0;
+  padding: 0;
 }
 
 h2 {
@@ -32,16 +34,14 @@ h3 {
 .card {
   display: flex;
   flex-direction: column;
-  padding: 28px !important;
   width: 730px !important;
-  overflow-y: auto;
-  position: fixed;
-  top: 32px;
-  bottom: 32px;
-  left: calc(50% - 375px);
+  height: calc(100vh - 64px);
+  position: relative;
+  margin: 32px auto;
   background: var(--light-secondary-background);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.24);
   border-radius: 8px;
+  overflow: hidden;
 }
 
 #options-page-container {
@@ -51,7 +51,11 @@ h3 {
 }
 
 header {
-  padding-bottom: 0.8rem;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: var(--light-secondary-background);
+  padding: 28px 28px 0.8rem;
   border-bottom: var(--border);
 }
 
@@ -62,6 +66,7 @@ header {
   font-weight: 400;
   font-size: 22px;
   line-height: 100%;
+  gap: 20px;
 }
 
 .image-offset {
@@ -79,6 +84,12 @@ header {
   gap: 2rem;
   font-size: 28px;
   font-weight: 600;
+}
+
+#middle {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px;
 }
 
 .settings-item-container {
@@ -162,4 +173,13 @@ p {
   align-items: center;
   gap: 0.3rem;
   margin-bottom: 10px;
+}
+
+.discord-button {
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.discord-button svg {
+  margin-right: 4px;
 }
