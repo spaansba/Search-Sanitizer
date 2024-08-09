@@ -1,6 +1,6 @@
 {
   "name": "Site Sanitizer",
-  "description": "Chrome Extension to block sites",
+  "description": "Block sites/images/videos from showing up on Google Search results",
   "version": "1.0.0",
   "manifest_version": 3,
   "icons": {
@@ -13,13 +13,7 @@
     "default_title": "Search Sanitizer",
     "default_icon": "logoApp.png"
   },
-  "permissions": [
-    "declarativeNetRequest",
-    "storage",
-    "contextMenus",
-    "notifications",
-    "tabs"
-  ],
+  "permissions": ["declarativeNetRequest", "storage", "contextMenus", "notifications", "tabs"],
   "options_ui": {
     "open_in_tab": true,
     "page": "options.html"

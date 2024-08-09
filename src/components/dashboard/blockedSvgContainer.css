@@ -22,7 +22,7 @@
   position: relative;
 
   svg {
-    fill: rgb(36, 22, 22);
+    fill: rgb(0, 0, 0);
     transition: fill 0.3s ease;
   }
 }

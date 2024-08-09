@@ -1,17 +1,3 @@
-:root {
-  color-scheme: light;
-  --light-main-background: #d1d1cf;
-  --light-secondary-background: #fff;
-  --light-main-text: black;
-  --light-secondary-text: #3a3a35;
-  --light-main-background: #d1d1cf;
-  --light-hover: #d1d1cf;
-  --border: 1px solid var(--light-main-background);
-  font-family: "Lato", sans-serif;
-}
-
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
-
 .cards-container {
   gap: 12px;
   display: flex;
@@ -19,7 +5,7 @@
 }
 
 .card-container {
-  background: linear-gradient(rgb(234, 240, 168), rgb(244, 247, 212));
+  background: var(--green-card-linear);
   position: relative;
   height: 100px;
   width: 210px;
@@ -44,7 +30,7 @@
 }
 
 .card-container > .card-top {
-  background: linear-gradient(rgb(234, 240, 168), rgb(244, 247, 212));
+  background: var(--green-card-linear);
   height: 55%;
   padding-left: 3px;
   padding-right: 3px;
@@ -91,9 +77,9 @@
 }
 
 .secondary {
-  background: linear-gradient(rgb(168 222 240), rgb(212 234 247));
+  background: var(--blue-card-linear);
 }
 
 #card-top-lifetime {
-  background: linear-gradient(rgb(168 222 240), rgb(212 234 247));
+  background: var(--blue-card-linear);
 }

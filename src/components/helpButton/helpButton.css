@@ -8,6 +8,7 @@
 }
 
 .help-dialog {
+  background-color: var(--dialog-background-color);
   user-select: text;
   transform: translateY(-2px);
   z-index: 100;

@@ -1,7 +1,9 @@
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /*!**************************************!*\
   !*** ./src/background/background.ts ***!
   \**************************************/
+
 chrome.runtime.onInstalled.addListener(() => {
     chrome.action.setBadgeBackgroundColor({ color: "#666665" });
     chrome.action.setBadgeTextColor({ color: "#fff" });
