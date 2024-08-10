@@ -32,7 +32,6 @@ function callContentScript(googleContentScriptProps: googleContentScriptProps) {
   } else if (tbm.includes("vid")) {
     googleSearchVideos(googleContentScriptProps)
   } else if (tbm.includes("nws")) {
-    console.log("d")
     googleSearchNews(googleContentScriptProps)
   } else if (udm.includes("2")) {
     googleSearchImages(googleContentScriptProps)

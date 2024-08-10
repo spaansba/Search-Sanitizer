@@ -5,8 +5,9 @@
   "manifest_version": 3,
   "icons": {
     "16": "logoApp.png",
+    "32": "logoApp32.png",
     "48": "logoApp.png",
-    "128": "logoApp.png"
+    "128": "logoApp128.png"
   },
   "action": {
     "default_popup": "popup.html",

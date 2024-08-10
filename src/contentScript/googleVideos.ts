@@ -14,15 +14,11 @@ export default async function googleSearchVideos({
   }
 
   await ContentScript.getSearchElement()
-  const queryString: string = ".g:not([data-processed])"
-
-  if (ContentScript.searchResultsContainer) {
-    ContentScript.processSearchResultsForBlocking(queryString, false, "v")
-    new MutationObserver(() => {
-      ContentScript.processSearchResultsForBlocking(queryString, false, "v")
-    }).observe(ContentScript.searchResultsContainer, {
-      childList: true,
-      subtree: true,
-    })
-  }
+  ContentScript.processVideosForBlocking()
+  new MutationObserver(() => {
+    ContentScript.processVideosForBlocking()
+  }).observe(ContentScript.searchResultsContainer, {
+    childList: true,
+    subtree: true,
+  })
 }

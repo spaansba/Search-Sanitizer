@@ -3,7 +3,7 @@ import { blockCategories, BlockedUrlDataLocal, searchCategories } from "../types
 import { BlockedCountUpdateManager } from "./blockedCountUpdateManager"
 
 export class GoogleScriptService {
-  searchResultsContainer: Element | undefined
+  searchResultsContainer: Element
   processedResults: Set<Element> = new Set()
   private _blockedCount: number = 0
   public get blockedCount(): number {
@@ -35,6 +35,9 @@ export class GoogleScriptService {
       lifeTimeBlocks,
       this.updatedBlockedCallback.bind(this)
     )
+
+    // Initialize the searchContainer for if it cant be found
+    this.searchResultsContainer = document.body
   }
 
   // Return a promise that resolves when the search element is found
@@ -111,7 +114,6 @@ export class GoogleScriptService {
   private isPatternUrl(url: URL, urlString: string, pattern: string): boolean {
     try {
       if (!pattern) {
-        console.log("not")
         return false
       }
       pattern = this.removeTrailingSlash(pattern.toLowerCase())
@@ -191,11 +193,13 @@ export class GoogleScriptService {
   }
 
   processSearchResultsForBlocking(
-    queryString: string,
+    queryString: string, // string we query for
+    containerToSearchIn: Element, // Narrows the search
     blockInvisibleElements: boolean,
     searchCategory: searchCategories
   ) {
-    const searchResults = this.searchResultsContainer?.querySelectorAll(queryString)
+    const searchResults = containerToSearchIn.querySelectorAll(queryString)
+
     searchResults?.forEach((searchElement) => {
       if (this.processedResults.has(searchElement)) {
         return
@@ -249,6 +253,7 @@ export class GoogleScriptService {
     const cites = searchElement.querySelectorAll("cite")
     for (const cite of cites) {
       let url = cite.textContent?.split(" ")[0] // Get first text in cite (it concatenates all descendants)
+      console.log(url)
 
       if (url) {
         // Add 'https://' if the URL doesn't start with 'http://' or 'https://'
@@ -264,5 +269,33 @@ export class GoogleScriptService {
       }
     }
     return false
+  }
+
+  // Block invis elements as well as sometimes they load in the "all image" section before the user sees them
+  processImagesForBlocking() {
+    const queryString: string = ".ivg-i:not([data-processed])"
+    this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, true, "i")
+  }
+
+  // Blocks the top scrollbar of adds at the top of the product / regular / image page
+  processTopAddsForBlocking() {
+    const queryString: string = ".mnr-c.pla-unit:not([data-processed])"
+    this.processSearchResultsForBlocking(queryString, document.body, false, "i")
+  }
+
+  processNewsForBlocking() {
+    const queryString: string = ".SoaBEf:not([data-processed])"
+    this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, false, "n")
+  }
+
+  processVideosForBlocking() {
+    const queryString: string = ".g:not([data-processed])"
+    this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, false, "v")
+  }
+
+  processRegularForBlocking() {
+    const queryString: string =
+      ".g:not([data-processed]):not([data-initq]:not(.ivg-i):not(.related-question-pair)"
+    this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, false, "w")
   }
 }

@@ -15,16 +15,16 @@ export default async function googleSearchRegular({
 
   await ContentScript.getSearchElement()
 
-  const queryString: string = ".g:not([data-processed]):not([data-initq]:not(.ivg-i)"
-  ContentScript.processSearchResultsForBlocking(queryString, false, "w")
-
-  processImagesForBlocking()
+  ContentScript.processRegularForBlocking()
+  ContentScript.processImagesForBlocking()
+  ContentScript.processTopAddsForBlocking()
 
   if (ContentScript.searchResultsContainer) {
     new MutationObserver(() => {
-      ContentScript.processSearchResultsForBlocking(queryString, false, "w")
+      ContentScript.processRegularForBlocking()
+      ContentScript.processImagesForBlocking()
+      ContentScript.processTopAddsForBlocking()
       setTimeout(() => processRelatedQuestionsForBlocking(), 500) //TODO fix need for 500 timeout
-      setTimeout(() => processImagesForBlocking(), 500)
     }).observe(ContentScript.searchResultsContainer, {
       childList: true,
       subtree: true,
@@ -37,27 +37,22 @@ export default async function googleSearchRegular({
       const relatedQuestions = askSection.querySelectorAll(
         ".related-question-pair:not([data-processed])"
       )
-
-      relatedQuestions?.forEach((relatedQuestion) => {
+      relatedQuestions.forEach((relatedQuestion) => {
         if (ContentScript.processedResults.has(relatedQuestion)) {
           return
         }
+
         ContentScript.processedResults.add(relatedQuestion)
         relatedQuestion.setAttribute("data-processed", "true")
         if (
-          ContentScript.checkLinksForBlockedUrls(relatedQuestion, false, "w", "related Q") ||
-          ContentScript.checkCitesForBlockedUrls(relatedQuestion, false, "w", "related Q")
+          ContentScript.checkLinksForBlockedUrls(relatedQuestion, true, "w", "related Q") ||
+          ContentScript.checkCitesForBlockedUrls(relatedQuestion, true, "w", "related Q")
         ) {
+          console.log("block ", relatedQuestion)
+
           ContentScript.markElementAsBlocked(relatedQuestion as HTMLElement)
         }
       })
     })
-  }
-
-  // Block invis elements as well as sometimes they load in the "all image" section before the user sees them
-  // Also this counts for i in block count instead of regular w
-  function processImagesForBlocking() {
-    const queryString: string = ".ivg-i:not([data-processed])"
-    ContentScript.processSearchResultsForBlocking(queryString, true, "i")
   }
 }

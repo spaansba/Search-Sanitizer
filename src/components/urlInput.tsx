@@ -48,18 +48,23 @@ export default function UrlInput({ handleClose, addBlockedUrl, addCurrentUrl }: 
     setInputIsValid(isValidMatchPattern(inputValue) || isValidUrl(inputValue))
   }, [inputValue])
 
-  // Get the opened tab to backfill the input value
   useEffect(() => {
-    // If we dont want the current url in the blocked site input (e.g. option page)
+    // If we don't want the current url in the blocked site input (e.g. option page)
     if (!addCurrentUrl) {
       return
     }
+
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]?.url) {
         const newTabUrl: URL = new URL(tabs[0].url)
-        setTabUrl(newTabUrl)
-        setInputValue(newTabUrl.hostname)
-        setInputAlternatives(getUrlAlternatives())
+
+        // Check if the URL is from Google, if so dont add it to the preview
+        if (!newTabUrl.hostname.includes("google")) {
+          setTabUrl(newTabUrl)
+          setInputValue(newTabUrl.hostname)
+          setInputAlternatives(getUrlAlternatives())
+        }
+        getInputElement().focus()
       }
     })
   }, [addCurrentUrl])

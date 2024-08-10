@@ -235,6 +235,8 @@ class GoogleScriptService {
         this.addDocumentHead();
         this.addEventListeners();
         this.updateManager = new _blockedCountUpdateManager__WEBPACK_IMPORTED_MODULE_1__.BlockedCountUpdateManager(blockedUrlsDict, lifeTimeBlocks, this.updatedBlockedCallback.bind(this));
+        // Initialize the searchContainer for if it cant be found
+        this.searchResultsContainer = document.body;
     }
     // Return a promise that resolves when the search element is found
     getSearchElement() {
@@ -298,7 +300,6 @@ class GoogleScriptService {
     isPatternUrl(url, urlString, pattern) {
         try {
             if (!pattern) {
-                console.log("not");
                 return false;
             }
             pattern = this.removeTrailingSlash(pattern.toLowerCase());
@@ -362,9 +363,10 @@ class GoogleScriptService {
     isElementVisible(element) {
         return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
     }
-    processSearchResultsForBlocking(queryString, blockInvisibleElements, searchCategory) {
-        var _a;
-        const searchResults = (_a = this.searchResultsContainer) === null || _a === void 0 ? void 0 : _a.querySelectorAll(queryString);
+    processSearchResultsForBlocking(queryString, // string we query for
+    containerToSearchIn, // Narrows the search
+    blockInvisibleElements, searchCategory) {
+        const searchResults = containerToSearchIn.querySelectorAll(queryString);
         searchResults === null || searchResults === void 0 ? void 0 : searchResults.forEach((searchElement) => {
             if (this.processedResults.has(searchElement)) {
                 return;
@@ -393,6 +395,7 @@ class GoogleScriptService {
         const cites = searchElement.querySelectorAll("cite");
         for (const cite of cites) {
             let url = (_a = cite.textContent) === null || _a === void 0 ? void 0 : _a.split(" ")[0]; // Get first text in cite (it concatenates all descendants)
+            console.log(url);
             if (url) {
                 // Add 'https://' if the URL doesn't start with 'http://' or 'https://'
                 if (!/^https?:\/\//i.test(url)) {
@@ -406,6 +409,28 @@ class GoogleScriptService {
             }
         }
         return false;
+    }
+    // Block invis elements as well as sometimes they load in the "all image" section before the user sees them
+    processImagesForBlocking() {
+        const queryString = ".ivg-i:not([data-processed])";
+        this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, true, "i");
+    }
+    // Blocks the top scrollbar of adds at the top of the product / regular / image page
+    processTopAddsForBlocking() {
+        const queryString = ".mnr-c.pla-unit:not([data-processed])";
+        this.processSearchResultsForBlocking(queryString, document.body, false, "i");
+    }
+    processNewsForBlocking() {
+        const queryString = ".SoaBEf:not([data-processed])";
+        this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, false, "n");
+    }
+    processVideosForBlocking() {
+        const queryString = ".g:not([data-processed])";
+        this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, false, "v");
+    }
+    processRegularForBlocking() {
+        const queryString = ".g:not([data-processed]):not([data-initq]:not(.ivg-i):not(.related-question-pair)";
+        this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, false, "w");
     }
 }
 
@@ -441,11 +466,12 @@ function googleSearchImages(_a) {
             return;
         }
         yield ContentScript.getSearchElement();
-        const queryString = ".ivg-i:not([data-processed])";
-        ContentScript.processSearchResultsForBlocking(queryString, false, "i");
+        ContentScript.processImagesForBlocking();
+        ContentScript.processTopAddsForBlocking();
         if (ContentScript.searchResultsContainer) {
             new MutationObserver(() => {
-                ContentScript.processSearchResultsForBlocking(queryString, false, "i");
+                ContentScript.processImagesForBlocking();
+                ContentScript.processTopAddsForBlocking();
             }).observe(ContentScript.searchResultsContainer, {
                 childList: true,
                 subtree: true,
@@ -486,11 +512,10 @@ function googleSearchNews(_a) {
             return;
         }
         yield ContentScript.getSearchElement();
-        const queryString = ".SoaBEf:not([data-processed])";
-        ContentScript.processSearchResultsForBlocking(queryString, false, "n");
+        ContentScript.processNewsForBlocking();
         if (ContentScript.searchResultsContainer) {
             new MutationObserver(() => {
-                ContentScript.processSearchResultsForBlocking(queryString, false, "n");
+                ContentScript.processNewsForBlocking();
             }).observe(ContentScript.searchResultsContainer, {
                 childList: true,
                 subtree: true,
@@ -531,14 +556,15 @@ function googleSearchRegular(_a) {
             return;
         }
         yield ContentScript.getSearchElement();
-        const queryString = ".g:not([data-processed]):not([data-initq]:not(.ivg-i)";
-        ContentScript.processSearchResultsForBlocking(queryString, false, "w");
-        processImagesForBlocking();
+        ContentScript.processRegularForBlocking();
+        ContentScript.processImagesForBlocking();
+        ContentScript.processTopAddsForBlocking();
         if (ContentScript.searchResultsContainer) {
             new MutationObserver(() => {
-                ContentScript.processSearchResultsForBlocking(queryString, false, "w");
+                ContentScript.processRegularForBlocking();
+                ContentScript.processImagesForBlocking();
+                ContentScript.processTopAddsForBlocking();
                 setTimeout(() => processRelatedQuestionsForBlocking(), 500); //TODO fix need for 500 timeout
-                setTimeout(() => processImagesForBlocking(), 500);
             }).observe(ContentScript.searchResultsContainer, {
                 childList: true,
                 subtree: true,
@@ -549,24 +575,19 @@ function googleSearchRegular(_a) {
             const moreToAskSections = (_a = ContentScript.searchResultsContainer) === null || _a === void 0 ? void 0 : _a.querySelectorAll("[data-initq]");
             moreToAskSections === null || moreToAskSections === void 0 ? void 0 : moreToAskSections.forEach((askSection) => {
                 const relatedQuestions = askSection.querySelectorAll(".related-question-pair:not([data-processed])");
-                relatedQuestions === null || relatedQuestions === void 0 ? void 0 : relatedQuestions.forEach((relatedQuestion) => {
+                relatedQuestions.forEach((relatedQuestion) => {
                     if (ContentScript.processedResults.has(relatedQuestion)) {
                         return;
                     }
                     ContentScript.processedResults.add(relatedQuestion);
                     relatedQuestion.setAttribute("data-processed", "true");
-                    if (ContentScript.checkLinksForBlockedUrls(relatedQuestion, false, "w", "related Q") ||
-                        ContentScript.checkCitesForBlockedUrls(relatedQuestion, false, "w", "related Q")) {
+                    if (ContentScript.checkLinksForBlockedUrls(relatedQuestion, true, "w", "related Q") ||
+                        ContentScript.checkCitesForBlockedUrls(relatedQuestion, true, "w", "related Q")) {
+                        console.log("block ", relatedQuestion);
                         ContentScript.markElementAsBlocked(relatedQuestion);
                     }
                 });
             });
-        }
-        // Block invis elements as well as sometimes they load in the "all image" section before the user sees them
-        // Also this counts for i in block count instead of regular w
-        function processImagesForBlocking() {
-            const queryString = ".ivg-i:not([data-processed])";
-            ContentScript.processSearchResultsForBlocking(queryString, true, "i");
         }
     });
 }
@@ -603,16 +624,13 @@ function googleSearchVideos(_a) {
             return;
         }
         yield ContentScript.getSearchElement();
-        const queryString = ".g:not([data-processed])";
-        if (ContentScript.searchResultsContainer) {
-            ContentScript.processSearchResultsForBlocking(queryString, false, "v");
-            new MutationObserver(() => {
-                ContentScript.processSearchResultsForBlocking(queryString, false, "v");
-            }).observe(ContentScript.searchResultsContainer, {
-                childList: true,
-                subtree: true,
-            });
-        }
+        ContentScript.processVideosForBlocking();
+        new MutationObserver(() => {
+            ContentScript.processVideosForBlocking();
+        }).observe(ContentScript.searchResultsContainer, {
+            childList: true,
+            subtree: true,
+        });
     });
 }
 
@@ -721,7 +739,6 @@ function callContentScript(googleContentScriptProps) {
         (0,_googleVideos__WEBPACK_IMPORTED_MODULE_2__["default"])(googleContentScriptProps);
     }
     else if (tbm.includes("nws")) {
-        console.log("d");
         (0,_googleNews__WEBPACK_IMPORTED_MODULE_3__["default"])(googleContentScriptProps);
     }
     else if (udm.includes("2")) {

@@ -899,7 +899,6 @@ const CodeMirrorEditor = () => {
             .map(([url]) => `${url}`)
             .join("\n");
         setInitialDoc(newInitialDoc);
-        console.log(newInitialDoc);
     }, [blockedUrls]);
     //Show a popup if the user tries to leave the page with unsaved changes in the editor
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
@@ -930,7 +929,6 @@ const CodeMirrorEditor = () => {
                 }
             });
             chrome.storage.local.set({ blockedUrlData: newBlockedUrlData }, () => {
-                console.log("URL data saved");
                 setBlockedUrls(newBlockedUrlData);
             });
         }
@@ -1196,17 +1194,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _helpButton_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./helpButton.css */ "./src/components/helpButton/helpButton.css");
-Object(function webpackMissingModule() { var e = new Error("Cannot find module '../../useDarkMode'"); e.code = 'MODULE_NOT_FOUND'; throw e; }());
-
 
 
 
 function HelpButton({ helpElement }) {
     const [isHelpVisible, setIsHelpVisible] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
     const helpDialog = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
-    const isDarkMode = Object(function webpackMissingModule() { var e = new Error("Cannot find module '../../useDarkMode'"); e.code = 'MODULE_NOT_FOUND'; throw e; }())();
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-        console.log(isDarkMode + " dark mode");
         if (!helpDialog.current) {
             return;
         }
@@ -1328,7 +1322,6 @@ const App = () => {
             setActiveSection(section);
         }
         chrome.storage.local.get(["blockedUrlData"], (result) => {
-            console.log("Retrieved from storage:", result.blockedUrlData);
             if (result.blockedUrlData) {
                 setBlockedUrls(result.blockedUrlData);
             }
@@ -1362,7 +1355,7 @@ const App = () => {
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
         const messageListener = (message) => {
             if (message.type === "SLIDER_CHANGED") {
-                chrome.storage.local.get([message.key], (result) => { });
+                chrome.storage.local.get([message.key], (_result) => { });
             }
         };
         chrome.runtime.onMessage.addListener(messageListener);
@@ -1404,7 +1397,7 @@ const App = () => {
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "card" },
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("header", null,
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "container" },
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", { className: "logo", src: "logoApp.png", alt: "logo" }),
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", { className: "logo", src: "logoApp.png", alt: "logo", title: "Search Sanitizer" }),
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "header-wrapper" },
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: `container image-offset button ${activeSection === "blockedSites" ? "active" : ""}`, onClick: () => setActiveSectionAndUpdateURL("blockedSites") },
                             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", null, "Blocked Sites")),

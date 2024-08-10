@@ -22,7 +22,6 @@ const CodeMirrorEditor: React.FC = () => {
       .map(([url]) => `${url}`)
       .join("\n")
     setInitialDoc(newInitialDoc)
-    console.log(newInitialDoc)
   }, [blockedUrls])
 
   //Show a popup if the user tries to leave the page with unsaved changes in the editor
@@ -58,7 +57,6 @@ const CodeMirrorEditor: React.FC = () => {
       })
 
       chrome.storage.local.set({ blockedUrlData: newBlockedUrlData }, () => {
-        console.log("URL data saved")
         setBlockedUrls(newBlockedUrlData)
       })
     }

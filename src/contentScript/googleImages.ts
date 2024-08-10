@@ -14,12 +14,13 @@ export default async function googleSearchImages({
   }
 
   await ContentScript.getSearchElement()
-  const queryString: string = ".ivg-i:not([data-processed])"
-  ContentScript.processSearchResultsForBlocking(queryString, false, "i")
+  ContentScript.processImagesForBlocking()
+  ContentScript.processTopAddsForBlocking()
 
   if (ContentScript.searchResultsContainer) {
     new MutationObserver(() => {
-      ContentScript.processSearchResultsForBlocking(queryString, false, "i")
+      ContentScript.processImagesForBlocking()
+      ContentScript.processTopAddsForBlocking()
     }).observe(ContentScript.searchResultsContainer, {
       childList: true,
       subtree: true,

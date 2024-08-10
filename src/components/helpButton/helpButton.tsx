@@ -1,7 +1,6 @@
 import React from "react"
 import { useEffect, useRef, useState } from "react"
 import "./helpButton.css"
-import { useDarkMode } from "../../useDarkMode"
 
 interface HelpButtonProps {
   helpElement: React.ReactNode
@@ -9,9 +8,7 @@ interface HelpButtonProps {
 export default function HelpButton({ helpElement }: HelpButtonProps) {
   const [isHelpVisible, setIsHelpVisible] = useState(false)
   const helpDialog = useRef<HTMLDialogElement>(null)
-  const isDarkMode = useDarkMode()
   useEffect(() => {
-    console.log(isDarkMode + " dark mode")
     if (!helpDialog.current) {
       return
     }

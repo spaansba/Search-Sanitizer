@@ -272,9 +272,7 @@ const App = () => {
     (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
         const messageListener = (message) => {
             if (message.type === "SLIDER_CHANGED") {
-                chrome.storage.local.get([message.key], (result) => {
-                    console.log(`Slider ${message.key} changed to ${result[message.key]}`);
-                });
+                chrome.storage.local.get([message.key], (_result) => { });
             }
         };
         chrome.runtime.onMessage.addListener(messageListener);
@@ -307,8 +305,9 @@ const App = () => {
                     const updatedBlockedUrls = Object.assign({}, result.blockedUrlData);
                     updatedBlockedUrls[urlToAdd] = {
                         i: 0,
-                        s: 0,
+                        w: 0,
                         v: 0,
+                        n: 0,
                     };
                     chrome.storage.local.set({ blockedUrlData: updatedBlockedUrls });
                 }

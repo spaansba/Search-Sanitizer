@@ -28,7 +28,6 @@ const App: React.FC = () => {
       setActiveSection(section)
     }
     chrome.storage.local.get(["blockedUrlData"], (result) => {
-      console.log("Retrieved from storage:", result.blockedUrlData)
       if (result.blockedUrlData) {
         setBlockedUrls(result.blockedUrlData)
       }
@@ -66,7 +65,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const messageListener = (message: { type: string; key: any }) => {
       if (message.type === "SLIDER_CHANGED") {
-        chrome.storage.local.get([message.key], (result) => {})
+        chrome.storage.local.get([message.key], (_result) => {})
       }
     }
     chrome.runtime.onMessage.addListener(messageListener)
@@ -143,7 +142,7 @@ const App: React.FC = () => {
       <div className="card">
         <header>
           <div className="container">
-            <img className="logo" src="logoApp.png" alt="logo" />
+            <img className="logo" src="logoApp.png" alt="logo" title="Search Sanitizer" />
 
             <div className="header-wrapper">
               <div
