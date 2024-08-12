@@ -2,14 +2,14 @@ import { googleContentScriptProps } from "."
 import { GoogleScriptService } from "./contentScript"
 
 export default async function googleSearchRegular({
-  extensionIsOn,
+  settings,
   urlsDict,
   lifeTimeBlocks,
 }: googleContentScriptProps) {
-  const ContentScript = new GoogleScriptService(urlsDict, extensionIsOn, lifeTimeBlocks)
+  const ContentScript = new GoogleScriptService(urlsDict, settings, lifeTimeBlocks)
 
   // We check extension is on here so GoogleScriptService still loads custom top of page element that shows the extension is turned off
-  if (!extensionIsOn) {
+  if (!settings.extensionIsOn) {
     return
   }
 
@@ -18,6 +18,7 @@ export default async function googleSearchRegular({
   ContentScript.processRegularForBlocking()
   ContentScript.processImagesForBlocking()
   ContentScript.processTopAddsForBlocking()
+  ContentScript.processRecipes()
 
   if (ContentScript.searchResultsContainer) {
     new MutationObserver(() => {
@@ -25,6 +26,7 @@ export default async function googleSearchRegular({
       ContentScript.processImagesForBlocking()
       ContentScript.processTopAddsForBlocking()
       setTimeout(() => processRelatedQuestionsForBlocking(), 500) //TODO fix need for 500 timeout
+      ContentScript.processRecipes()
     }).observe(ContentScript.searchResultsContainer, {
       childList: true,
       subtree: true,
@@ -32,24 +34,23 @@ export default async function googleSearchRegular({
   }
 
   function processRelatedQuestionsForBlocking() {
+    if (!settings.blockWeb) {
+      return
+    }
+
     const moreToAskSections = ContentScript.searchResultsContainer?.querySelectorAll("[data-initq]")
     moreToAskSections?.forEach((askSection) => {
       const relatedQuestions = askSection.querySelectorAll(
         ".related-question-pair:not([data-processed])"
       )
-      relatedQuestions.forEach((relatedQuestion) => {
-        if (ContentScript.processedResults.has(relatedQuestion)) {
-          return
-        }
 
-        ContentScript.processedResults.add(relatedQuestion)
+      relatedQuestions.forEach((relatedQuestion) => {
         relatedQuestion.setAttribute("data-processed", "true")
         if (
           ContentScript.checkLinksForBlockedUrls(relatedQuestion, true, "w", "related Q") ||
           ContentScript.checkCitesForBlockedUrls(relatedQuestion, true, "w", "related Q")
         ) {
           console.log("block ", relatedQuestion)
-
           ContentScript.markElementAsBlocked(relatedQuestion as HTMLElement)
         }
       })

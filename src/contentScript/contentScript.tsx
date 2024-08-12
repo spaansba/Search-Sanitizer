@@ -1,10 +1,10 @@
+import type { contentRelatedSettings } from "."
 import { addTopOfPage, updateBlockedCount } from "../components/topPage"
 import { blockCategories, BlockedUrlDataLocal, searchCategories } from "../types"
 import { BlockedCountUpdateManager } from "./blockedCountUpdateManager"
 
 export class GoogleScriptService {
   searchResultsContainer: Element
-  processedResults: Set<Element> = new Set()
   private _blockedCount: number = 0
   public get blockedCount(): number {
     return this._blockedCount
@@ -17,17 +17,17 @@ export class GoogleScriptService {
     this._resultsAreHidden = value
     this.updateBlockedElementsVisibility()
   }
-  private isExtensionOn: boolean = true
+  private settings: contentRelatedSettings
   blockedUrlsDict: { blockedUrlData: BlockedUrlDataLocal }
   private updateManager: BlockedCountUpdateManager
 
   constructor(
     blockedUrlsDict: { blockedUrlData: BlockedUrlDataLocal },
-    isExtensionOn: boolean,
+    settings: contentRelatedSettings,
     lifeTimeBlocks: blockCategories
   ) {
     this.blockedUrlsDict = blockedUrlsDict
-    this.isExtensionOn = isExtensionOn
+    this.settings = settings
     this.addDocumentHead()
     this.addEventListeners()
     this.updateManager = new BlockedCountUpdateManager(
@@ -63,7 +63,7 @@ export class GoogleScriptService {
         () => this.resultsAreHidden,
         (value) => this.setBlockedElementsVisibility(value),
         this.blockedCount,
-        this.isExtensionOn
+        this.settings.extensionIsOn
       )
     })
   }
@@ -201,11 +201,6 @@ export class GoogleScriptService {
     const searchResults = containerToSearchIn.querySelectorAll(queryString)
 
     searchResults?.forEach((searchElement) => {
-      if (this.processedResults.has(searchElement)) {
-        return
-      }
-
-      this.processedResults.add(searchElement)
       searchElement.setAttribute("data-processed", "true")
 
       if (
@@ -235,8 +230,8 @@ export class GoogleScriptService {
   ): boolean {
     const links = searchElement.querySelectorAll("a")
     for (const link of links) {
-      if (link.href && this.shouldUrlBeBlocked(link.href, searchCategory, origin)) {
-        if (blockInvisibleElements || this.isElementVisible(link)) {
+      if (blockInvisibleElements || this.isElementVisible(link)) {
+        if (link.href && this.shouldUrlBeBlocked(link.href, searchCategory, origin)) {
           return true
         }
       }
@@ -253,16 +248,14 @@ export class GoogleScriptService {
     const cites = searchElement.querySelectorAll("cite")
     for (const cite of cites) {
       let url = cite.textContent?.split(" ")[0] // Get first text in cite (it concatenates all descendants)
-      console.log(url)
-
       if (url) {
         // Add 'https://' if the URL doesn't start with 'http://' or 'https://'
         if (!/^https?:\/\//i.test(url)) {
           url = "https://" + url
         }
 
-        if (this.shouldUrlBeBlocked(url, searchCategory, origin)) {
-          if (blockInvisibleElements || this.isElementVisible(cite)) {
+        if (blockInvisibleElements || this.isElementVisible(cite)) {
+          if (this.shouldUrlBeBlocked(url, searchCategory, origin)) {
             return true
           }
         }
@@ -273,29 +266,46 @@ export class GoogleScriptService {
 
   // Block invis elements as well as sometimes they load in the "all image" section before the user sees them
   processImagesForBlocking() {
-    const queryString: string = ".ivg-i:not([data-processed])"
-    this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, true, "i")
+    if (this.settings.blockImage) {
+      const queryString: string = ".ivg-i:not([data-processed])"
+      this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, true, "i")
+    }
   }
 
   // Blocks the top scrollbar of adds at the top of the product / regular / image page
   processTopAddsForBlocking() {
-    const queryString: string = ".mnr-c.pla-unit:not([data-processed])"
-    this.processSearchResultsForBlocking(queryString, document.body, false, "i")
+    if (this.settings.blockAds) {
+      const queryString: string = ".mnr-c.pla-unit:not([data-processed])"
+      this.processSearchResultsForBlocking(queryString, document.body, false, "i")
+    }
   }
 
   processNewsForBlocking() {
-    const queryString: string = ".SoaBEf:not([data-processed])"
-    this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, false, "n")
+    if (this.settings.blockNews) {
+      const queryString: string = ".SoaBEf:not([data-processed])"
+      this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, false, "n")
+    }
   }
 
   processVideosForBlocking() {
-    const queryString: string = ".g:not([data-processed])"
-    this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, false, "v")
+    if (this.settings.blockVideo) {
+      const queryString: string = ".g:not([data-processed])"
+      this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, false, "v")
+    }
   }
 
   processRegularForBlocking() {
-    const queryString: string =
-      ".g:not([data-processed]):not([data-initq]:not(.ivg-i):not(.related-question-pair)"
-    this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, false, "w")
+    if (this.settings.blockWeb) {
+      const queryString: string =
+        ".g:not([data-processed]):not([data-initq]:not(.ivg-i):not(.related-question-pair)"
+      this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, false, "w")
+    }
+  }
+
+  processRecipes() {
+    if (this.settings.blockRecipe) {
+      const queryString: string = ".F6H0Gb.h2UtUe:not([data-processed])"
+      this.processSearchResultsForBlocking(queryString, this.searchResultsContainer, false, "w")
+    }
   }
 }

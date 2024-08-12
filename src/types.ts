@@ -1,7 +1,8 @@
 export type UserSettings = {
   settingName: string
   googleStorageKey: string
-  refreshPageOnUpdate: boolean
+  title: string
+  refreshPageOnUpdate?: boolean
 }
 
 ///

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import {
   isValidMatchPattern,
   isValidUrl,
@@ -10,10 +10,9 @@ import "./urlInput.css"
 interface UrlInputProps {
   handleClose: () => void
   addBlockedUrl: (url: string) => void
-  addCurrentUrl: boolean
 }
 
-export default function UrlInput({ handleClose, addBlockedUrl, addCurrentUrl }: UrlInputProps) {
+export default function UrlInput({ handleClose, addBlockedUrl }: UrlInputProps) {
   const [inputValue, setInputValue] = useState<string>("")
   const urlInput = useRef<HTMLInputElement>(null)
   const [tabUrl, setTabUrl] = useState<URL>()
@@ -21,27 +20,23 @@ export default function UrlInput({ handleClose, addBlockedUrl, addCurrentUrl }: 
   const [inputIsValid, setInputIsValid] = useState<boolean>()
   const addButton = useRef<HTMLButtonElement>(null)
 
-  // If we use urlInput.current everywhere we would get "'urlInput.current' is possibly 'null'." everywhere
-  const getInputElement = useCallback(() => {
-    if (!urlInput.current) {
-      throw new Error("urlInput is not available")
-    }
-    return urlInput.current
-  }, [])
-
   function onHandleAlternative(Alternative: string) {
+    if (!urlInput.current) {
+      return
+    }
     setInputValue(Alternative.trim())
-    getInputElement().value = Alternative
-    getInputElement().focus()
+    urlInput.current.value = Alternative
+    urlInput.current.focus()
   }
 
   useEffect(() => {
-    if (tabUrl) {
-      getInputElement().value = tabUrl.hostname
-      setInputAlternatives(getUrlAlternatives())
-      getInputElement().focus()
+    if (!tabUrl || !urlInput.current) {
+      return
     }
-  }, [tabUrl, getInputElement])
+    urlInput.current.value = tabUrl.hostname
+    setInputAlternatives(getUrlAlternatives())
+    urlInput.current.focus()
+  }, [tabUrl])
 
   useEffect(() => {
     setInputAlternatives(getUrlAlternatives)
@@ -49,25 +44,22 @@ export default function UrlInput({ handleClose, addBlockedUrl, addCurrentUrl }: 
   }, [inputValue])
 
   useEffect(() => {
-    // If we don't want the current url in the blocked site input (e.g. option page)
-    if (!addCurrentUrl) {
-      return
-    }
-
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]?.url) {
         const newTabUrl: URL = new URL(tabs[0].url)
 
-        // Check if the URL is from Google, if so dont add it to the preview
-        if (!newTabUrl.hostname.includes("google")) {
+        // Check if the URL is from Google and if the protocol is an actual website, if so dont add it to the preview
+        if (!newTabUrl.hostname.includes("google") && newTabUrl.protocol.includes("http")) {
           setTabUrl(newTabUrl)
           setInputValue(newTabUrl.hostname)
           setInputAlternatives(getUrlAlternatives())
         }
-        getInputElement().focus()
+        if (urlInput.current) {
+          urlInput.current.focus()
+        }
       }
     })
-  }, [addCurrentUrl])
+  })
 
   const handleAddNewUrl = () => {
     if (inputIsValid) {
@@ -77,10 +69,13 @@ export default function UrlInput({ handleClose, addBlockedUrl, addCurrentUrl }: 
   }
 
   const handleInputChange = () => {
-    if (inputValue === getInputElement().value) {
+    if (!urlInput.current) {
       return
     }
-    setInputValue(getInputElement().value.trim())
+    if (inputValue === urlInput.current.value) {
+      return
+    }
+    setInputValue(urlInput.current.value.trim())
   }
 
   function getUrlAlternatives(): string[] {

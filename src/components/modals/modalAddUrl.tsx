@@ -47,11 +47,7 @@ export default function ModalAddUrl({ isOpen, onClose }: ModalAddUrlProps) {
   return (
     <dialog className="dialog-container" ref={dialogRef} onClose={handleClose}>
       <h1>Add new URL to block</h1>
-      <UrlInput
-        handleClose={handleClose}
-        addBlockedUrl={addBlockedUrl}
-        addCurrentUrl={false}
-      ></UrlInput>
+      <UrlInput handleClose={handleClose} addBlockedUrl={addBlockedUrl}></UrlInput>
     </dialog>
   )
 }

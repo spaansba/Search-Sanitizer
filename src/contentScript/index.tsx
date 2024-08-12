@@ -4,14 +4,24 @@ import googleSearchImages from "./googleImages"
 import googleSearchVideos from "./googleVideos"
 import googleSearchNews from "./googleNews"
 
-export interface googleContentScriptProps {
+export interface contentRelatedSettings {
   extensionIsOn: boolean
+  blockAds: boolean
+  blockImage: boolean
+  blockNews: boolean
+  blockRecipe: boolean
+  blockVideo: boolean
+  blockWeb: boolean
+}
+
+export interface googleContentScriptProps {
+  settings: contentRelatedSettings
   urlsDict: { blockedUrlData: BlockedUrlDataLocal }
   lifeTimeBlocks: blockCategories
 }
 
 async function initializeContentScript() {
-  const extensionIsOn: boolean = await isExtensionOn()
+  const settings = await isExtensionOn()
   const urlsDict = await getBlockedUrl()
   const lifeTimeBlocks = await getLifeTimeBlockedUrl()
 
@@ -19,7 +29,7 @@ async function initializeContentScript() {
     return
   }
 
-  callContentScript({ extensionIsOn, urlsDict, lifeTimeBlocks })
+  callContentScript({ settings, urlsDict, lifeTimeBlocks })
 }
 
 function callContentScript(googleContentScriptProps: googleContentScriptProps) {
@@ -40,9 +50,31 @@ function callContentScript(googleContentScriptProps: googleContentScriptProps) {
   }
 }
 
-async function isExtensionOn(): Promise<boolean> {
-  const result = await chrome.storage.local.get("extensionOnOff")
-  return result.extensionOnOff as boolean
+async function isExtensionOn(): Promise<googleContentScriptProps["settings"]> {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(
+      [
+        "extensionIsOn",
+        "blockAds",
+        "blockImage",
+        "blockNews",
+        "blockRecipe",
+        "blockVideo",
+        "blockWeb",
+      ],
+      (result: { [key: string]: boolean }) => {
+        resolve({
+          extensionIsOn: result.extensionIsOn ?? true,
+          blockAds: result.blockAds ?? false,
+          blockImage: result.blockImage ?? false,
+          blockNews: result.blockNews ?? false,
+          blockRecipe: result.blockRecipe ?? false,
+          blockVideo: result.blockVideo ?? false,
+          blockWeb: result.blockWeb ?? false,
+        })
+      }
+    )
+  })
 }
 
 async function getBlockedUrl(): Promise<{ blockedUrlData: BlockedUrlDataLocal }> {

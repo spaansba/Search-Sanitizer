@@ -126,7 +126,7 @@ const App: React.FC = () => {
             add in bulk
           </p>
         </div>
-        <UrlInput handleClose={handleClose} addBlockedUrl={addBlockedUrl} addCurrentUrl={true} />
+        <UrlInput handleClose={handleClose} addBlockedUrl={addBlockedUrl} />
       </div>
       <div id="bottom-section">
         <BlockedSvgContainer

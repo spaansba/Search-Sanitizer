@@ -103,9 +103,9 @@ export function addTopOfPage(
 
 function getTitle(blockedCount: number, resultsHidden: boolean): string {
   if (blockedCount < 1) {
-    return `${blockedCount} blocked search results`
+    return `${blockedCount} hidden search results`
   } else {
-    return `${blockedCount} blocked search results. Click to ${
+    return `${blockedCount} hidden search results. Click to ${
       !resultsHidden ? "show" : "hide"
     } them again`
   }

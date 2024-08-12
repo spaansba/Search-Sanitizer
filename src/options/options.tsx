@@ -47,16 +47,53 @@ const App: React.FC = () => {
     window.history.pushState({}, "", url)
   }
 
-  const allSettings: UserSettings[] = [
+  const generalSettings: UserSettings[] = [
     {
       settingName: "Extension on",
       googleStorageKey: "extensionOnOff",
-      refreshPageOnUpdate: false,
+      title: "Turn the extension on or off",
     },
     {
       settingName: "Dark mode",
       googleStorageKey: "darkMode",
+      title: "Switch to dark mode",
       refreshPageOnUpdate: true,
+    },
+  ]
+
+  const blockSettings: UserSettings[] = [
+    {
+      settingName: "Block websites",
+      googleStorageKey: "blockWeb",
+      title:
+        "Hides entire websites from the search results, includes the <Related Questions> section ",
+    },
+    {
+      settingName: "Block images",
+      googleStorageKey: "blockImage",
+      title: "Hides images from the search results",
+    },
+    {
+      settingName: "Block videos",
+      googleStorageKey: "blockVideo",
+      title:
+        "Hides videos in the dedicated video section in search results. Does not affect videos appearing in regular web results",
+    },
+    {
+      settingName: "Block news",
+      googleStorageKey: "blockNews",
+      title:
+        "Hides results in the dedicated news section in search results. Does not affect news articles appearing in regular web results",
+    },
+    {
+      settingName: "Block recipes",
+      googleStorageKey: "blockRecipe",
+      title: "Hides recipes from the search results",
+    },
+    {
+      settingName: "Block ads",
+      googleStorageKey: "blockAds",
+      title: "Hides adds from the search results",
     },
   ]
 
@@ -97,11 +134,15 @@ const App: React.FC = () => {
         return (
           <>
             <h2 className="top-h2">General Settings</h2>
-            {allSettings.map((setting, index) => (
-              <div key={index} className="settings-item-container">
+            {generalSettings.map((setting) => (
+              <div
+                key={setting.googleStorageKey}
+                className="settings-item-container"
+                title={setting.title}
+              >
                 <p>{setting.settingName}</p>
                 <div className="slider">
-                  <OnOffSlider id={index.toString()} setting={setting} />
+                  <OnOffSlider id={setting.googleStorageKey} setting={setting} />
                 </div>
               </div>
             ))}
@@ -128,6 +169,19 @@ const App: React.FC = () => {
                 </svg>
               </div>
             </div>
+            <h2 className="top-h2">Block Settings</h2>
+            {blockSettings.map((setting) => (
+              <div
+                key={setting.googleStorageKey}
+                className="settings-item-container"
+                title={setting.title}
+              >
+                <p>{setting.settingName}</p>
+                <div className="slider">
+                  <OnOffSlider id={setting.googleStorageKey} setting={setting} />
+                </div>
+              </div>
+            ))}
           </>
         )
     }

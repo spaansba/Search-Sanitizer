@@ -1,45 +1,52 @@
 interface StorageData {
-  extensionOnOff?: boolean
-  darkMode?: boolean
-  lifetimeTotalBlocks?: {
+  extensionOnOff: boolean
+  darkMode: boolean
+  lifetimeTotalBlocks: {
     i: number
     n: number
     v: number
     w: number
   }
-  blockedUrlData?: Record<string, any>
+  blockedUrlData: Record<string, any>
+  blockAds: boolean
+  blockImage: boolean
+  blockNews: boolean
+  blockRecipe: boolean
+  blockVideo: boolean
+  blockWeb: boolean
 }
 
 chrome.runtime.onInstalled.addListener(() => {
-  // Check and set local storage values only if they don't exist
-  chrome.storage.local.get(
-    ["extensionOnOff", "darkMode", "lifetimeTotalBlocks", "blockedUrlData"],
-    (result: StorageData) => {
-      const valuesToSet: StorageData = {}
+  // Define default values
+  const defaultValues: StorageData = {
+    extensionOnOff: true,
+    darkMode: false,
+    lifetimeTotalBlocks: { i: 0, n: 0, v: 0, w: 0 },
+    blockedUrlData: {},
+    blockAds: true,
+    blockImage: true,
+    blockNews: true,
+    blockRecipe: true,
+    blockVideo: true,
+    blockWeb: true,
+  }
 
-      if (result.extensionOnOff === undefined) {
-        valuesToSet.extensionOnOff = true
-      }
+  // Check and set local storage values
+  chrome.storage.local.get(Object.keys(defaultValues), (result: { [key: string]: any }) => {
+    const valuesToSet: Partial<StorageData> = {}
 
-      if (result.darkMode === undefined) {
-        valuesToSet.darkMode = false
-      }
-
-      if (result.lifetimeTotalBlocks === undefined) {
-        valuesToSet.lifetimeTotalBlocks = { i: 0, n: 0, v: 0, w: 0 }
-      }
-
-      if (result.blockedUrlData === undefined) {
-        valuesToSet.blockedUrlData = {}
-      }
-
-      if (Object.keys(valuesToSet).length > 0) {
-        chrome.storage.local.set(valuesToSet, () => {
-          console.log("Initial values set in local storage")
-        })
+    for (const [key, defaultValue] of Object.entries(defaultValues)) {
+      if (result[key] === undefined) {
+        valuesToSet[key as keyof StorageData] = defaultValue
       }
     }
-  )
+
+    if (Object.keys(valuesToSet).length > 0) {
+      chrome.storage.local.set(valuesToSet, () => {
+        console.log("Initial values set in local storage")
+      })
+    }
+  })
 
   chrome.action.setBadgeBackgroundColor({ color: "#666665" })
   chrome.action.setBadgeTextColor({ color: "#fff" })
