@@ -14,7 +14,7 @@
     "default_title": "Search Sanitizer",
     "default_icon": "logoApp.png"
   },
-  "permissions": ["declarativeNetRequest", "storage", "contextMenus", "notifications", "tabs"],
+  "permissions": ["storage", "contextMenus", "tabs"],
   "options_ui": {
     "open_in_tab": true,
     "page": "options.html"
