@@ -10,7 +10,7 @@ Open source Google Chrome extension that blocks URLs from showing up in your Goo
 ```
 git clone https://github.com/spaansba/Search-Sanitizer.git
 
-cd ublacklist
+cd Search-Sanitizer
 
 npm install
 
