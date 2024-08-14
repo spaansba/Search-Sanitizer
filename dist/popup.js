@@ -320,7 +320,7 @@ const App = () => {
     const ExtensionOnOffSetting = {
         settingName: "Extension on",
         googleStorageKey: "extensionOnOff",
-        refreshPageOnUpdate: false,
+        title: "Turn extension off/on",
     };
     return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "popup-container" },
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "entire-top-bar" },

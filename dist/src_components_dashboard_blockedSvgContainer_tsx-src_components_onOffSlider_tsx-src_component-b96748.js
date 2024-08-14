@@ -567,7 +567,7 @@ function UrlInput({ handleClose, addBlockedUrl }) {
                 }
             }
         });
-    });
+    }, []);
     const handleAddNewUrl = () => {
         if (inputIsValid) {
             addBlockedUrl(inputValue);

@@ -59,7 +59,7 @@ export default function UrlInput({ handleClose, addBlockedUrl }: UrlInputProps) 
         }
       }
     })
-  })
+  }, [])
 
   const handleAddNewUrl = () => {
     if (inputIsValid) {

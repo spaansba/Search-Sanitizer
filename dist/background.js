@@ -51,12 +51,6 @@ chrome.runtime.onMessage.addListener((message) => {
             break;
     }
 });
-// Reset the badge when a new page starts loading
-chrome.tabs.onUpdated.addListener((_tabId, changeInfo, _tab) => {
-    if (changeInfo.status === "loading") {
-        chrome.action.setBadgeText({ text: "" });
-    }
-});
 chrome.contextMenus.onClicked.addListener((info) => {
     switch (info.menuItemId) {
         case "AddCurrentURL":

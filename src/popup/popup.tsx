@@ -81,7 +81,7 @@ const App: React.FC = () => {
   const ExtensionOnOffSetting: UserSettings = {
     settingName: "Extension on",
     googleStorageKey: "extensionOnOff",
-    refreshPageOnUpdate: false,
+    title: "Turn extension off/on",
   }
 
   return (
