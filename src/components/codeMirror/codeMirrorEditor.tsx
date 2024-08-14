@@ -10,6 +10,7 @@ import { urlLinter } from "./codeMirrorLinter"
 import type { BlockedUrlDataLocal } from "../../types"
 import { BlockedUrlsContext } from "../../options/options"
 import "./codeMirrorEditor.css"
+import { transformUserInputToValidURL } from "../../helper/urlHelpers"
 
 const CodeMirrorEditor: React.FC = () => {
   const editorViewRef = useRef<EditorView | null>(null)
@@ -45,6 +46,7 @@ const CodeMirrorEditor: React.FC = () => {
       const newBlockedUrlData: BlockedUrlDataLocal = {}
 
       docValues.forEach((url) => {
+        url = transformUserInputToValidURL(url)
         url = url.trim()
         if (url) {
           newBlockedUrlData[url] = {

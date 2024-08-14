@@ -663,16 +663,14 @@ function formatCount(count) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   isPatternUrl: () => (/* binding */ isPatternUrl),
+/* harmony export */   isPatternWildcard: () => (/* binding */ isPatternWildcard),
 /* harmony export */   isValidMatchPattern: () => (/* binding */ isValidMatchPattern),
 /* harmony export */   isValidUrl: () => (/* binding */ isValidUrl),
 /* harmony export */   stringToMatchPattern: () => (/* binding */ stringToMatchPattern),
 /* harmony export */   stringToUrl: () => (/* binding */ stringToUrl),
 /* harmony export */   transformUserInputToValidURL: () => (/* binding */ transformUserInputToValidURL)
 /* harmony export */ });
-function isValidMatchPattern(input) {
-    const matchPatternRegex = /^(?:(?:\*|https?|ftp):\/\/(?:\*|(?:\*\.)?[^/*]+)(?:\/.*)?|\*:\/\/.*)$/;
-    return matchPatternRegex.test(input);
-}
 // When we enter a blocked site via popup or option page do the following:
 // if "www." then replace it with "*://*."
 // if doesnt start with http and is not a valid match pattern than add "*://*."
@@ -702,10 +700,14 @@ function isValidUrl(input) {
     const urlRegex = /^(www\.[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+(?:\/.*)?|[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+(?:\/.*)?|https:\/\/www\.[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+(?:\/.*)?|https?:\/\/[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+(?:\/.*)?|file:\/\/\/.*)$/;
     return urlRegex.test(input);
 }
+function isValidMatchPattern(input) {
+    const matchPatternRegex = /^(?:(?:\*|https?|ftp):\/\/(?:\*|(?:\*\.)?[^/*]+)(?:\/.*)?|\*:\/\/.*)$/;
+    return matchPatternRegex.test(input);
+}
 function stringToUrl(input) {
     input = input.replace(/^\.|\.$/, ""); // If input starts or ends with . remove it
     if (!isValidUrl(input)) {
-        return input.startsWith("http://") || input.startsWith("https://") ? input : `${input}.com`;
+        return input.startsWith("http") && !isValidMatchPattern(input) ? input : `*://*.${input}.com`;
     }
     else {
         return `${input}`;
@@ -722,6 +724,51 @@ function stringToMatchPattern(input) {
         // If it's just text, treat it as a domain name
         return `*://*.${input}.*`;
     }
+}
+function removeTrailingSlash(s) {
+    return s.endsWith("/") ? s.slice(0, -1) : s;
+}
+function isPatternUrl(url, urlString, pattern) {
+    try {
+        if (!pattern) {
+            return false;
+        }
+        pattern = removeTrailingSlash(pattern.toLowerCase());
+        const patternVariations = [
+            pattern,
+            `www.${pattern}`,
+            `https://${pattern}`,
+            `https://www.${pattern}`,
+            `http://${pattern}`,
+            `http://www.${pattern}`,
+        ];
+        const comparisons = [
+            urlString,
+            url.origin.toLowerCase(),
+            url.host.toLowerCase(),
+            url.hostname.toLowerCase(),
+            removeTrailingSlash(url.href.toLowerCase()),
+        ];
+        for (const comp of comparisons) {
+            for (const variation of patternVariations) {
+                if (comp === variation) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    catch (error) {
+        console.error(`Invalid URL`);
+        return false;
+    }
+}
+function isPatternWildcard(urlString, pattern) {
+    urlString = urlString.toLowerCase();
+    pattern = pattern.toLowerCase();
+    const escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\\\*/g, ".*");
+    const regex = new RegExp(`^${escapedPattern}(/.*)?$`);
+    return regex.test(urlString);
 }
 
 

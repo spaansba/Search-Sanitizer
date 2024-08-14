@@ -1,9 +1,3 @@
-export function isValidMatchPattern(input: string): boolean {
-  const matchPatternRegex = /^(?:(?:\*|https?|ftp):\/\/(?:\*|(?:\*\.)?[^/*]+)(?:\/.*)?|\*:\/\/.*)$/
-
-  return matchPatternRegex.test(input)
-}
-
 // When we enter a blocked site via popup or option page do the following:
 // if "www." then replace it with "*://*."
 // if doesnt start with http and is not a valid match pattern than add "*://*."
@@ -35,10 +29,15 @@ export function isValidUrl(input: string): boolean {
   return urlRegex.test(input)
 }
 
+export function isValidMatchPattern(input: string): boolean {
+  const matchPatternRegex = /^(?:(?:\*|https?|ftp):\/\/(?:\*|(?:\*\.)?[^/*]+)(?:\/.*)?|\*:\/\/.*)$/
+  return matchPatternRegex.test(input)
+}
+
 export function stringToUrl(input: string): string {
   input = input.replace(/^\.|\.$/, "") // If input starts or ends with . remove it
   if (!isValidUrl(input)) {
-    return input.startsWith("http://") || input.startsWith("https://") ? input : `${input}.com`
+    return input.startsWith("http") && !isValidMatchPattern(input) ? input : `*://*.${input}.com`
   } else {
     return `${input}`
   }
@@ -55,4 +54,57 @@ export function stringToMatchPattern(input: string): string {
     // If it's just text, treat it as a domain name
     return `*://*.${input}.*`
   }
+}
+
+function removeTrailingSlash(s: string): string {
+  return s.endsWith("/") ? s.slice(0, -1) : s
+}
+
+export function isPatternUrl(url: URL, urlString: string, pattern: string): boolean {
+  try {
+    if (!pattern) {
+      return false
+    }
+    pattern = removeTrailingSlash(pattern.toLowerCase())
+
+    const patternVariations = [
+      pattern,
+      `www.${pattern}`,
+      `https://${pattern}`,
+      `https://www.${pattern}`,
+      `http://${pattern}`,
+      `http://www.${pattern}`,
+    ]
+
+    const comparisons = [
+      urlString,
+      url.origin.toLowerCase(),
+      url.host.toLowerCase(),
+      url.hostname.toLowerCase(),
+      removeTrailingSlash(url.href.toLowerCase()),
+    ]
+
+    for (const comp of comparisons) {
+      for (const variation of patternVariations) {
+        if (comp === variation) {
+          return true
+        }
+      }
+    }
+
+    return false
+  } catch (error) {
+    console.error(`Invalid URL`)
+    return false
+  }
+}
+
+export function isPatternWildcard(urlString: string, pattern: string): boolean {
+  urlString = urlString.toLowerCase()
+  pattern = pattern.toLowerCase()
+
+  const escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\\\*/g, ".*")
+
+  const regex = new RegExp(`^${escapedPattern}(/.*)?$`)
+  return regex.test(urlString)
 }

@@ -1,5 +1,6 @@
 import type { contentRelatedSettings } from "."
 import { addTopOfPage, updateBlockedCount } from "../components/topPage"
+import { isPatternUrl, isPatternWildcard } from "../helper/urlHelpers"
 import { blockCategories, BlockedUrlDataLocal, searchCategories } from "../types"
 import { BlockedCountUpdateManager } from "./blockedCountUpdateManager"
 
@@ -79,7 +80,7 @@ export class GoogleScriptService {
         [card-relevant="true"] {opacity: 0.3 !important}
       `
     document.head.appendChild(style)
-  } //  [card-show="true"] { display: block !important; }
+  }
 
   private incrementBlockCount(userPattern: string, searchCategory: searchCategories) {
     this._blockedCount++
@@ -111,59 +112,6 @@ export class GoogleScriptService {
     })
   }
 
-  private isPatternUrl(url: URL, urlString: string, pattern: string): boolean {
-    try {
-      if (!pattern) {
-        return false
-      }
-      pattern = this.removeTrailingSlash(pattern.toLowerCase())
-
-      const patternVariations = [
-        pattern,
-        `www.${pattern}`,
-        `https://${pattern}`,
-        `https://www.${pattern}`,
-        `http://${pattern}`,
-        `http://www.${pattern}`,
-      ]
-
-      const comparisons = [
-        urlString,
-        url.origin.toLowerCase(),
-        url.host.toLowerCase(),
-        url.hostname.toLowerCase(),
-        this.removeTrailingSlash(url.href.toLowerCase()),
-      ]
-
-      for (const comp of comparisons) {
-        for (const variation of patternVariations) {
-          if (comp === variation) {
-            return true
-          }
-        }
-      }
-
-      return false
-    } catch (error) {
-      console.error(`Invalid URL`)
-      return false
-    }
-  }
-
-  private removeTrailingSlash(s: string): string {
-    return s.endsWith("/") ? s.slice(0, -1) : s
-  }
-
-  private isPatternWildcard(urlString: string, pattern: string): boolean {
-    urlString = urlString.toLowerCase()
-    pattern = pattern.toLowerCase()
-
-    const escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\\\*/g, ".*")
-
-    const regex = new RegExp(`^${escapedPattern}$`)
-    return regex.test(urlString)
-  }
-
   shouldUrlBeBlocked(
     googleSearchUrl: string,
     searchCategory: searchCategories,
@@ -172,14 +120,14 @@ export class GoogleScriptService {
     const url = new URL(googleSearchUrl)
     for (const pattern of Object.keys(this.blockedUrlsDict.blockedUrlData)) {
       // Here we check if the pattern is an URL and if it matches the current checked URL
-      if (this.isPatternUrl(url, googleSearchUrl, pattern)) {
+      if (isPatternUrl(url, googleSearchUrl, pattern)) {
         console.log(`Blocked URL: ${googleSearchUrl} url pattern: ${pattern} from ${origin}`)
         this.incrementBlockCount(pattern, searchCategory)
         return true
       }
 
       // Here we check if the pattern is a matched Pattern and if it matches the current checked URL
-      if (this.isPatternWildcard(googleSearchUrl, pattern)) {
+      if (isPatternWildcard(googleSearchUrl, pattern)) {
         this.incrementBlockCount(pattern, searchCategory)
         console.log(`Blocked URL: ${url} matched pattern: ${pattern} from ${origin}`)
         return true
@@ -188,17 +136,16 @@ export class GoogleScriptService {
     return false
   }
 
-  private isElementVisible(element: HTMLElement): boolean {
-    return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length)
-  }
-
   processSearchResultsForBlocking(
-    queryString: string, // string we query for
-    containerToSearchIn: Element, // Narrows the search
+    queryString: string,
+    containerToSearchIn: Element,
     blockInvisibleElements: boolean,
     searchCategory: searchCategories
   ) {
     const searchResults = containerToSearchIn.querySelectorAll(queryString)
+    if (searchResults.length > 0) {
+      console.log("search Results ", searchResults)
+    }
 
     searchResults?.forEach((searchElement) => {
       searchElement.setAttribute("data-processed", "true")
@@ -222,6 +169,10 @@ export class GoogleScriptService {
     })
   }
 
+  private isElementVisible(element: HTMLElement): boolean {
+    return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length)
+  }
+
   checkLinksForBlockedUrls(
     searchElement: Element,
     blockInvisibleElements: boolean,
@@ -229,6 +180,7 @@ export class GoogleScriptService {
     origin: string
   ): boolean {
     const links = searchElement.querySelectorAll("a")
+
     for (const link of links) {
       if (blockInvisibleElements || this.isElementVisible(link)) {
         if (link.href && this.shouldUrlBeBlocked(link.href, searchCategory, origin)) {
@@ -276,9 +228,15 @@ export class GoogleScriptService {
   processTopAddsForBlocking() {
     if (this.settings.blockAds) {
       const queryString: string = ".mnr-c.pla-unit:not([data-processed])"
-      this.processSearchResultsForBlocking(queryString, document.body, false, "i")
+      this.processSearchResultsForBlocking(queryString, document.body, true, "i")
     }
   }
+
+  // hard to do since there are no links as the product page just opens a popup instead of a website
+  // processProductsForBlocking() {
+  //   const queryString: string = ".LrTUQ.LPpDAd:not([data-processed])"
+  //   this.processSearchResultsForBlocking(queryString, document.body, true, "i")
+  // }
 
   processNewsForBlocking() {
     if (this.settings.blockNews) {

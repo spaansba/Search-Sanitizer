@@ -477,6 +477,10 @@ header {
   gap: 20px;
 }
 
+.under-header {
+  font-size: 14px;
+}
+
 .image-offset {
   gap: 0.8rem;
 }
@@ -513,15 +517,10 @@ header {
   cursor: pointer;
 }
 
-.settings-item-container > p {
-  display: inline;
+p {
   font-size: 15px;
   color: var(--secondary-text-color);
   user-select: text;
-}
-
-p.under-header {
-  font-size: 12px;
 }
 
 .slider {
@@ -596,7 +595,7 @@ p.under-header {
 .discord-button svg {
   margin-right: 4px;
 }
-`, "",{"version":3,"sources":["webpack://./src/options/options.css"],"names":[],"mappings":"AAAA;EACE,sBAAsB;EACtB,6BAA6B;EAC7B,qCAAqC;EACrC,qBAAqB;EACrB,+BAA+B;EAC/B,0BAA0B;EAC1B,4BAA4B;EAC5B,sBAAsB;EACtB,uBAAuB;EACvB,4BAA4B;EAC5B,+BAA+B;EAC/B,iBAAiB;EACjB,wBAAwB;EACxB,+BAA+B;EAC/B,uEAAuE;EACvE,4EAA4E;EAC5E,2BAA2B;EAC3B,+BAA+B;AACjC;;AAIA,qBAAqB;AACrB;EACE,gCAAgC;EAChC,qCAAqC;EACrC,qBAAqB;EACrB,+BAA+B;EAC/B,0BAA0B;EAC1B,4BAA4B;EAC5B,sBAAsB;EACtB,uBAAuB;EACvB,2BAA2B;EAC3B,kCAAkC;EAClC,uEAAuE;EACvE,wEAAwE;EACxE,wBAAwB;AAC1B;;AAEA;EACE,mDAAmD;EACnD,SAAS;EACT,UAAU;AACZ;;AAEA;EACE,gBAAgB;EAChB,kBAAkB;EAClB,eAAe;EACf,gBAAgB;EAChB,kBAAkB;AACpB;;AAEA;EACE,eAAe;EACf,gBAAgB;EAChB,kBAAkB;AACpB;;AAEA;EACE,aAAa;EACb,sBAAsB;EACtB,uBAAuB;EACvB,0BAA0B;EAC1B,kBAAkB;EAClB,iBAAiB;EACjB,wCAAwC;EACxC,2CAA2C;EAC3C,kBAAkB;EAClB,gBAAgB;AAClB;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,sBAAsB;AACxB;;AAEA;EACE,gBAAgB;EAChB,MAAM;EACN,aAAa;EACb,8CAA8C;EAC9C,yBAAyB;EACzB,4BAA4B;AAC9B;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,kCAAkC;EAClC,gBAAgB;EAChB,eAAe;EACf,iBAAiB;EACjB,SAAS;AACX;;AAEA;EACE,WAAW;AACb;;AAEA;EACE,kBAAkB;AACpB;;AAEA;EACE,YAAY;EACZ,aAAa;EACb,6BAA6B;EAC7B,SAAS;EACT,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,OAAO;EACP,gBAAgB;EAChB,2BAA2B;AAC7B;;AAEA;EACE,mBAAmB;EACnB,gBAAgB;EAChB,aAAa;EACb,mBAAmB;EACnB,mBAAmB;EACnB,4BAA4B;AAC9B;;AAEA;EACE,eAAe;AACjB;;AAEA;EACE,eAAe;EACf,eAAe;EACf,kCAAkC;EAClC,iBAAiB;AACnB;;AAEA;EACE,eAAe;AACjB;;AAEA;EACE,iBAAiB;AACnB;;AAEA;EACE,iCAAiC;AACnC;;AAEA;EACE,SAAS;EACT,YAAY;EACZ,cAAc;EACd,cAAc;EACd,gBAAgB;EAChB,iBAAiB;EACjB,sBAAsB;EACtB,gBAAgB;EAChB,cAAc;EACd,aAAa;AACf;;AAEA;EACE,yBAAyB;EACzB,kCAAkC;EAClC,cAAc;EACd,aAAa;EACb,gBAAgB;EAChB,gBAAgB;AAClB;;AAEA;EACE,wBAAwB;EACxB,kCAAkC;EAClC,sBAAsB;EACtB,gBAAgB;EAChB,YAAY;EACZ,gBAAgB;EAChB,kBAAkB;EAClB,UAAU;AACZ;;AAEA;EACE,WAAW;EACX,gBAAgB;AAClB;;AAEA;EACE,sBAAsB;EACtB,WAAW;EACX,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,WAAW;EACX,mBAAmB;AACrB;;AAEA;EACE,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,iBAAiB;AACnB","sourcesContent":[":root {\r\n  /* Light mode colors */\r\n  --main-background-color: #fff;\r\n  --secondary-background-color: #d1d1cf;\r\n  --text-color: #333333;\r\n  --secondary-text-color: #333333;\r\n  --card-background: #f0f0f0;\r\n  --button-background: #e0e0e0;\r\n  --button-text: #000000;\r\n  --border-color: #cccccc;\r\n  --active-button-color: green;\r\n  font-family: \"Lato\", sans-serif;\r\n  user-select: none;\r\n  color: var(--text-color);\r\n  --dialog-background-color: #fff;\r\n  --blue-card-linear: linear-gradient(rgb(168 222 240), rgb(212 234 247));\r\n  --green-card-linear: linear-gradient(rgb(234, 240, 168), rgb(244, 247, 212));\r\n  --border: 1px solid #acacaa;\r\n  font-family: \"Lato\", sans-serif;\r\n}\r\n\r\n@import url(\"https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap\");\r\n\r\n/* Dark mode colors */\r\n[data-theme=\"dark\"] {\r\n  --main-background-color: #696969;\r\n  --secondary-background-color: #424242;\r\n  --text-color: #000000;\r\n  --secondary-text-color: #000000;\r\n  --card-background: #2c2c2c;\r\n  --button-background: #3a3a3a;\r\n  --button-text: #ffffff;\r\n  --border-color: #444444;\r\n  --active-button-color: #fff;\r\n  --dialog-background-color: #d0d0d0;\r\n  --blue-card-linear: linear-gradient(rgb(113 166 184), rgb(134 157 170));\r\n  --green-card-linear: linear-gradient(rgb(198 204 128), rgb(193 195 166));\r\n  color: var(--text-color);\r\n}\r\n\r\nbody {\r\n  background-color: var(--secondary-background-color);\r\n  margin: 0;\r\n  padding: 0;\r\n}\r\n\r\nh2 {\r\n  margin-top: 22px;\r\n  margin-bottom: 8px;\r\n  font-size: 24px;\r\n  font-weight: 600;\r\n  font-style: normal;\r\n}\r\n\r\nh3 {\r\n  font-size: 20px;\r\n  font-weight: 500;\r\n  font-style: normal;\r\n}\r\n\r\n.card {\r\n  display: flex;\r\n  flex-direction: column;\r\n  width: 790px !important;\r\n  height: calc(100vh - 64px);\r\n  position: relative;\r\n  margin: 32px auto;\r\n  background: var(--main-background-color);\r\n  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.24);\r\n  border-radius: 8px;\r\n  overflow: hidden;\r\n}\r\n\r\n#options-page-container {\r\n  display: flex;\r\n  align-items: center;\r\n  flex-direction: column;\r\n}\r\n\r\nheader {\r\n  position: sticky;\r\n  top: 0;\r\n  z-index: 1000;\r\n  background-color: var(--main-background-color);\r\n  padding: 28px 28px 0.8rem;\r\n  border-bottom: var(--border);\r\n}\r\n\r\n.container {\r\n  display: flex;\r\n  align-items: center;\r\n  color: var(--secondary-text-color);\r\n  font-weight: 400;\r\n  font-size: 22px;\r\n  line-height: 100%;\r\n  gap: 20px;\r\n}\r\n\r\n.image-offset {\r\n  gap: 0.8rem;\r\n}\r\n\r\n.container img {\r\n  margin-right: auto;\r\n}\r\n\r\n.header-wrapper {\r\n  flex-grow: 1;\r\n  display: flex;\r\n  justify-content: space-evenly;\r\n  gap: 2rem;\r\n  font-size: 28px;\r\n  font-weight: 600;\r\n}\r\n\r\n#middle {\r\n  flex: 1;\r\n  overflow-y: auto;\r\n  padding: 6px 28px 28px 28px;\r\n}\r\n\r\n.settings-item-container {\r\n  margin-bottom: 10px;\r\n  margin-top: 10px;\r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: center;\r\n  border-bottom: var(--border);\r\n}\r\n\r\n.button {\r\n  cursor: pointer;\r\n}\r\n\r\n.settings-item-container > p {\r\n  display: inline;\r\n  font-size: 15px;\r\n  color: var(--secondary-text-color);\r\n  user-select: text;\r\n}\r\n\r\np.under-header {\r\n  font-size: 12px;\r\n}\r\n\r\n.slider {\r\n  margin-left: auto;\r\n}\r\n\r\n.active {\r\n  color: var(--active-button-color);\r\n}\r\n\r\n.custom-textarea {\r\n  margin: 0;\r\n  flex-grow: 2;\r\n  flex-shrink: 0;\r\n  display: block;\r\n  white-space: pre;\r\n  word-wrap: normal;\r\n  box-sizing: border-box;\r\n  min-height: 100%;\r\n  padding: 4px 0;\r\n  outline: none;\r\n}\r\n\r\n.blocked-site-container {\r\n  background-color: #202124;\r\n  border: 1px solid rgb(95, 99, 104);\r\n  color: #e8e8d3;\r\n  height: 300px;\r\n  overflow: hidden;\r\n  resize: vertical;\r\n}\r\n\r\n.scroll-container {\r\n  display: flex !important;\r\n  align-items: flex-start !important;\r\n  font-family: monospace;\r\n  line-height: 1.4;\r\n  height: 100%;\r\n  overflow-x: auto;\r\n  position: relative;\r\n  z-index: 0;\r\n}\r\n\r\n.line-number-container {\r\n  width: 30px;\r\n  overflow: hidden;\r\n}\r\n\r\n.buttons {\r\n  background-color: aqua;\r\n  width: 30px;\r\n  height: 40px;\r\n}\r\n\r\n.logo {\r\n  width: 40px;\r\n  height: 40px;\r\n}\r\n\r\n.question-text {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 0.3rem;\r\n  margin-bottom: 10px;\r\n}\r\n\r\n.discord-button {\r\n  cursor: pointer;\r\n  font-weight: 600;\r\n}\r\n\r\n.discord-button svg {\r\n  margin-right: 4px;\r\n}\r\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/options/options.css"],"names":[],"mappings":"AAAA;EACE,sBAAsB;EACtB,6BAA6B;EAC7B,qCAAqC;EACrC,qBAAqB;EACrB,+BAA+B;EAC/B,0BAA0B;EAC1B,4BAA4B;EAC5B,sBAAsB;EACtB,uBAAuB;EACvB,4BAA4B;EAC5B,+BAA+B;EAC/B,iBAAiB;EACjB,wBAAwB;EACxB,+BAA+B;EAC/B,uEAAuE;EACvE,4EAA4E;EAC5E,2BAA2B;EAC3B,+BAA+B;AACjC;;AAIA,qBAAqB;AACrB;EACE,gCAAgC;EAChC,qCAAqC;EACrC,qBAAqB;EACrB,+BAA+B;EAC/B,0BAA0B;EAC1B,4BAA4B;EAC5B,sBAAsB;EACtB,uBAAuB;EACvB,2BAA2B;EAC3B,kCAAkC;EAClC,uEAAuE;EACvE,wEAAwE;EACxE,wBAAwB;AAC1B;;AAEA;EACE,mDAAmD;EACnD,SAAS;EACT,UAAU;AACZ;;AAEA;EACE,gBAAgB;EAChB,kBAAkB;EAClB,eAAe;EACf,gBAAgB;EAChB,kBAAkB;AACpB;;AAEA;EACE,eAAe;EACf,gBAAgB;EAChB,kBAAkB;AACpB;;AAEA;EACE,aAAa;EACb,sBAAsB;EACtB,uBAAuB;EACvB,0BAA0B;EAC1B,kBAAkB;EAClB,iBAAiB;EACjB,wCAAwC;EACxC,2CAA2C;EAC3C,kBAAkB;EAClB,gBAAgB;AAClB;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,sBAAsB;AACxB;;AAEA;EACE,gBAAgB;EAChB,MAAM;EACN,aAAa;EACb,8CAA8C;EAC9C,yBAAyB;EACzB,4BAA4B;AAC9B;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,kCAAkC;EAClC,gBAAgB;EAChB,eAAe;EACf,iBAAiB;EACjB,SAAS;AACX;;AAEA;EACE,eAAe;AACjB;;AAEA;EACE,WAAW;AACb;;AAEA;EACE,kBAAkB;AACpB;;AAEA;EACE,YAAY;EACZ,aAAa;EACb,6BAA6B;EAC7B,SAAS;EACT,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,OAAO;EACP,gBAAgB;EAChB,2BAA2B;AAC7B;;AAEA;EACE,mBAAmB;EACnB,gBAAgB;EAChB,aAAa;EACb,mBAAmB;EACnB,mBAAmB;EACnB,4BAA4B;AAC9B;;AAEA;EACE,eAAe;AACjB;;AAEA;EACE,eAAe;EACf,kCAAkC;EAClC,iBAAiB;AACnB;;AAEA;EACE,iBAAiB;AACnB;;AAEA;EACE,iCAAiC;AACnC;;AAEA;EACE,SAAS;EACT,YAAY;EACZ,cAAc;EACd,cAAc;EACd,gBAAgB;EAChB,iBAAiB;EACjB,sBAAsB;EACtB,gBAAgB;EAChB,cAAc;EACd,aAAa;AACf;;AAEA;EACE,yBAAyB;EACzB,kCAAkC;EAClC,cAAc;EACd,aAAa;EACb,gBAAgB;EAChB,gBAAgB;AAClB;;AAEA;EACE,wBAAwB;EACxB,kCAAkC;EAClC,sBAAsB;EACtB,gBAAgB;EAChB,YAAY;EACZ,gBAAgB;EAChB,kBAAkB;EAClB,UAAU;AACZ;;AAEA;EACE,WAAW;EACX,gBAAgB;AAClB;;AAEA;EACE,sBAAsB;EACtB,WAAW;EACX,YAAY;AACd;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,WAAW;EACX,mBAAmB;AACrB;;AAEA;EACE,eAAe;EACf,gBAAgB;AAClB;;AAEA;EACE,iBAAiB;AACnB","sourcesContent":[":root {\r\n  /* Light mode colors */\r\n  --main-background-color: #fff;\r\n  --secondary-background-color: #d1d1cf;\r\n  --text-color: #333333;\r\n  --secondary-text-color: #333333;\r\n  --card-background: #f0f0f0;\r\n  --button-background: #e0e0e0;\r\n  --button-text: #000000;\r\n  --border-color: #cccccc;\r\n  --active-button-color: green;\r\n  font-family: \"Lato\", sans-serif;\r\n  user-select: none;\r\n  color: var(--text-color);\r\n  --dialog-background-color: #fff;\r\n  --blue-card-linear: linear-gradient(rgb(168 222 240), rgb(212 234 247));\r\n  --green-card-linear: linear-gradient(rgb(234, 240, 168), rgb(244, 247, 212));\r\n  --border: 1px solid #acacaa;\r\n  font-family: \"Lato\", sans-serif;\r\n}\r\n\r\n@import url(\"https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap\");\r\n\r\n/* Dark mode colors */\r\n[data-theme=\"dark\"] {\r\n  --main-background-color: #696969;\r\n  --secondary-background-color: #424242;\r\n  --text-color: #000000;\r\n  --secondary-text-color: #000000;\r\n  --card-background: #2c2c2c;\r\n  --button-background: #3a3a3a;\r\n  --button-text: #ffffff;\r\n  --border-color: #444444;\r\n  --active-button-color: #fff;\r\n  --dialog-background-color: #d0d0d0;\r\n  --blue-card-linear: linear-gradient(rgb(113 166 184), rgb(134 157 170));\r\n  --green-card-linear: linear-gradient(rgb(198 204 128), rgb(193 195 166));\r\n  color: var(--text-color);\r\n}\r\n\r\nbody {\r\n  background-color: var(--secondary-background-color);\r\n  margin: 0;\r\n  padding: 0;\r\n}\r\n\r\nh2 {\r\n  margin-top: 22px;\r\n  margin-bottom: 8px;\r\n  font-size: 24px;\r\n  font-weight: 600;\r\n  font-style: normal;\r\n}\r\n\r\nh3 {\r\n  font-size: 20px;\r\n  font-weight: 500;\r\n  font-style: normal;\r\n}\r\n\r\n.card {\r\n  display: flex;\r\n  flex-direction: column;\r\n  width: 790px !important;\r\n  height: calc(100vh - 64px);\r\n  position: relative;\r\n  margin: 32px auto;\r\n  background: var(--main-background-color);\r\n  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.24);\r\n  border-radius: 8px;\r\n  overflow: hidden;\r\n}\r\n\r\n#options-page-container {\r\n  display: flex;\r\n  align-items: center;\r\n  flex-direction: column;\r\n}\r\n\r\nheader {\r\n  position: sticky;\r\n  top: 0;\r\n  z-index: 1000;\r\n  background-color: var(--main-background-color);\r\n  padding: 28px 28px 0.8rem;\r\n  border-bottom: var(--border);\r\n}\r\n\r\n.container {\r\n  display: flex;\r\n  align-items: center;\r\n  color: var(--secondary-text-color);\r\n  font-weight: 400;\r\n  font-size: 22px;\r\n  line-height: 100%;\r\n  gap: 20px;\r\n}\r\n\r\n.under-header {\r\n  font-size: 14px;\r\n}\r\n\r\n.image-offset {\r\n  gap: 0.8rem;\r\n}\r\n\r\n.container img {\r\n  margin-right: auto;\r\n}\r\n\r\n.header-wrapper {\r\n  flex-grow: 1;\r\n  display: flex;\r\n  justify-content: space-evenly;\r\n  gap: 2rem;\r\n  font-size: 28px;\r\n  font-weight: 600;\r\n}\r\n\r\n#middle {\r\n  flex: 1;\r\n  overflow-y: auto;\r\n  padding: 6px 28px 28px 28px;\r\n}\r\n\r\n.settings-item-container {\r\n  margin-bottom: 10px;\r\n  margin-top: 10px;\r\n  display: flex;\r\n  flex-direction: row;\r\n  align-items: center;\r\n  border-bottom: var(--border);\r\n}\r\n\r\n.button {\r\n  cursor: pointer;\r\n}\r\n\r\np {\r\n  font-size: 15px;\r\n  color: var(--secondary-text-color);\r\n  user-select: text;\r\n}\r\n\r\n.slider {\r\n  margin-left: auto;\r\n}\r\n\r\n.active {\r\n  color: var(--active-button-color);\r\n}\r\n\r\n.custom-textarea {\r\n  margin: 0;\r\n  flex-grow: 2;\r\n  flex-shrink: 0;\r\n  display: block;\r\n  white-space: pre;\r\n  word-wrap: normal;\r\n  box-sizing: border-box;\r\n  min-height: 100%;\r\n  padding: 4px 0;\r\n  outline: none;\r\n}\r\n\r\n.blocked-site-container {\r\n  background-color: #202124;\r\n  border: 1px solid rgb(95, 99, 104);\r\n  color: #e8e8d3;\r\n  height: 300px;\r\n  overflow: hidden;\r\n  resize: vertical;\r\n}\r\n\r\n.scroll-container {\r\n  display: flex !important;\r\n  align-items: flex-start !important;\r\n  font-family: monospace;\r\n  line-height: 1.4;\r\n  height: 100%;\r\n  overflow-x: auto;\r\n  position: relative;\r\n  z-index: 0;\r\n}\r\n\r\n.line-number-container {\r\n  width: 30px;\r\n  overflow: hidden;\r\n}\r\n\r\n.buttons {\r\n  background-color: aqua;\r\n  width: 30px;\r\n  height: 40px;\r\n}\r\n\r\n.logo {\r\n  width: 40px;\r\n  height: 40px;\r\n}\r\n\r\n.question-text {\r\n  display: flex;\r\n  align-items: center;\r\n  gap: 0.3rem;\r\n  margin-bottom: 10px;\r\n}\r\n\r\n.discord-button {\r\n  cursor: pointer;\r\n  font-weight: 600;\r\n}\r\n\r\n.discord-button svg {\r\n  margin-right: 4px;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -875,14 +874,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var codemirror__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @codemirror/view */ "./node_modules/@codemirror/view/dist/index.js");
-/* harmony import */ var _codemirror_state__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @codemirror/state */ "./node_modules/@codemirror/state/dist/index.js");
-/* harmony import */ var _codemirror_lint__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @codemirror/lint */ "./node_modules/@codemirror/lint/dist/index.js");
-/* harmony import */ var _codemirror_lang_javascript__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @codemirror/lang-javascript */ "./node_modules/@codemirror/lang-javascript/dist/index.js");
-/* harmony import */ var _codemirror_commands__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @codemirror/commands */ "./node_modules/@codemirror/commands/dist/index.js");
+/* harmony import */ var codemirror__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @codemirror/view */ "./node_modules/@codemirror/view/dist/index.js");
+/* harmony import */ var _codemirror_state__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @codemirror/state */ "./node_modules/@codemirror/state/dist/index.js");
+/* harmony import */ var _codemirror_lint__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @codemirror/lint */ "./node_modules/@codemirror/lint/dist/index.js");
+/* harmony import */ var _codemirror_lang_javascript__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @codemirror/lang-javascript */ "./node_modules/@codemirror/lang-javascript/dist/index.js");
+/* harmony import */ var _codemirror_commands__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @codemirror/commands */ "./node_modules/@codemirror/commands/dist/index.js");
 /* harmony import */ var _codeMirrorLinter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./codeMirrorLinter */ "./src/components/codeMirror/codeMirrorLinter.ts");
 /* harmony import */ var _options_options__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../options/options */ "./src/options/options.tsx");
 /* harmony import */ var _codeMirrorEditor_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./codeMirrorEditor.css */ "./src/components/codeMirror/codeMirrorEditor.css");
+/* harmony import */ var _helper_urlHelpers__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../helper/urlHelpers */ "./src/helper/urlHelpers.ts");
+
 
 
 
@@ -923,6 +924,7 @@ const CodeMirrorEditor = () => {
             const newBlockedUrlData = {};
             docValues.forEach((url) => {
                 var _a, _b, _c, _d;
+                url = (0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_4__.transformUserInputToValidURL)(url);
                 url = url.trim();
                 if (url) {
                     newBlockedUrlData[url] = {
@@ -953,25 +955,25 @@ const CodeMirrorEditor = () => {
     const editor = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)((parent) => {
         var _a;
         if (parent) {
-            editorViewRef.current = new codemirror__WEBPACK_IMPORTED_MODULE_4__.EditorView({
+            editorViewRef.current = new codemirror__WEBPACK_IMPORTED_MODULE_5__.EditorView({
                 parent,
-                state: _codemirror_state__WEBPACK_IMPORTED_MODULE_5__.EditorState.create({
+                state: _codemirror_state__WEBPACK_IMPORTED_MODULE_6__.EditorState.create({
                     doc: initialDoc,
                     extensions: [
                         _codeMirrorLinter__WEBPACK_IMPORTED_MODULE_1__.urlLinter,
-                        codemirror__WEBPACK_IMPORTED_MODULE_4__.keymap.of([..._codemirror_commands__WEBPACK_IMPORTED_MODULE_6__.historyKeymap, ..._codemirror_commands__WEBPACK_IMPORTED_MODULE_6__.standardKeymap]),
-                        codemirror__WEBPACK_IMPORTED_MODULE_4__.EditorView.updateListener.of((update) => {
+                        codemirror__WEBPACK_IMPORTED_MODULE_5__.keymap.of([..._codemirror_commands__WEBPACK_IMPORTED_MODULE_7__.historyKeymap, ..._codemirror_commands__WEBPACK_IMPORTED_MODULE_7__.standardKeymap]),
+                        codemirror__WEBPACK_IMPORTED_MODULE_5__.EditorView.updateListener.of((update) => {
                             if (update.docChanged) {
                                 onEditorChange();
                             }
                         }),
-                        (0,_codemirror_commands__WEBPACK_IMPORTED_MODULE_6__.history)(),
-                        (0,codemirror__WEBPACK_IMPORTED_MODULE_4__.dropCursor)(),
-                        (0,_codemirror_lang_javascript__WEBPACK_IMPORTED_MODULE_7__.javascript)(),
-                        (0,_codemirror_lint__WEBPACK_IMPORTED_MODULE_8__.lintGutter)(),
-                        (0,codemirror__WEBPACK_IMPORTED_MODULE_4__.lineNumbers)(),
-                        (0,codemirror__WEBPACK_IMPORTED_MODULE_4__.highlightActiveLineGutter)(),
-                        codemirror__WEBPACK_IMPORTED_MODULE_4__.EditorView.theme({
+                        (0,_codemirror_commands__WEBPACK_IMPORTED_MODULE_7__.history)(),
+                        (0,codemirror__WEBPACK_IMPORTED_MODULE_5__.dropCursor)(),
+                        (0,_codemirror_lang_javascript__WEBPACK_IMPORTED_MODULE_8__.javascript)(),
+                        (0,_codemirror_lint__WEBPACK_IMPORTED_MODULE_9__.lintGutter)(),
+                        (0,codemirror__WEBPACK_IMPORTED_MODULE_5__.lineNumbers)(),
+                        (0,codemirror__WEBPACK_IMPORTED_MODULE_5__.highlightActiveLineGutter)(),
+                        codemirror__WEBPACK_IMPORTED_MODULE_5__.EditorView.theme({
                             "&": {
                                 height: "300px",
                                 border: "1px solid #ccc",
@@ -1418,7 +1420,7 @@ const App = () => {
                 return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement((react__WEBPACK_IMPORTED_MODULE_0___default().Fragment), null,
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", { className: "top-h2" }, "General Settings"),
                     generalSettings.map((setting) => (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { key: setting.googleStorageKey, className: "settings-item-container", title: setting.title },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, setting.settingName),
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", { className: "setting-name" }, setting.settingName),
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "slider" },
                             react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__["default"], { id: setting.googleStorageKey, setting: setting }))))),
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { title: "Join the Discord for help", className: "settings-item-container discord-button", onClick: onClickDiscord },
@@ -1428,10 +1430,9 @@ const App = () => {
                                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", null,
                                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M216.856339,16.5966031 C200.285002,8.84328665 182.566144,3.2084988 164.041564,0 C161.766523,4.11318106 159.108624,9.64549908 157.276099,14.0464379 C137.583995,11.0849896 118.072967,11.0849896 98.7430163,14.0464379 C96.9108417,9.64549908 94.1925838,4.11318106 91.8971895,0 C73.3526068,3.2084988 55.6133949,8.86399117 39.0420583,16.6376612 C5.61752293,67.146514 -3.4433191,116.400813 1.08711069,164.955721 C23.2560196,181.510915 44.7403634,191.567697 65.8621325,198.148576 C71.0772151,190.971126 75.7283628,183.341335 79.7352139,175.300261 C72.104019,172.400575 64.7949724,168.822202 57.8887866,164.667963 C59.7209612,163.310589 61.5131304,161.891452 63.2445898,160.431257 C105.36741,180.133187 151.134928,180.133187 192.754523,160.431257 C194.506336,161.891452 196.298154,163.310589 198.110326,164.667963 C191.183787,168.842556 183.854737,172.420929 176.223542,175.320965 C180.230393,183.341335 184.861538,190.991831 190.096624,198.16893 C211.238746,191.588051 232.743023,181.531619 254.911949,164.955721 C260.227747,108.668201 245.831087,59.8662432 216.856339,16.5966031 Z M85.4738752,135.09489 C72.8290281,135.09489 62.4592217,123.290155 62.4592217,108.914901 C62.4592217,94.5396472 72.607595,82.7145587 85.4738752,82.7145587 C98.3405064,82.7145587 108.709962,94.5189427 108.488529,108.914901 C108.508531,123.290155 98.3405064,135.09489 85.4738752,135.09489 Z M170.525237,135.09489 C157.88039,135.09489 147.510584,123.290155 147.510584,108.914901 C147.510584,94.5396472 157.658606,82.7145587 170.525237,82.7145587 C183.391518,82.7145587 193.761324,94.5189427 193.539891,108.914901 C193.539891,123.290155 183.391518,135.09489 170.525237,135.09489 Z", fill: "#5865F2" }))))),
                     react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h2", { className: "top-h2" }, "Block Settings"),
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", { className: "under-header" }, "Google has a plethora of different result sections. Tell us where we should block matched URLs (hover for more info)"),
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", { className: "under-header" }, "Google has a plethora of different result sections. Tell us where we should block matched URLs:"),
                     blockSettings.map((setting) => (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { key: setting.googleStorageKey, className: "settings-item-container", title: setting.title },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", null, setting.settingName),
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", { className: "setting-information" }, setting.settingName),
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("p", { className: "setting-name" }, setting.settingName),
                         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "slider" },
                             react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__["default"], { id: setting.googleStorageKey, setting: setting })))))));
         }

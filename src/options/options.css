@@ -96,6 +96,10 @@ header {
   gap: 20px;
 }
 
+.under-header {
+  font-size: 14px;
+}
+
 .image-offset {
   gap: 0.8rem;
 }
@@ -132,15 +136,10 @@ header {
   cursor: pointer;
 }
 
-.settings-item-container > p {
-  display: inline;
+p {
   font-size: 15px;
   color: var(--secondary-text-color);
   user-select: text;
-}
-
-p.under-header {
-  font-size: 12px;
 }
 
 .slider {

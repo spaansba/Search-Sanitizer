@@ -211,7 +211,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   GoogleScriptService: () => (/* binding */ GoogleScriptService)
 /* harmony export */ });
 /* harmony import */ var _components_topPage__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/topPage */ "./src/components/topPage.ts");
-/* harmony import */ var _blockedCountUpdateManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./blockedCountUpdateManager */ "./src/contentScript/blockedCountUpdateManager.ts");
+/* harmony import */ var _helper_urlHelpers__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helper/urlHelpers */ "./src/helper/urlHelpers.ts");
+/* harmony import */ var _blockedCountUpdateManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./blockedCountUpdateManager */ "./src/contentScript/blockedCountUpdateManager.ts");
+
 
 
 class GoogleScriptService {
@@ -232,7 +234,7 @@ class GoogleScriptService {
         this.settings = settings;
         this.addDocumentHead();
         this.addEventListeners();
-        this.updateManager = new _blockedCountUpdateManager__WEBPACK_IMPORTED_MODULE_1__.BlockedCountUpdateManager(blockedUrlsDict, lifeTimeBlocks, this.updatedBlockedCallback.bind(this));
+        this.updateManager = new _blockedCountUpdateManager__WEBPACK_IMPORTED_MODULE_2__.BlockedCountUpdateManager(blockedUrlsDict, lifeTimeBlocks, this.updatedBlockedCallback.bind(this));
         // Initialize the searchContainer for if it cant be found
         this.searchResultsContainer = document.body;
     }
@@ -268,7 +270,7 @@ class GoogleScriptService {
         [card-relevant="true"] {opacity: 0.3 !important}
       `;
         document.head.appendChild(style);
-    } //  [card-show="true"] { display: block !important; }
+    }
     incrementBlockCount(userPattern, searchCategory) {
         this._blockedCount++;
         this.updateManager.incrementCount(userPattern, searchCategory);
@@ -295,62 +297,17 @@ class GoogleScriptService {
             }
         });
     }
-    isPatternUrl(url, urlString, pattern) {
-        try {
-            if (!pattern) {
-                return false;
-            }
-            pattern = this.removeTrailingSlash(pattern.toLowerCase());
-            const patternVariations = [
-                pattern,
-                `www.${pattern}`,
-                `https://${pattern}`,
-                `https://www.${pattern}`,
-                `http://${pattern}`,
-                `http://www.${pattern}`,
-            ];
-            const comparisons = [
-                urlString,
-                url.origin.toLowerCase(),
-                url.host.toLowerCase(),
-                url.hostname.toLowerCase(),
-                this.removeTrailingSlash(url.href.toLowerCase()),
-            ];
-            for (const comp of comparisons) {
-                for (const variation of patternVariations) {
-                    if (comp === variation) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-        catch (error) {
-            console.error(`Invalid URL`);
-            return false;
-        }
-    }
-    removeTrailingSlash(s) {
-        return s.endsWith("/") ? s.slice(0, -1) : s;
-    }
-    isPatternWildcard(urlString, pattern) {
-        urlString = urlString.toLowerCase();
-        pattern = pattern.toLowerCase();
-        const escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\\\*/g, ".*");
-        const regex = new RegExp(`^${escapedPattern}$`);
-        return regex.test(urlString);
-    }
     shouldUrlBeBlocked(googleSearchUrl, searchCategory, origin) {
         const url = new URL(googleSearchUrl);
         for (const pattern of Object.keys(this.blockedUrlsDict.blockedUrlData)) {
             // Here we check if the pattern is an URL and if it matches the current checked URL
-            if (this.isPatternUrl(url, googleSearchUrl, pattern)) {
+            if ((0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_1__.isPatternUrl)(url, googleSearchUrl, pattern)) {
                 console.log(`Blocked URL: ${googleSearchUrl} url pattern: ${pattern} from ${origin}`);
                 this.incrementBlockCount(pattern, searchCategory);
                 return true;
             }
             // Here we check if the pattern is a matched Pattern and if it matches the current checked URL
-            if (this.isPatternWildcard(googleSearchUrl, pattern)) {
+            if ((0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_1__.isPatternWildcard)(googleSearchUrl, pattern)) {
                 this.incrementBlockCount(pattern, searchCategory);
                 console.log(`Blocked URL: ${url} matched pattern: ${pattern} from ${origin}`);
                 return true;
@@ -358,13 +315,11 @@ class GoogleScriptService {
         }
         return false;
     }
-    isElementVisible(element) {
-        return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
-    }
-    processSearchResultsForBlocking(queryString, // string we query for
-    containerToSearchIn, // Narrows the search
-    blockInvisibleElements, searchCategory) {
+    processSearchResultsForBlocking(queryString, containerToSearchIn, blockInvisibleElements, searchCategory) {
         const searchResults = containerToSearchIn.querySelectorAll(queryString);
+        if (searchResults.length > 0) {
+            console.log("search Results ", searchResults);
+        }
         searchResults === null || searchResults === void 0 ? void 0 : searchResults.forEach((searchElement) => {
             searchElement.setAttribute("data-processed", "true");
             if (this.checkLinksForBlockedUrls(searchElement, blockInvisibleElements, searchCategory, `regular`) ||
@@ -372,6 +327,9 @@ class GoogleScriptService {
                 this.markElementAsBlocked(searchElement);
             }
         });
+    }
+    isElementVisible(element) {
+        return !!(element.offsetWidth || element.offsetHeight || element.getClientRects().length);
     }
     checkLinksForBlockedUrls(searchElement, blockInvisibleElements, searchCategory, origin) {
         const links = searchElement.querySelectorAll("a");
@@ -414,9 +372,14 @@ class GoogleScriptService {
     processTopAddsForBlocking() {
         if (this.settings.blockAds) {
             const queryString = ".mnr-c.pla-unit:not([data-processed])";
-            this.processSearchResultsForBlocking(queryString, document.body, false, "i");
+            this.processSearchResultsForBlocking(queryString, document.body, true, "i");
         }
     }
+    // hard to do since there are no links as the product page just opens a popup instead of a website
+    // processProductsForBlocking() {
+    //   const queryString: string = ".LrTUQ.LPpDAd:not([data-processed])"
+    //   this.processSearchResultsForBlocking(queryString, document.body, true, "i")
+    // }
     processNewsForBlocking() {
         if (this.settings.blockNews) {
             const queryString = ".SoaBEf:not([data-processed])";
@@ -642,6 +605,125 @@ function googleSearchVideos(_a) {
             subtree: true,
         });
     });
+}
+
+
+/***/ }),
+
+/***/ "./src/helper/urlHelpers.ts":
+/*!**********************************!*\
+  !*** ./src/helper/urlHelpers.ts ***!
+  \**********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   isPatternUrl: () => (/* binding */ isPatternUrl),
+/* harmony export */   isPatternWildcard: () => (/* binding */ isPatternWildcard),
+/* harmony export */   isValidMatchPattern: () => (/* binding */ isValidMatchPattern),
+/* harmony export */   isValidUrl: () => (/* binding */ isValidUrl),
+/* harmony export */   stringToMatchPattern: () => (/* binding */ stringToMatchPattern),
+/* harmony export */   stringToUrl: () => (/* binding */ stringToUrl),
+/* harmony export */   transformUserInputToValidURL: () => (/* binding */ transformUserInputToValidURL)
+/* harmony export */ });
+// When we enter a blocked site via popup or option page do the following:
+// if "www." then replace it with "*://*."
+// if doesnt start with http and is not a valid match pattern than add "*://*."
+function transformUserInputToValidURL(input) {
+    if (!input)
+        return input;
+    const matchPattern = "*://*.";
+    if (input.startsWith("www.")) {
+        input = input.replace("www.", "");
+        return matchPattern + input;
+    }
+    else {
+        if (!input.startsWith("http") && !isValidMatchPattern(input)) {
+            return matchPattern + input;
+        }
+    }
+    return input;
+}
+// valid urls should be:
+// https://www.reddit.com
+// https://.reddit.com
+// www.reddit.com
+// reddit.com
+// http://www.reddit.com
+// http://reddit.com
+function isValidUrl(input) {
+    const urlRegex = /^(www\.[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+(?:\/.*)?|[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+(?:\/.*)?|https:\/\/www\.[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+(?:\/.*)?|https?:\/\/[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+(?:\/.*)?|file:\/\/\/.*)$/;
+    return urlRegex.test(input);
+}
+function isValidMatchPattern(input) {
+    const matchPatternRegex = /^(?:(?:\*|https?|ftp):\/\/(?:\*|(?:\*\.)?[^/*]+)(?:\/.*)?|\*:\/\/.*)$/;
+    return matchPatternRegex.test(input);
+}
+function stringToUrl(input) {
+    input = input.replace(/^\.|\.$/, ""); // If input starts or ends with . remove it
+    if (!isValidUrl(input)) {
+        return input.startsWith("http") && !isValidMatchPattern(input) ? input : `*://*.${input}.com`;
+    }
+    else {
+        return `${input}`;
+    }
+}
+function stringToMatchPattern(input) {
+    input = input.replace(/^(https?:\/\/)?(www\.)?/, "");
+    const parts = input.split(".");
+    if (parts.length > 1) {
+        // If it's a domain-like string, create a match pattern
+        return `*://*.${parts[0]}.*`;
+    }
+    else {
+        // If it's just text, treat it as a domain name
+        return `*://*.${input}.*`;
+    }
+}
+function removeTrailingSlash(s) {
+    return s.endsWith("/") ? s.slice(0, -1) : s;
+}
+function isPatternUrl(url, urlString, pattern) {
+    try {
+        if (!pattern) {
+            return false;
+        }
+        pattern = removeTrailingSlash(pattern.toLowerCase());
+        const patternVariations = [
+            pattern,
+            `www.${pattern}`,
+            `https://${pattern}`,
+            `https://www.${pattern}`,
+            `http://${pattern}`,
+            `http://www.${pattern}`,
+        ];
+        const comparisons = [
+            urlString,
+            url.origin.toLowerCase(),
+            url.host.toLowerCase(),
+            url.hostname.toLowerCase(),
+            removeTrailingSlash(url.href.toLowerCase()),
+        ];
+        for (const comp of comparisons) {
+            for (const variation of patternVariations) {
+                if (comp === variation) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    catch (error) {
+        console.error(`Invalid URL`);
+        return false;
+    }
+}
+function isPatternWildcard(urlString, pattern) {
+    urlString = urlString.toLowerCase();
+    pattern = pattern.toLowerCase();
+    const escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, "\\$&").replace(/\\\*/g, ".*");
+    const regex = new RegExp(`^${escapedPattern}(/.*)?$`);
+    return regex.test(urlString);
 }
 
 
