@@ -170,6 +170,10 @@ const App: React.FC = () => {
               </div>
             </div>
             <h2 className="top-h2">Block Settings</h2>
+            <p className="under-header">
+              Google has a plethora of different result sections. Tell us where we should block
+              matched URLs (hover for more info)
+            </p>
             {blockSettings.map((setting) => (
               <div
                 key={setting.googleStorageKey}
@@ -177,6 +181,7 @@ const App: React.FC = () => {
                 title={setting.title}
               >
                 <p>{setting.settingName}</p>
+                <p className="setting-information">{setting.settingName}</p>
                 <div className="slider">
                   <OnOffSlider id={setting.googleStorageKey} setting={setting} />
                 </div>

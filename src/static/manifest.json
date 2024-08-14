@@ -1,7 +1,7 @@
 {
-  "name": "Site Sanitizer",
-  "description": "Block sites/images/videos from showing up on Google Search results",
-  "version": "1.0.2",
+  "name": "Search Sanitizer",
+  "description": "Block sites/images/videos/ads from showing up on Google Search results based on URL",
+  "version": "1.0.3",
   "manifest_version": 3,
   "icons": {
     "16": "logoApp.png",

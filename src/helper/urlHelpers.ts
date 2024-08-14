@@ -1,8 +1,24 @@
 export function isValidMatchPattern(input: string): boolean {
-  const matchPatternRegex =
-    /^(?:(?:\*|https?|ftp):\/\/(?:\*|(?:\*\.)?[^/*]+)(?:\/.*)?|\*:\/\/.*)$/
+  const matchPatternRegex = /^(?:(?:\*|https?|ftp):\/\/(?:\*|(?:\*\.)?[^/*]+)(?:\/.*)?|\*:\/\/.*)$/
 
   return matchPatternRegex.test(input)
+}
+
+// When we enter a blocked site via popup or option page do the following:
+// if "www." then replace it with "*://*."
+// if doesnt start with http and is not a valid match pattern than add "*://*."
+export function transformUserInputToValidURL(input: string): string {
+  if (!input) return input
+  const matchPattern = "*://*."
+  if (input.startsWith("www.")) {
+    input = input.replace("www.", "")
+    return matchPattern + input
+  } else {
+    if (!input.startsWith("http") && !isValidMatchPattern(input)) {
+      return matchPattern + input
+    }
+  }
+  return input
 }
 
 // valid urls should be:
@@ -22,9 +38,7 @@ export function isValidUrl(input: string): boolean {
 export function stringToUrl(input: string): string {
   input = input.replace(/^\.|\.$/, "") // If input starts or ends with . remove it
   if (!isValidUrl(input)) {
-    return input.startsWith("http://") || input.startsWith("https://")
-      ? input
-      : `${input}.com`
+    return input.startsWith("http://") || input.startsWith("https://") ? input : `${input}.com`
   } else {
     return `${input}`
   }

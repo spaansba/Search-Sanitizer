@@ -64,7 +64,7 @@ export default function UrlInput({ handleClose, addBlockedUrl }: UrlInputProps) 
   const handleAddNewUrl = () => {
     if (inputIsValid) {
       addBlockedUrl(inputValue)
-      handleClose()
+      handleCloseAndClear()
     }
   }
 
@@ -76,6 +76,14 @@ export default function UrlInput({ handleClose, addBlockedUrl }: UrlInputProps) 
       return
     }
     setInputValue(urlInput.current.value.trim())
+  }
+
+  const handleCloseAndClear = () => {
+    setInputValue("")
+    if (urlInput.current) {
+      urlInput.current.value = ""
+    }
+    handleClose()
   }
 
   function getUrlAlternatives(): string[] {
@@ -145,7 +153,7 @@ export default function UrlInput({ handleClose, addBlockedUrl }: UrlInputProps) 
         >
           Add
         </button>
-        <button type="button" onClick={handleClose} className="url-button cancel">
+        <button type="button" onClick={handleCloseAndClear} className="url-button cancel">
           Cancel
         </button>
       </div>

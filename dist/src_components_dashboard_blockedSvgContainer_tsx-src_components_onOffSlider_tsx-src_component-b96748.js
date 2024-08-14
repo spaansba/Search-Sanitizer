@@ -571,7 +571,7 @@ function UrlInput({ handleClose, addBlockedUrl }) {
     const handleAddNewUrl = () => {
         if (inputIsValid) {
             addBlockedUrl(inputValue);
-            handleClose();
+            handleCloseAndClear();
         }
     };
     const handleInputChange = () => {
@@ -582,6 +582,13 @@ function UrlInput({ handleClose, addBlockedUrl }) {
             return;
         }
         setInputValue(urlInput.current.value.trim());
+    };
+    const handleCloseAndClear = () => {
+        setInputValue("");
+        if (urlInput.current) {
+            urlInput.current.value = "";
+        }
+        handleClose();
     };
     function getUrlAlternatives() {
         const alternatives = [];
@@ -616,7 +623,7 @@ function UrlInput({ handleClose, addBlockedUrl }) {
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "alternatives", title: Alternative, onClick: () => onHandleAlternative(Alternative) }, Alternative)))),
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "button-wrapper" },
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { ref: addButton, type: "button", disabled: !inputIsValid, onClick: handleAddNewUrl, className: `url-button add ${!inputIsValid ? "disabled" : ""}`, title: !inputIsValid ? "Please enter a valid URL or match pattern" : "" }, "Add"),
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { type: "button", onClick: handleClose, className: "url-button cancel" }, "Cancel"))));
+            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("button", { type: "button", onClick: handleCloseAndClear, className: "url-button cancel" }, "Cancel"))));
 }
 
 
@@ -659,11 +666,30 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   isValidMatchPattern: () => (/* binding */ isValidMatchPattern),
 /* harmony export */   isValidUrl: () => (/* binding */ isValidUrl),
 /* harmony export */   stringToMatchPattern: () => (/* binding */ stringToMatchPattern),
-/* harmony export */   stringToUrl: () => (/* binding */ stringToUrl)
+/* harmony export */   stringToUrl: () => (/* binding */ stringToUrl),
+/* harmony export */   transformUserInputToValidURL: () => (/* binding */ transformUserInputToValidURL)
 /* harmony export */ });
 function isValidMatchPattern(input) {
     const matchPatternRegex = /^(?:(?:\*|https?|ftp):\/\/(?:\*|(?:\*\.)?[^/*]+)(?:\/.*)?|\*:\/\/.*)$/;
     return matchPatternRegex.test(input);
+}
+// When we enter a blocked site via popup or option page do the following:
+// if "www." then replace it with "*://*."
+// if doesnt start with http and is not a valid match pattern than add "*://*."
+function transformUserInputToValidURL(input) {
+    if (!input)
+        return input;
+    const matchPattern = "*://*.";
+    if (input.startsWith("www.")) {
+        input = input.replace("www.", "");
+        return matchPattern + input;
+    }
+    else {
+        if (!input.startsWith("http") && !isValidMatchPattern(input)) {
+            return matchPattern + input;
+        }
+    }
+    return input;
 }
 // valid urls should be:
 // https://www.reddit.com
@@ -679,9 +705,7 @@ function isValidUrl(input) {
 function stringToUrl(input) {
     input = input.replace(/^\.|\.$/, ""); // If input starts or ends with . remove it
     if (!isValidUrl(input)) {
-        return input.startsWith("http://") || input.startsWith("https://")
-            ? input
-            : `${input}.com`;
+        return input.startsWith("http://") || input.startsWith("https://") ? input : `${input}.com`;
     }
     else {
         return `${input}`;

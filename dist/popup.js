@@ -47,11 +47,7 @@ body {
   margin: 0;
   background-color: var(--main-background-color);
   width: 350px;
-}
-
-#popup-container {
-  display: flex;
-  flex-direction: column;
+  color: var(--text-color);
 }
 
 /* top bar */
@@ -59,18 +55,14 @@ body {
   background-color: var(--secondary-background-color);
   padding: 15px 15px 0px 15px;
   padding-bottom: 15px;
-  height: 32px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  gap: 0.8rem;
 }
 
-.top-bar-section {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.8rem;
+.top-item:first-child {
+  margin-right: auto; /* Make the first child on the left (logo) put the rest on the right */
 }
 
 .header-text {
@@ -83,7 +75,6 @@ body {
 
 .top-bar-icon {
   width: 32px;
-  height: 32px;
 }
 
 /* Settings Button */
@@ -124,7 +115,7 @@ body {
 
 #bottom-section {
   background-color: var(--secondary-background-color);
-  box-shadow: 0 -2px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);
   align-content: center;
   padding: 0px 15px;
   height: 78px;
@@ -170,7 +161,7 @@ body {
 .dicord-button {
   cursor: pointer;
 }
-`, "",{"version":3,"sources":["webpack://./src/popup/popup.css"],"names":[],"mappings":"AAAA;EACE,sBAAsB;EACtB,6BAA6B;EAC7B,qCAAqC;EACrC,qBAAqB;EACrB,+BAA+B;EAC/B,0BAA0B;EAC1B,2BAA2B;EAC3B,+BAA+B;AACjC;;AAIA,qBAAqB;AACrB;EACE,gCAAgC;EAChC,qCAAqC;EACrC,qBAAqB;EACrB,+BAA+B;EAC/B,0BAA0B;EAC1B,wBAAwB;AAC1B;;AAEA;EACE,SAAS;EACT,8CAA8C;EAC9C,YAAY;AACd;;AAEA;EACE,aAAa;EACb,sBAAsB;AACxB;;AAEA,YAAY;AACZ;EACE,mDAAmD;EACnD,2BAA2B;EAC3B,oBAAoB;EACpB,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,8BAA8B;EAC9B,wCAAwC;AAC1C;;AAEA;EACE,aAAa;EACb,mBAAmB;EACnB,8BAA8B;EAC9B,WAAW;AACb;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,eAAe;EACf,6BAA6B;EAC7B,mBAAmB;AACrB;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA,oBAAoB;AACpB;EACE,WAAW;EACX,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,+BAA+B;;EAE/B;IACE,iBAAiB;IACjB,WAAW;IACX,YAAY;IACZ,cAAc;EAChB;AACF;;AAEA;EACE,eAAe;EACf,0BAA0B;AAC5B;;AAEA;EACE,YAAY;EACZ,kBAAkB;EAClB,sCAAsC;AACxC;;AAEA;EACE,2BAA2B;;EAE3B;IACE,eAAe;EACjB;AACF;;AAEA;EACE,mDAAmD;EACnD,yCAAyC;EACzC,qBAAqB;EACrB,iBAAiB;EACjB,YAAY;AACd;;AAEA;EACE,eAAe;AACjB;;AAEA;EACE,2BAA2B;AAC7B;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,yBAAyB;EACzB,WAAW;EACX,YAAY;EACZ,cAAc;AAChB;;AAEA;EACE,aAAa;EACb,qBAAqB;AACvB;;AAEA;EACE,YAAY;EACZ,iBAAiB;EACjB,iBAAiB;EACjB,0BAA0B;AAC5B;;AAEA;EACE,UAAU;EACV,eAAe;AACjB;;AAEA;EACE,eAAe;AACjB","sourcesContent":[":root {\r\n  /* Light mode colors */\r\n  --main-background-color: #fff;\r\n  --secondary-background-color: #f4f4f4;\r\n  --text-color: #333333;\r\n  --secondary-text-color: #333333;\r\n  --card-background: #f0f0f0;\r\n  --border: 1px solid #acacaa;\r\n  font-family: \"Lato\", sans-serif;\r\n}\r\n\r\n@import url(\"https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap\");\r\n\r\n/* Dark mode colors */\r\n[data-theme=\"dark\"] {\r\n  --main-background-color: #696969;\r\n  --secondary-background-color: #424242;\r\n  --text-color: #000000;\r\n  --secondary-text-color: #000000;\r\n  --card-background: #2c2c2c;\r\n  color: var(--text-color);\r\n}\r\n\r\nbody {\r\n  margin: 0;\r\n  background-color: var(--main-background-color);\r\n  width: 350px;\r\n}\r\n\r\n#popup-container {\r\n  display: flex;\r\n  flex-direction: column;\r\n}\r\n\r\n/* top bar */\r\n#entire-top-bar {\r\n  background-color: var(--secondary-background-color);\r\n  padding: 15px 15px 0px 15px;\r\n  padding-bottom: 15px;\r\n  height: 32px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.2);\r\n}\r\n\r\n.top-bar-section {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: space-between;\r\n  gap: 0.8rem;\r\n}\r\n\r\n.header-text {\r\n  text-align: center;\r\n  font-weight: 400;\r\n  font-size: 18px;\r\n  color: var(--light-main-text);\r\n  margin-left: 0.5rem;\r\n}\r\n\r\n.top-bar-icon {\r\n  width: 32px;\r\n  height: 32px;\r\n}\r\n\r\n/* Settings Button */\r\n#settings-icon {\r\n  width: 24px;\r\n  height: 24px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  transition: transform 0.7s ease;\r\n\r\n  img {\r\n    user-select: none;\r\n    width: 100%;\r\n    height: 100%;\r\n    display: block;\r\n  }\r\n}\r\n\r\n#settings-icon:hover {\r\n  cursor: pointer;\r\n  transform: rotate(0.3turn);\r\n}\r\n\r\n.button-hover-effect {\r\n  padding: 6px;\r\n  border-radius: 8px;\r\n  transition: background-color 0.3s ease;\r\n}\r\n\r\n#middle-section {\r\n  padding: 5px 15px 15px 15px;\r\n\r\n  h1 {\r\n    font-size: 18px;\r\n  }\r\n}\r\n\r\n#bottom-section {\r\n  background-color: var(--secondary-background-color);\r\n  box-shadow: 0 -2px 3px rgba(0, 0, 0, 0.2);\r\n  align-content: center;\r\n  padding: 0px 15px;\r\n  height: 78px;\r\n}\r\n\r\n#bottom-section h1 {\r\n  font-size: 18px;\r\n}\r\n\r\n#bottom-section .blocked-svg-container {\r\n  background-color: #c5ce9e00;\r\n}\r\n\r\n#bottom-section svg {\r\n  width: 32px;\r\n  height: 32px;\r\n}\r\n\r\n#bottom-section .badge {\r\n  background-color: #ccccc8;\r\n  width: 27px;\r\n  height: 20px;\r\n  font-size: 9px;\r\n}\r\n\r\n.block-url-header-container {\r\n  display: flex;\r\n  align-items: baseline;\r\n}\r\n\r\n.add-in-bulk-link {\r\n  opacity: 0.7;\r\n  font-size: 0.7rem;\r\n  margin-left: 10px;\r\n  text-decoration: underline;\r\n}\r\n\r\n.add-in-bulk-link:hover {\r\n  opacity: 1;\r\n  cursor: pointer;\r\n}\r\n\r\n.dicord-button {\r\n  cursor: pointer;\r\n}\r\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./src/popup/popup.css"],"names":[],"mappings":"AAAA;EACE,sBAAsB;EACtB,6BAA6B;EAC7B,qCAAqC;EACrC,qBAAqB;EACrB,+BAA+B;EAC/B,0BAA0B;EAC1B,2BAA2B;EAC3B,+BAA+B;AACjC;;AAIA,qBAAqB;AACrB;EACE,gCAAgC;EAChC,qCAAqC;EACrC,qBAAqB;EACrB,+BAA+B;EAC/B,0BAA0B;EAC1B,wBAAwB;AAC1B;;AAEA;EACE,SAAS;EACT,8CAA8C;EAC9C,YAAY;EACZ,wBAAwB;AAC1B;;AAEA,YAAY;AACZ;EACE,mDAAmD;EACnD,2BAA2B;EAC3B,oBAAoB;EACpB,aAAa;EACb,mBAAmB;EACnB,wCAAwC;EACxC,WAAW;AACb;;AAEA;EACE,kBAAkB,EAAE,sEAAsE;AAC5F;;AAEA;EACE,kBAAkB;EAClB,gBAAgB;EAChB,eAAe;EACf,6BAA6B;EAC7B,mBAAmB;AACrB;;AAEA;EACE,WAAW;AACb;;AAEA,oBAAoB;AACpB;EACE,WAAW;EACX,YAAY;EACZ,aAAa;EACb,mBAAmB;EACnB,uBAAuB;EACvB,+BAA+B;;EAE/B;IACE,iBAAiB;IACjB,WAAW;IACX,YAAY;IACZ,cAAc;EAChB;AACF;;AAEA;EACE,eAAe;EACf,0BAA0B;AAC5B;;AAEA;EACE,YAAY;EACZ,kBAAkB;EAClB,sCAAsC;AACxC;;AAEA;EACE,2BAA2B;;EAE3B;IACE,eAAe;EACjB;AACF;;AAEA;EACE,mDAAmD;EACnD,yCAAyC;EACzC,qBAAqB;EACrB,iBAAiB;EACjB,YAAY;AACd;;AAEA;EACE,eAAe;AACjB;;AAEA;EACE,2BAA2B;AAC7B;;AAEA;EACE,WAAW;EACX,YAAY;AACd;;AAEA;EACE,yBAAyB;EACzB,WAAW;EACX,YAAY;EACZ,cAAc;AAChB;;AAEA;EACE,aAAa;EACb,qBAAqB;AACvB;;AAEA;EACE,YAAY;EACZ,iBAAiB;EACjB,iBAAiB;EACjB,0BAA0B;AAC5B;;AAEA;EACE,UAAU;EACV,eAAe;AACjB;;AAEA;EACE,eAAe;AACjB","sourcesContent":[":root {\r\n  /* Light mode colors */\r\n  --main-background-color: #fff;\r\n  --secondary-background-color: #f4f4f4;\r\n  --text-color: #333333;\r\n  --secondary-text-color: #333333;\r\n  --card-background: #f0f0f0;\r\n  --border: 1px solid #acacaa;\r\n  font-family: \"Lato\", sans-serif;\r\n}\r\n\r\n@import url(\"https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap\");\r\n\r\n/* Dark mode colors */\r\n[data-theme=\"dark\"] {\r\n  --main-background-color: #696969;\r\n  --secondary-background-color: #424242;\r\n  --text-color: #000000;\r\n  --secondary-text-color: #000000;\r\n  --card-background: #2c2c2c;\r\n  color: var(--text-color);\r\n}\r\n\r\nbody {\r\n  margin: 0;\r\n  background-color: var(--main-background-color);\r\n  width: 350px;\r\n  color: var(--text-color);\r\n}\r\n\r\n/* top bar */\r\n#entire-top-bar {\r\n  background-color: var(--secondary-background-color);\r\n  padding: 15px 15px 0px 15px;\r\n  padding-bottom: 15px;\r\n  display: flex;\r\n  align-items: center;\r\n  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);\r\n  gap: 0.8rem;\r\n}\r\n\r\n.top-item:first-child {\r\n  margin-right: auto; /* Make the first child on the left (logo) put the rest on the right */\r\n}\r\n\r\n.header-text {\r\n  text-align: center;\r\n  font-weight: 400;\r\n  font-size: 18px;\r\n  color: var(--light-main-text);\r\n  margin-left: 0.5rem;\r\n}\r\n\r\n.top-bar-icon {\r\n  width: 32px;\r\n}\r\n\r\n/* Settings Button */\r\n#settings-icon {\r\n  width: 24px;\r\n  height: 24px;\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  transition: transform 0.7s ease;\r\n\r\n  img {\r\n    user-select: none;\r\n    width: 100%;\r\n    height: 100%;\r\n    display: block;\r\n  }\r\n}\r\n\r\n#settings-icon:hover {\r\n  cursor: pointer;\r\n  transform: rotate(0.3turn);\r\n}\r\n\r\n.button-hover-effect {\r\n  padding: 6px;\r\n  border-radius: 8px;\r\n  transition: background-color 0.3s ease;\r\n}\r\n\r\n#middle-section {\r\n  padding: 5px 15px 15px 15px;\r\n\r\n  h1 {\r\n    font-size: 18px;\r\n  }\r\n}\r\n\r\n#bottom-section {\r\n  background-color: var(--secondary-background-color);\r\n  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.1);\r\n  align-content: center;\r\n  padding: 0px 15px;\r\n  height: 78px;\r\n}\r\n\r\n#bottom-section h1 {\r\n  font-size: 18px;\r\n}\r\n\r\n#bottom-section .blocked-svg-container {\r\n  background-color: #c5ce9e00;\r\n}\r\n\r\n#bottom-section svg {\r\n  width: 32px;\r\n  height: 32px;\r\n}\r\n\r\n#bottom-section .badge {\r\n  background-color: #ccccc8;\r\n  width: 27px;\r\n  height: 20px;\r\n  font-size: 9px;\r\n}\r\n\r\n.block-url-header-container {\r\n  display: flex;\r\n  align-items: baseline;\r\n}\r\n\r\n.add-in-bulk-link {\r\n  opacity: 0.7;\r\n  font-size: 0.7rem;\r\n  margin-left: 10px;\r\n  text-decoration: underline;\r\n}\r\n\r\n.add-in-bulk-link:hover {\r\n  opacity: 1;\r\n  cursor: pointer;\r\n}\r\n\r\n.dicord-button {\r\n  cursor: pointer;\r\n}\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -246,6 +237,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../components/onOffSlider */ "./src/components/onOffSlider.tsx");
 /* harmony import */ var _components_urlInput__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../components/urlInput */ "./src/components/urlInput.tsx");
 /* harmony import */ var _components_dashboard_blockedSvgContainer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../components/dashboard/blockedSvgContainer */ "./src/components/dashboard/blockedSvgContainer.tsx");
+/* harmony import */ var _helper_urlHelpers__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../helper/urlHelpers */ "./src/helper/urlHelpers.ts");
+
 
 
 
@@ -299,20 +292,19 @@ const App = () => {
         window.close();
     };
     function addBlockedUrl(urlToAdd) {
-        if (urlToAdd) {
-            chrome.storage.local.get(["blockedUrlData"], (result) => {
-                if (result.blockedUrlData) {
-                    const updatedBlockedUrls = Object.assign({}, result.blockedUrlData);
-                    updatedBlockedUrls[urlToAdd] = {
-                        i: 0,
-                        w: 0,
-                        v: 0,
-                        n: 0,
-                    };
-                    chrome.storage.local.set({ blockedUrlData: updatedBlockedUrls });
-                }
-            });
-        }
+        urlToAdd = (0,_helper_urlHelpers__WEBPACK_IMPORTED_MODULE_6__.transformUserInputToValidURL)(urlToAdd);
+        chrome.storage.local.get(["blockedUrlData"], (result) => {
+            if (result.blockedUrlData) {
+                const updatedBlockedUrls = Object.assign({}, result.blockedUrlData);
+                updatedBlockedUrls[urlToAdd] = {
+                    i: 0,
+                    w: 0,
+                    v: 0,
+                    n: 0,
+                };
+                chrome.storage.local.set({ blockedUrlData: updatedBlockedUrls });
+            }
+        });
     }
     function onClickDiscord() {
         window.open("https://discord.gg/smt753Fwt3", "_blank");
@@ -324,16 +316,15 @@ const App = () => {
     };
     return (react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "popup-container" },
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "entire-top-bar" },
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "left-top-bar", className: "top-bar-section" },
-                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", { className: "top-bar-icon", src: "logoApp.png", alt: "Broom icon", title: "Search Sanitizer" })),
-            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "right-top-bar", className: "top-bar-section" },
-                react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__["default"], { id: "OnOff", setting: ExtensionOnOffSetting }),
-                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { title: "Join the Discord for help", className: "dicord-button", onClick: onClickDiscord },
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { width: "24px", height: "24px", viewBox: "0 -28.5 256 256", version: "1.1", preserveAspectRatio: "xMidYMid" },
-                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", null,
-                            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M216.856339,16.5966031 C200.285002,8.84328665 182.566144,3.2084988 164.041564,0 C161.766523,4.11318106 159.108624,9.64549908 157.276099,14.0464379 C137.583995,11.0849896 118.072967,11.0849896 98.7430163,14.0464379 C96.9108417,9.64549908 94.1925838,4.11318106 91.8971895,0 C73.3526068,3.2084988 55.6133949,8.86399117 39.0420583,16.6376612 C5.61752293,67.146514 -3.4433191,116.400813 1.08711069,164.955721 C23.2560196,181.510915 44.7403634,191.567697 65.8621325,198.148576 C71.0772151,190.971126 75.7283628,183.341335 79.7352139,175.300261 C72.104019,172.400575 64.7949724,168.822202 57.8887866,164.667963 C59.7209612,163.310589 61.5131304,161.891452 63.2445898,160.431257 C105.36741,180.133187 151.134928,180.133187 192.754523,160.431257 C194.506336,161.891452 196.298154,163.310589 198.110326,164.667963 C191.183787,168.842556 183.854737,172.420929 176.223542,175.320965 C180.230393,183.341335 184.861538,190.991831 190.096624,198.16893 C211.238746,191.588051 232.743023,181.531619 254.911949,164.955721 C260.227747,108.668201 245.831087,59.8662432 216.856339,16.5966031 Z M85.4738752,135.09489 C72.8290281,135.09489 62.4592217,123.290155 62.4592217,108.914901 C62.4592217,94.5396472 72.607595,82.7145587 85.4738752,82.7145587 C98.3405064,82.7145587 108.709962,94.5189427 108.488529,108.914901 C108.508531,123.290155 98.3405064,135.09489 85.4738752,135.09489 Z M170.525237,135.09489 C157.88039,135.09489 147.510584,123.290155 147.510584,108.914901 C147.510584,94.5396472 157.658606,82.7145587 170.525237,82.7145587 C183.391518,82.7145587 193.761324,94.5189427 193.539891,108.914901 C193.539891,123.290155 183.391518,135.09489 170.525237,135.09489 Z", fill: "#5865F2" })))),
-                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { onClick: openOptionsPage, id: "settings-icon", className: "button-hover-effect" },
-                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", { src: "setting.png", alt: "Settings icon" })))),
+            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", { className: "top-bar-icon top-item", src: "logoApp.png", alt: "Broom icon", title: "Search Sanitizer" }),
+            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "top-item" },
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement(_components_onOffSlider__WEBPACK_IMPORTED_MODULE_3__["default"], { id: "OnOff", setting: ExtensionOnOffSetting })),
+            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { title: "Join the Discord for help", className: "dicord-button top-item", onClick: onClickDiscord },
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("svg", { width: "24px", height: "24px", viewBox: "0 -28.5 256 256", version: "1.1", preserveAspectRatio: "xMidYMid" },
+                    react__WEBPACK_IMPORTED_MODULE_0___default().createElement("g", null,
+                        react__WEBPACK_IMPORTED_MODULE_0___default().createElement("path", { d: "M216.856339,16.5966031 C200.285002,8.84328665 182.566144,3.2084988 164.041564,0 C161.766523,4.11318106 159.108624,9.64549908 157.276099,14.0464379 C137.583995,11.0849896 118.072967,11.0849896 98.7430163,14.0464379 C96.9108417,9.64549908 94.1925838,4.11318106 91.8971895,0 C73.3526068,3.2084988 55.6133949,8.86399117 39.0420583,16.6376612 C5.61752293,67.146514 -3.4433191,116.400813 1.08711069,164.955721 C23.2560196,181.510915 44.7403634,191.567697 65.8621325,198.148576 C71.0772151,190.971126 75.7283628,183.341335 79.7352139,175.300261 C72.104019,172.400575 64.7949724,168.822202 57.8887866,164.667963 C59.7209612,163.310589 61.5131304,161.891452 63.2445898,160.431257 C105.36741,180.133187 151.134928,180.133187 192.754523,160.431257 C194.506336,161.891452 196.298154,163.310589 198.110326,164.667963 C191.183787,168.842556 183.854737,172.420929 176.223542,175.320965 C180.230393,183.341335 184.861538,190.991831 190.096624,198.16893 C211.238746,191.588051 232.743023,181.531619 254.911949,164.955721 C260.227747,108.668201 245.831087,59.8662432 216.856339,16.5966031 Z M85.4738752,135.09489 C72.8290281,135.09489 62.4592217,123.290155 62.4592217,108.914901 C62.4592217,94.5396472 72.607595,82.7145587 85.4738752,82.7145587 C98.3405064,82.7145587 108.709962,94.5189427 108.488529,108.914901 C108.508531,123.290155 98.3405064,135.09489 85.4738752,135.09489 Z M170.525237,135.09489 C157.88039,135.09489 147.510584,123.290155 147.510584,108.914901 C147.510584,94.5396472 157.658606,82.7145587 170.525237,82.7145587 C183.391518,82.7145587 193.761324,94.5189427 193.539891,108.914901 C193.539891,123.290155 183.391518,135.09489 170.525237,135.09489 Z", fill: "#5865F2" })))),
+            react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { onClick: openOptionsPage, id: "settings-icon", className: "button-hover-effect top-item" },
+                react__WEBPACK_IMPORTED_MODULE_0___default().createElement("img", { src: "setting.png", alt: "Settings icon" }))),
         react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { id: "middle-section" },
             react__WEBPACK_IMPORTED_MODULE_0___default().createElement("div", { className: "block-url-header-container" },
                 react__WEBPACK_IMPORTED_MODULE_0___default().createElement("h1", null, "Block URL"),

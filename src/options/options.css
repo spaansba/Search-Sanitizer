@@ -132,10 +132,15 @@ header {
   cursor: pointer;
 }
 
-p {
+.settings-item-container > p {
+  display: inline;
   font-size: 15px;
   color: var(--secondary-text-color);
   user-select: text;
+}
+
+p.under-header {
+  font-size: 12px;
 }
 
 .slider {

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useRef } from "react"
 import "./modalAddUrl.css"
 import { BlockedUrlsContext } from "../../options/options"
 import UrlInput from "../urlInput"
+import { transformUserInputToValidURL } from "../../helper/urlHelpers"
 
 interface ModalAddUrlProps {
   isOpen: boolean
@@ -25,23 +26,23 @@ export default function ModalAddUrl({ isOpen, onClose }: ModalAddUrlProps) {
   }
 
   function addBlockedUrl(urlToAdd: string) {
-    if (urlToAdd) {
-      chrome.storage.local.get(["blockedUrlData"], (result) => {
-        if (result.blockedUrlData) {
-          const updatedBlockedUrls = { ...result.blockedUrlData }
-          updatedBlockedUrls[urlToAdd] = {
-            i: 0,
-            s: 0,
-            v: 0,
-          }
+    urlToAdd = transformUserInputToValidURL(urlToAdd)
 
-          chrome.storage.local.set({ blockedUrlData: updatedBlockedUrls }, () => {
-            setBlockedUrls(updatedBlockedUrls)
-            handleClose()
-          })
+    chrome.storage.local.get(["blockedUrlData"], (result) => {
+      if (result.blockedUrlData) {
+        const updatedBlockedUrls = { ...result.blockedUrlData }
+        updatedBlockedUrls[urlToAdd] = {
+          i: 0,
+          s: 0,
+          v: 0,
         }
-      })
-    }
+
+        chrome.storage.local.set({ blockedUrlData: updatedBlockedUrls }, () => {
+          setBlockedUrls(updatedBlockedUrls)
+          handleClose()
+        })
+      }
+    })
   }
 
   return (
