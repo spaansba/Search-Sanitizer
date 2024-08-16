@@ -3,7 +3,7 @@
 Open source Google Chrome extension that blocks URLs from showing up in your Google Search results (websites/images/videos/news/ads etc)
 
 ## Download extension
-<link>
+[Search Sanitizer](https://chromewebstore.google.com/detail/cojacdikohpefnppeaaehbkonbhenhgb?hl=en-US&utm_source=ext_sidebar)
 
 ## Download code
 
